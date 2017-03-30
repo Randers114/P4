@@ -1,10 +1,13 @@
-// Generated from C:/Users/Stefan/Desktop/javaparser/src\FinalGrammar.g4 by ANTLR 4.6
+// Generated from C:/Users/Stefan/Desktop/4. Semester/Git/compiler/src/sourceParser\FinalGrammar.g4 by ANTLR 4.6
 package sourceParser;
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.misc.*;
 import org.antlr.v4.runtime.tree.*;
 import java.util.List;
+import java.util.Iterator;
+import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class FinalGrammarParser extends Parser {
@@ -85,7 +88,7 @@ public class FinalGrammarParser extends Parser {
 	}
 
 	@Override
-	public String getGrammarFileName() { return "sourceParser/FinalGrammar.g4"; }
+	public String getGrammarFileName() { return "FinalGrammar.g4"; }
 
 	@Override
 	public String[] getRuleNames() { return ruleNames; }
