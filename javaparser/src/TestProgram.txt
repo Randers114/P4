@@ -1,0 +1,25 @@
+main
+ {
+     number a = 25;
+     number b = 50;
+     number c;
+     bool k = true;
+
+     for(1 to 10) do
+     {
+
+     }
+     new Motor[d] hey;
+     addMethod(a, b);
+
+    if(not true) then {  }
+
+ }
+
+
+ number Method addMethod(number a, number b)
+ {
+     number c = a + b;
+
+     return c;
+ }
