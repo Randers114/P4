@@ -9,7 +9,7 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
 
-        org.antlr.v4.runtime.CharStream charStream = new ANTLRFileStream("C:\\Users\\Stefan\\Desktop\\javaparser\\src\\TestProgram.txt");
+        org.antlr.v4.runtime.CharStream charStream = new ANTLRFileStream("C:\\Users\\Stefan\\Desktop\\4. Semester\\Git\\compiler\\src\\TestProgram.txt");
         FinalGrammarLexer lexer = new FinalGrammarLexer(charStream);
 
         TokenStream tokenStream = new org.antlr.v4.runtime.CommonTokenStream(lexer);

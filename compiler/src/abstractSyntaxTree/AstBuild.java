@@ -194,7 +194,8 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
     public Node visitPrmt(FinalGrammarParser.PrmtContext ctx) {
         ParameterNode parameterNode = new ParameterNode();
 
-        parameterNode.Parameter = ctx.getText();
+        parameterNode.Parameter = ctx.getChild(0).getText();
+
         if (ctx.prmt() != null){
             parameterNode.prmt = visitPrmt(ctx.prmt());
         }

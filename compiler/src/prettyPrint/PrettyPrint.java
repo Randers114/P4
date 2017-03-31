@@ -11,7 +11,7 @@ public class PrettyPrint
 
 	private static void VisitNode(ProgramNode node)
 	{
-		System.out.println("Main {");
+		System.out.println("main {");
 		for (Node item : node.leftMain)
 		{
 			VisitNode(item);
@@ -162,8 +162,10 @@ public class PrettyPrint
 	}
 	private static void VisitNode(ParameterNode node){
 		System.out.print(node.Parameter);
+
 		if (node.prmt != null){
 			System.out.print(", ");
+
 			VisitNode(node.prmt);
 		}
 	}
@@ -179,7 +181,7 @@ public class PrettyPrint
 		VisitNode(node.id);
 		System.out.print("(");
 		VisitNode(node.parameter);
-		System.out.println(")");
+		System.out.println(") ;");
 	}
 	private static void VisitNode(NumberNode node){
 		System.out.print(node.value);
@@ -193,7 +195,11 @@ public class PrettyPrint
 	private static void VisitNode(IdentifierNode node){
 		System.out.print(node.name);
 	}
+	private static void VisitNode(BoolNode node){
+		System.out.print(node.aBoolean);
+	}
 	private static void VisitNode(ReturnValNode node){
+		System.out.printf("return ");
 		VisitNode(node.returnvalue);
 	}
 	private static void VisitNode(InstanceNode node){
@@ -313,6 +319,8 @@ public class PrettyPrint
 			VisitNode((UnaryMinusNode) node);
 		} else if (node instanceof NotBoolNode){
 			VisitNode((NotBoolNode) node);
+		} else if (node instanceof BoolNode){
+			VisitNode((BoolNode) node);
 		}
 	}
 }
