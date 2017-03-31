@@ -5,7 +5,7 @@ import abstractSyntaxTree.nodes.ProgramNode;
 
 public class PrettyPrint
 {
-	public PrettyPrint(ProgramNode node){
+	public static void Init(ProgramNode node){
 		VisitNode(node);
 	}
 	private static void VisitNode(ProgramNode node) {

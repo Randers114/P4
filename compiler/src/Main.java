@@ -10,24 +10,32 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
         org.antlr.v4.runtime.CharStream charStream = new ANTLRFileStream("C:\\Users\\Stefan\\Desktop\\4. Semester\\Git\\compiler\\src\\TestProgram.txt");
+
+        PrettyPrint.Init(InitAST(RunParser(charStream)));
+    }
+
+    private static FinalGrammarParser InitParser(org.antlr.v4.runtime.CharStream charStream){
         FinalGrammarLexer lexer = new FinalGrammarLexer(charStream);
-
         TokenStream tokenStream = new org.antlr.v4.runtime.CommonTokenStream(lexer);
-        FinalGrammarParser parser = new FinalGrammarParser(tokenStream);
 
+        return new FinalGrammarParser(tokenStream);
+    }
+
+    private static ProgramNode InitAST(FinalGrammarParser.ProgramContext programContext){
+        AstBuild astBuild = new AstBuild();
+
+        return (ProgramNode) astBuild.visitProgram(programContext);
+    }
+
+    private static FinalGrammarParser.ProgramContext RunParser(org.antlr.v4.runtime.CharStream charStream){
         FinalGrammarParser.ProgramContext programContext = new FinalGrammarParser.ProgramContext(null, -1);
 
         try {
-            programContext = parser.program();
+            programContext = InitParser(charStream).program();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        ProgramNode programNode;
 
-        AstBuild astBuild = new AstBuild();
-
-        programNode = (ProgramNode) astBuild.visitProgram(programContext);
-
-        PrettyPrint prettyPrint = new PrettyPrint(programNode);
+        return programContext;
     }
 }
