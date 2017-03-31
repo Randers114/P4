@@ -8,9 +8,7 @@ public class PrettyPrint
 	public PrettyPrint(ProgramNode node){
 		VisitNode(node);
 	}
-
-	private static void VisitNode(ProgramNode node)
-	{
+	private static void VisitNode(ProgramNode node) {
 		System.out.println("main {");
 		for (Node item : node.leftMain)
 		{
@@ -23,39 +21,31 @@ public class PrettyPrint
 			VisitNode(item);
 		}
 	}
-
-	private static void VisitNode(MinusNode node)
-	{
+	private static void VisitNode(MinusNode node) {
 		VisitNode(node.left);
 		System.out.print("-");
 		VisitNode(node.right);
 	}
-	private static void VisitNode(PlusNode node)
-	{
+	private static void VisitNode(PlusNode node) {
 		VisitNode(node.right);
 		System.out.print("+");
 		VisitNode(node.left);
 	}
-	private static void VisitNode(TimesNode node)
-	{
+	private static void VisitNode(TimesNode node) {
 		VisitNode(node.right);
 		System.out.print("*");
 		VisitNode(node.left);
 	}
-	private static void VisitNode(DivideNode node)
-	{
+	private static void VisitNode(DivideNode node) {
 		VisitNode(node.right);
 		System.out.print("/");
 		VisitNode(node.left);
 	}
-	private static void VisitNode(UnaryMinusNode node)
-	{
+	private static void VisitNode(UnaryMinusNode node) {
 		System.out.print("-");
 		VisitNode(node.child);
 	}
-
-	private static void VisitNode(MethodNode node)
-	{
+	private static void VisitNode(MethodNode node) {
 		VisitNode(node.type);
 		System.out.print("Method ");
 		VisitNode(node.id);
@@ -75,9 +65,7 @@ public class PrettyPrint
 	{
 		VisitNode(node.content);
 	}
-
-	private static void VisitNode(DclNode node)
-	{
+	private static void VisitNode(DclNode node){
 		VisitNode(node.left);
 		VisitNode(node.middle);
 		if (node.right != null) {
@@ -242,12 +230,10 @@ public class PrettyPrint
 			VisitNode(node.right);
 		}
 	}
-
 	private static void VisitNode(NotBoolNode node){
 		System.out.printf("not ");
 		VisitNode(node.child);
 	}
-
 	private static void VisitNode(Node node){
 		if (node instanceof BodyNode){
 			VisitNode((BodyNode) node);

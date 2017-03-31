@@ -16,13 +16,36 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="450">
-      <file leaf-file-name="PrettyPrint.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="PrettyPrint.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/prettyPrint/PrettyPrint.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="350">
-              <caret line="166" column="30" lean-forward="false" selection-start-line="166" selection-start-column="30" selection-end-line="166" selection-end-column="30" />
+            <state relative-caret-position="577">
+              <caret line="235" column="5" lean-forward="false" selection-start-line="235" selection-start-column="5" selection-end-line="235" selection-end-column="5" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="method#VisitNode#0;class#PrettyPrint#0" expanded="false" />
+                <element signature="method#VisitNode#1;class#PrettyPrint#0" expanded="false" />
+                <element signature="method#VisitNode#2;class#PrettyPrint#0" expanded="false" />
+                <element signature="method#VisitNode#3;class#PrettyPrint#0" expanded="false" />
+                <element signature="method#VisitNode#4;class#PrettyPrint#0" expanded="false" />
+                <element signature="method#VisitNode#5;class#PrettyPrint#0" expanded="false" />
+                <element signature="method#VisitNode#6;class#PrettyPrint#0" expanded="false" />
+                <element signature="method#VisitNode#8;class#PrettyPrint#0" expanded="false" />
+                <element signature="method#VisitNode#10;class#PrettyPrint#0" expanded="false" />
+                <element signature="method#VisitNode#11;class#PrettyPrint#0" expanded="false" />
+                <element signature="method#VisitNode#12;class#PrettyPrint#0" expanded="false" />
+                <element signature="method#VisitNode#13;class#PrettyPrint#0" expanded="false" />
+                <element signature="method#VisitNode#14;class#PrettyPrint#0" expanded="false" />
+                <element signature="method#VisitNode#15;class#PrettyPrint#0" expanded="false" />
+                <element signature="method#VisitNode#17;class#PrettyPrint#0" expanded="false" />
+                <element signature="method#VisitNode#18;class#PrettyPrint#0" expanded="false" />
+                <element signature="method#VisitNode#19;class#PrettyPrint#0" expanded="false" />
+                <element signature="method#VisitNode#25;class#PrettyPrint#0" expanded="false" />
+                <element signature="method#VisitNode#32;class#PrettyPrint#0" expanded="false" />
+                <element signature="method#VisitNode#33;class#PrettyPrint#0" expanded="false" />
+                <element signature="method#VisitNode#35;class#PrettyPrint#0" expanded="false" />
+                <element signature="method#VisitNode#36;class#PrettyPrint#0" expanded="false" />
+                <element signature="method#VisitNode#37;class#PrettyPrint#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -38,7 +61,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="AstBuild.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="AstBuild.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/abstractSyntaxTree/AstBuild.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="502">
@@ -155,10 +178,10 @@
         <option value="$PROJECT_DIR$/src/abstractSyntaxTree/nodes/ValueNode.java" />
         <option value="$PROJECT_DIR$/src/abstractSyntaxTree/nodes/WhileNode.java" />
         <option value="$PROJECT_DIR$/src/prettyPrint/prettyPrint.java" />
-        <option value="$PROJECT_DIR$/src/prettyPrint/PrettyPrint.java" />
         <option value="$PROJECT_DIR$/src/TestProgram.txt" />
         <option value="$PROJECT_DIR$/src/Main.java" />
         <option value="$PROJECT_DIR$/src/abstractSyntaxTree/AstBuild.java" />
+        <option value="$PROJECT_DIR$/src/prettyPrint/PrettyPrint.java" />
       </list>
     </option>
   </component>
@@ -590,7 +613,15 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="4" />
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/prettyPrint/PrettyPrint.java</url>
+          <line>48</line>
+          <properties />
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
+      </breakpoints>
+      <option name="time" value="8" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="Application">
@@ -940,21 +971,44 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/prettyPrint/PrettyPrint.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="350">
-          <caret line="166" column="30" lean-forward="false" selection-start-line="166" selection-start-column="30" selection-end-line="166" selection-end-column="30" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/abstractSyntaxTree/AstBuild.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="502">
           <caret line="197" column="0" lean-forward="true" selection-start-line="197" selection-start-column="0" selection-end-line="197" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/prettyPrint/PrettyPrint.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="577">
+          <caret line="235" column="5" lean-forward="false" selection-start-line="235" selection-start-column="5" selection-end-line="235" selection-end-column="5" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#VisitNode#0;class#PrettyPrint#0" expanded="false" />
+            <element signature="method#VisitNode#1;class#PrettyPrint#0" expanded="false" />
+            <element signature="method#VisitNode#2;class#PrettyPrint#0" expanded="false" />
+            <element signature="method#VisitNode#3;class#PrettyPrint#0" expanded="false" />
+            <element signature="method#VisitNode#4;class#PrettyPrint#0" expanded="false" />
+            <element signature="method#VisitNode#5;class#PrettyPrint#0" expanded="false" />
+            <element signature="method#VisitNode#6;class#PrettyPrint#0" expanded="false" />
+            <element signature="method#VisitNode#8;class#PrettyPrint#0" expanded="false" />
+            <element signature="method#VisitNode#10;class#PrettyPrint#0" expanded="false" />
+            <element signature="method#VisitNode#11;class#PrettyPrint#0" expanded="false" />
+            <element signature="method#VisitNode#12;class#PrettyPrint#0" expanded="false" />
+            <element signature="method#VisitNode#13;class#PrettyPrint#0" expanded="false" />
+            <element signature="method#VisitNode#14;class#PrettyPrint#0" expanded="false" />
+            <element signature="method#VisitNode#15;class#PrettyPrint#0" expanded="false" />
+            <element signature="method#VisitNode#17;class#PrettyPrint#0" expanded="false" />
+            <element signature="method#VisitNode#18;class#PrettyPrint#0" expanded="false" />
+            <element signature="method#VisitNode#19;class#PrettyPrint#0" expanded="false" />
+            <element signature="method#VisitNode#25;class#PrettyPrint#0" expanded="false" />
+            <element signature="method#VisitNode#32;class#PrettyPrint#0" expanded="false" />
+            <element signature="method#VisitNode#33;class#PrettyPrint#0" expanded="false" />
+            <element signature="method#VisitNode#35;class#PrettyPrint#0" expanded="false" />
+            <element signature="method#VisitNode#36;class#PrettyPrint#0" expanded="false" />
+            <element signature="method#VisitNode#37;class#PrettyPrint#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
