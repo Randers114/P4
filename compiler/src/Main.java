@@ -4,12 +4,16 @@ import org.antlr.v4.runtime.ANTLRFileStream;
 import org.antlr.v4.runtime.TokenStream;
 import prettyPrint.PrettyPrint;
 import sourceParser.*;
+import java.util.Scanner;
 
 public class Main {
 
     public static void main(String[] args) throws Exception {
 
-        org.antlr.v4.runtime.CharStream charStream = new ANTLRFileStream("C:\\Users\\Stefan\\Desktop\\javaparser\\src\\TestProgram.txt");
+        Scanner scanner = new Scanner(System.in);
+        String InputPath = scanner.nextLine();
+        
+        org.antlr.v4.runtime.CharStream charStream = new ANTLRFileStream(InputPath);
         FinalGrammarLexer lexer = new FinalGrammarLexer(charStream);
 
         TokenStream tokenStream = new org.antlr.v4.runtime.CommonTokenStream(lexer);
