@@ -12,7 +12,7 @@ main
      new Motor[d] hey;
      addMethod(a, b);
 
-    if(not true) then {  }
+    if(not false) then {  }
 
  }
 
