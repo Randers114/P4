@@ -27,19 +27,19 @@ public class PrettyPrint
 		VisitNode(node.right);
 	}
 	private static void VisitNode(PlusNode node) {
-		VisitNode(node.right);
-		System.out.print("+");
 		VisitNode(node.left);
+		System.out.print("+");
+		VisitNode(node.right);
 	}
 	private static void VisitNode(TimesNode node) {
-		VisitNode(node.right);
-		System.out.print("*");
 		VisitNode(node.left);
+		System.out.print("*");
+		VisitNode(node.right);
 	}
 	private static void VisitNode(DivideNode node) {
-		VisitNode(node.right);
-		System.out.print("/");
 		VisitNode(node.left);
+		System.out.print("/");
+		VisitNode(node.right);
 	}
 	private static void VisitNode(UnaryMinusNode node) {
 		System.out.print("-");
