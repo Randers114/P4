@@ -5,5 +5,5 @@ package typeChecker;
  */
 public class TypeChecker
 {
-	
+
 }
