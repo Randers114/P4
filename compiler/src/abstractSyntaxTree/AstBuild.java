@@ -311,12 +311,12 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
             ValueNode valueNode = new ValueNode();
             valueNode.child = visitVal(ctx.val());
             return valueNode;
-        } else if (ctx.getText().contains("*")){
+        } else if (ctx.getChild(1).getText().equals("*")){
             TimesNode timesNode = new TimesNode();
             timesNode.left = visitVal(ctx.val());
             timesNode.right = visitTerm(ctx.term());
             return timesNode;
-        } else if (ctx.getText().contains("/")){
+        } else if (ctx.getChild(1).getText().equals("/")){
             DivideNode divideNode = new DivideNode();
             divideNode.left = visitVal(ctx.val());
             divideNode.right = visitTerm(ctx.term());

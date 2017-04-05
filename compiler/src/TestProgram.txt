@@ -1,6 +1,6 @@
 main
  {
-     number a = 25;
+     number a = 25 * 100 * 99 / 50;
      number b = 50;
      number c;
      bool k = true;
