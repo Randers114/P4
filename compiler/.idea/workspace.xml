@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c779e027-0997-4823-951d-8cb6ba049ac1" name="Default" comment="" />
+    <list default="true" id="c779e027-0997-4823-951d-8cb6ba049ac1" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/typeChecker/TypeChecker.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+    </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -22,9 +25,6 @@
             <state relative-caret-position="126">
               <caret line="7" column="27" lean-forward="false" selection-start-line="7" selection-start-column="27" selection-end-line="7" selection-end-column="27" />
               <folding>
-                <element signature="imports" expanded="false" />
-                <element signature="e#172#173#0" expanded="false" />
-                <element signature="e#194#195#0" expanded="false" />
                 <element signature="method#VisitNode#0;class#PrettyPrint#0" expanded="false" />
                 <element signature="method#VisitNode#1;class#PrettyPrint#0" expanded="false" />
                 <element signature="method#VisitNode#2;class#PrettyPrint#0" expanded="false" />
@@ -32,49 +32,19 @@
                 <element signature="method#VisitNode#4;class#PrettyPrint#0" expanded="false" />
                 <element signature="method#VisitNode#5;class#PrettyPrint#0" expanded="false" />
                 <element signature="method#VisitNode#6;class#PrettyPrint#0" expanded="false" />
-                <element signature="e#1466#1467#0" expanded="false" />
-                <element signature="e#1496#1497#0" expanded="false" />
                 <element signature="method#VisitNode#8;class#PrettyPrint#0" expanded="false" />
-                <element signature="e#1756#1757#0" expanded="false" />
-                <element signature="e#1784#1785#0" expanded="false" />
                 <element signature="method#VisitNode#10;class#PrettyPrint#0" expanded="false" />
                 <element signature="method#VisitNode#11;class#PrettyPrint#0" expanded="false" />
                 <element signature="method#VisitNode#12;class#PrettyPrint#0" expanded="false" />
                 <element signature="method#VisitNode#13;class#PrettyPrint#0" expanded="false" />
                 <element signature="method#VisitNode#14;class#PrettyPrint#0" expanded="false" />
                 <element signature="method#VisitNode#15;class#PrettyPrint#0" expanded="false" />
-                <element signature="e#3206#3207#0" expanded="false" />
-                <element signature="e#3246#3247#0" expanded="false" />
                 <element signature="method#VisitNode#17;class#PrettyPrint#0" expanded="false" />
                 <element signature="method#VisitNode#18;class#PrettyPrint#0" expanded="false" />
                 <element signature="method#VisitNode#19;class#PrettyPrint#0" expanded="false" />
-                <element signature="e#3816#3817#0" expanded="false" />
-                <element signature="e#3851#3852#0" expanded="false" />
-                <element signature="e#3898#3899#0" expanded="false" />
-                <element signature="e#3926#3927#0" expanded="false" />
-                <element signature="e#3974#3975#0" expanded="false" />
-                <element signature="e#4002#4003#0" expanded="false" />
-                <element signature="e#4055#4056#0" expanded="false" />
-                <element signature="e#4089#4090#0" expanded="false" />
-                <element signature="e#4136#4137#0" expanded="false" />
-                <element signature="e#4174#4175#0" expanded="false" />
                 <element signature="method#VisitNode#25;class#PrettyPrint#0" expanded="false" />
-                <element signature="e#4343#4344#0" expanded="false" />
-                <element signature="e#4387#4388#0" expanded="false" />
-                <element signature="e#4436#4437#0" expanded="false" />
-                <element signature="e#4467#4468#0" expanded="false" />
-                <element signature="e#4520#4521#0" expanded="false" />
-                <element signature="e#4559#4560#0" expanded="false" />
-                <element signature="e#4611#4612#0" expanded="false" />
-                <element signature="e#4650#4651#0" expanded="false" />
-                <element signature="e#4701#4702#0" expanded="false" />
-                <element signature="e#4740#4741#0" expanded="false" />
-                <element signature="e#4792#4793#0" expanded="false" />
-                <element signature="e#4849#4850#0" expanded="false" />
                 <element signature="method#VisitNode#32;class#PrettyPrint#0" expanded="false" />
                 <element signature="method#VisitNode#33;class#PrettyPrint#0" expanded="false" />
-                <element signature="e#5137#5138#0" expanded="false" />
-                <element signature="e#5184#5185#0" expanded="false" />
                 <element signature="method#VisitNode#35;class#PrettyPrint#0" expanded="false" />
                 <element signature="method#VisitNode#36;class#PrettyPrint#0" expanded="false" />
                 <element signature="method#VisitNode#37;class#PrettyPrint#0" expanded="false" />
@@ -96,13 +66,9 @@
       <file leaf-file-name="AstBuild.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/abstractSyntaxTree/AstBuild.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3780">
+            <state relative-caret-position="4032">
               <caret line="197" column="0" lean-forward="false" selection-start-line="197" selection-start-column="0" selection-end-line="197" selection-end-column="0" />
-              <folding>
-                <element signature="imports" expanded="false" />
-                <element signature="e#14480#14481#0" expanded="false" />
-                <element signature="e#14545#14546#0" expanded="false" />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
@@ -117,11 +83,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Main.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Main.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="210">
-              <caret line="14" column="46" lean-forward="true" selection-start-line="14" selection-start-column="46" selection-end-line="14" selection-end-column="46" />
+            <state relative-caret-position="399">
+              <caret line="26" column="5" lean-forward="false" selection-start-line="26" selection-start-column="5" selection-end-line="26" selection-end-column="5" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TypeChecker.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/typeChecker/TypeChecker.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="147">
+              <caret line="7" column="4" lean-forward="false" selection-start-line="7" selection-start-column="4" selection-end-line="7" selection-end-column="4" />
               <folding />
             </state>
           </provider>
@@ -165,7 +141,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/sourceParser/TestProgram.txt" />
         <option value="$PROJECT_DIR$/src/FinalGrammar.g4" />
         <option value="$PROJECT_DIR$/src/sourceParser/Node.java" />
         <option value="$PROJECT_DIR$/src/sourceParser/AstBuild.java" />
@@ -216,15 +191,19 @@
         <option value="$PROJECT_DIR$/src/abstractSyntaxTree/AstBuild.java" />
         <option value="$PROJECT_DIR$/src/prettyPrint/PrettyPrint.java" />
         <option value="$PROJECT_DIR$/src/Main.java" />
+        <option value="$PROJECT_DIR$/src/typeChecker/TypeChecker.java" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-11" />
+    <option name="x" value="-9" />
+    <option name="y" value="-9" />
     <option name="width" value="1932" />
-    <option name="height" value="1042" />
+    <option name="height" value="1048" />
   </component>
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
       <flattenPackages />
@@ -240,7 +219,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
       <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
@@ -268,9 +246,28 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="compiler" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="compiler" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="typeChecker" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
       <pane id="Scratches" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -435,6 +432,26 @@
       <envs />
       <method />
     </configuration>
+    <configuration default="true" type="GoApplicationRunConfiguration" factoryName="Go Application">
+      <module name="" />
+      <working_directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <kind value="FILE" />
+      <method />
+    </configuration>
+    <configuration default="true" type="GoRunFileConfiguration" factoryName="Go Single File">
+      <module name="" />
+      <working_directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <method />
+    </configuration>
+    <configuration default="true" type="GoTestRunConfiguration" factoryName="Go Test">
+      <module name="" />
+      <working_directory value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <kind value="DIRECTORY" />
+      <method />
+    </configuration>
     <configuration default="true" type="GradleRunConfiguration" factoryName="Gradle">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -526,6 +543,44 @@
       <option name="PORT" value="5005" />
       <method />
     </configuration>
+    <configuration default="true" type="ScalaTestRunConfiguration" factoryName="ScalaTest">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <module name="" />
+      <setting name="path" value="" />
+      <setting name="package" value="" />
+      <setting name="vmparams" value="" />
+      <setting name="params" value="" />
+      <setting name="workingDirectory" value="" />
+      <setting name="searchForTest" value="Across module dependencies" />
+      <setting name="testName" value="" />
+      <setting name="testKind" value="Class" />
+      <setting name="showProgressMessages" value="true" />
+      <setting name="useSbt" value="false" />
+      <setting name="useUiWithSbt" value="false" />
+      <classRegexps />
+      <testRegexps />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="Specs2RunConfiguration" factoryName="Specs2">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <module name="" />
+      <setting name="path" value="" />
+      <setting name="package" value="" />
+      <setting name="vmparams" value="" />
+      <setting name="params" value="" />
+      <setting name="workingDirectory" value="" />
+      <setting name="searchForTest" value="Across module dependencies" />
+      <setting name="testName" value="" />
+      <setting name="testKind" value="Class" />
+      <setting name="showProgressMessages" value="true" />
+      <setting name="useSbt" value="false" />
+      <setting name="useUiWithSbt" value="false" />
+      <classRegexps />
+      <testRegexps />
+      <envs />
+      <method />
+    </configuration>
     <configuration default="true" type="TestNG" factoryName="TestNG">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <module name="" />
@@ -552,6 +607,25 @@
       <envs />
       <properties />
       <listeners />
+      <method />
+    </configuration>
+    <configuration default="true" type="uTestRunConfiguration" factoryName="utest">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <module name="" />
+      <setting name="path" value="" />
+      <setting name="package" value="" />
+      <setting name="vmparams" value="" />
+      <setting name="params" value="" />
+      <setting name="workingDirectory" value="" />
+      <setting name="searchForTest" value="Across module dependencies" />
+      <setting name="testName" value="" />
+      <setting name="testKind" value="Class" />
+      <setting name="showProgressMessages" value="true" />
+      <setting name="useSbt" value="false" />
+      <setting name="useUiWithSbt" value="false" />
+      <classRegexps />
+      <testRegexps />
+      <envs />
       <method />
     </configuration>
     <list size="1">
@@ -588,13 +662,13 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-11" y="0" width="1932" height="1042" extended-state="0" />
+    <frame x="-9" y="-9" width="1932" height="1048" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Tool Output" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.51929826" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Nl-Palette" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32928178" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -607,6 +681,7 @@
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2617555" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="ANTLR Preview" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.6366823" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -614,11 +689,10 @@
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3995327" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Tool Output" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.51929826" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="ANTLR Preview" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.6366823" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32928178" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2677747" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
@@ -650,13 +724,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/sourceParser/FinalGrammarVisitor.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="219">
-          <caret line="17" column="6" lean-forward="false" selection-start-line="17" selection-start-column="6" selection-end-line="17" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/sourceParser/FinalGrammarListener.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
@@ -981,9 +1048,6 @@
         <state relative-caret-position="126">
           <caret line="7" column="27" lean-forward="false" selection-start-line="7" selection-start-column="27" selection-end-line="7" selection-end-column="27" />
           <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#172#173#0" expanded="false" />
-            <element signature="e#194#195#0" expanded="false" />
             <element signature="method#VisitNode#0;class#PrettyPrint#0" expanded="false" />
             <element signature="method#VisitNode#1;class#PrettyPrint#0" expanded="false" />
             <element signature="method#VisitNode#2;class#PrettyPrint#0" expanded="false" />
@@ -991,49 +1055,19 @@
             <element signature="method#VisitNode#4;class#PrettyPrint#0" expanded="false" />
             <element signature="method#VisitNode#5;class#PrettyPrint#0" expanded="false" />
             <element signature="method#VisitNode#6;class#PrettyPrint#0" expanded="false" />
-            <element signature="e#1466#1467#0" expanded="false" />
-            <element signature="e#1496#1497#0" expanded="false" />
             <element signature="method#VisitNode#8;class#PrettyPrint#0" expanded="false" />
-            <element signature="e#1756#1757#0" expanded="false" />
-            <element signature="e#1784#1785#0" expanded="false" />
             <element signature="method#VisitNode#10;class#PrettyPrint#0" expanded="false" />
             <element signature="method#VisitNode#11;class#PrettyPrint#0" expanded="false" />
             <element signature="method#VisitNode#12;class#PrettyPrint#0" expanded="false" />
             <element signature="method#VisitNode#13;class#PrettyPrint#0" expanded="false" />
             <element signature="method#VisitNode#14;class#PrettyPrint#0" expanded="false" />
             <element signature="method#VisitNode#15;class#PrettyPrint#0" expanded="false" />
-            <element signature="e#3206#3207#0" expanded="false" />
-            <element signature="e#3246#3247#0" expanded="false" />
             <element signature="method#VisitNode#17;class#PrettyPrint#0" expanded="false" />
             <element signature="method#VisitNode#18;class#PrettyPrint#0" expanded="false" />
             <element signature="method#VisitNode#19;class#PrettyPrint#0" expanded="false" />
-            <element signature="e#3816#3817#0" expanded="false" />
-            <element signature="e#3851#3852#0" expanded="false" />
-            <element signature="e#3898#3899#0" expanded="false" />
-            <element signature="e#3926#3927#0" expanded="false" />
-            <element signature="e#3974#3975#0" expanded="false" />
-            <element signature="e#4002#4003#0" expanded="false" />
-            <element signature="e#4055#4056#0" expanded="false" />
-            <element signature="e#4089#4090#0" expanded="false" />
-            <element signature="e#4136#4137#0" expanded="false" />
-            <element signature="e#4174#4175#0" expanded="false" />
             <element signature="method#VisitNode#25;class#PrettyPrint#0" expanded="false" />
-            <element signature="e#4343#4344#0" expanded="false" />
-            <element signature="e#4387#4388#0" expanded="false" />
-            <element signature="e#4436#4437#0" expanded="false" />
-            <element signature="e#4467#4468#0" expanded="false" />
-            <element signature="e#4520#4521#0" expanded="false" />
-            <element signature="e#4559#4560#0" expanded="false" />
-            <element signature="e#4611#4612#0" expanded="false" />
-            <element signature="e#4650#4651#0" expanded="false" />
-            <element signature="e#4701#4702#0" expanded="false" />
-            <element signature="e#4740#4741#0" expanded="false" />
-            <element signature="e#4792#4793#0" expanded="false" />
-            <element signature="e#4849#4850#0" expanded="false" />
             <element signature="method#VisitNode#32;class#PrettyPrint#0" expanded="false" />
             <element signature="method#VisitNode#33;class#PrettyPrint#0" expanded="false" />
-            <element signature="e#5137#5138#0" expanded="false" />
-            <element signature="e#5184#5185#0" expanded="false" />
             <element signature="method#VisitNode#35;class#PrettyPrint#0" expanded="false" />
             <element signature="method#VisitNode#36;class#PrettyPrint#0" expanded="false" />
             <element signature="method#VisitNode#37;class#PrettyPrint#0" expanded="false" />
@@ -1043,20 +1077,24 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/abstractSyntaxTree/AstBuild.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3780">
+        <state relative-caret-position="4032">
           <caret line="197" column="0" lean-forward="false" selection-start-line="197" selection-start-column="0" selection-end-line="197" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#14480#14481#0" expanded="false" />
-            <element signature="e#14545#14546#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="14" column="46" lean-forward="true" selection-start-line="14" selection-start-column="46" selection-end-line="14" selection-end-column="46" />
+        <state relative-caret-position="399">
+          <caret line="26" column="5" lean-forward="false" selection-start-line="26" selection-start-column="5" selection-end-line="26" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/typeChecker/TypeChecker.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="147">
+          <caret line="7" column="4" lean-forward="false" selection-start-line="7" selection-start-column="4" selection-end-line="7" selection-end-column="4" />
           <folding />
         </state>
       </provider>
