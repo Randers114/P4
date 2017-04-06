@@ -23,3 +23,24 @@ main
 
      return c;
  }
+
+
+ addMethod number
+    o
+    a number
+    b number
+    c number
+    k bool
+        o
+        p
+    hey Motor
+        o
+        p
+    p
+    o
+    c number
+    lookup (a)
+    lookup (b)
+    lookup (c)
+    p
+ p
