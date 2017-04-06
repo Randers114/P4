@@ -1,5 +1,9 @@
 package symbolTable;
 
+import abstractSyntaxTree.nodes.IdentifierNode;
+import abstractSyntaxTree.nodes.Node;
+import abstractSyntaxTree.nodes.TypesNode;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
@@ -21,10 +25,13 @@ public class SymbolTable {
         symbolTables.pop();
     }
 
-    public void Insert(String variableName, String type)
+    public void Insert(Node id, Node type)
     {
-        symbolTables.peek().Variables.add(new Variable(variableName, type));
-
+        if (LookUp(((IdentifierNode) id).name)){
+            symbolTables.peek().Variables.add(new Variable(((IdentifierNode) id).name,((TypesNode) type).type));
+        } else{
+            
+        }
     }
     public Boolean LookUp(String varName)
     {
