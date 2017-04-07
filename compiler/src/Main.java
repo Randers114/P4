@@ -5,6 +5,8 @@ import org.antlr.v4.runtime.ANTLRFileStream;
 import org.antlr.v4.runtime.TokenStream;
 import prettyPrint.PrettyPrint;
 import sourceParser.*;
+import symbolTable.BuildSymbolTable;
+
 import java.util.Scanner;
 
 public class Main {
@@ -16,7 +18,8 @@ public class Main {
         
         org.antlr.v4.runtime.CharStream charStream = new ANTLRFileStream(InputPath);
 
-        PrettyPrint.Init(InitAST(RunParser(charStream)));
+        //PrettyPrint.Init(InitAST(RunParser(charStream)));
+        BuildSymbolTable buildSymbolTable = new BuildSymbolTable(InitAST(RunParser(charStream)));
     }
 
     private static FinalGrammarParser InitParser(org.antlr.v4.runtime.CharStream charStream){

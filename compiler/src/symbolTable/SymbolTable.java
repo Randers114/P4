@@ -1,6 +1,7 @@
 package symbolTable;
 
 import abstractSyntaxTree.nodes.IdentifierNode;
+import abstractSyntaxTree.nodes.InstanceNode;
 import abstractSyntaxTree.nodes.Node;
 import abstractSyntaxTree.nodes.TypesNode;
 
@@ -10,7 +11,7 @@ import java.util.Stack;
 
 public class SymbolTable {
     private List<Variable> Variables;
-    public static Stack<SymbolTable> symbolTables;
+    public static List<SymbolTable> symbolTables = new ArrayList<>();
 
     public SymbolTable()
     {
@@ -19,29 +20,36 @@ public class SymbolTable {
 
     public void OpenScope(){
         SymbolTable nextScope = new SymbolTable();
-        symbolTables.push(nextScope);
+        symbolTables.add(nextScope);
     }
     public void CloseScope(){
-        symbolTables.pop();
+        symbolTables.remove((symbolTables.size() - 1));
     }
 
     public void Insert(Node id, Node type)
     {
-        if (LookUp(((IdentifierNode) id).name)){
-            symbolTables.peek().Variables.add(new Variable(((IdentifierNode) id).name,((TypesNode) type).type));
+        if (!LookUp(((IdentifierNode) id).name)){
+            if (type instanceof TypesNode){
+                symbolTables.get((symbolTables.size() - 1)).Variables.add(new Variable(((IdentifierNode) id).name,((TypesNode) type).type));
+            } else {
+                symbolTables.get((symbolTables.size() - 1)).Variables.add(new Variable(((IdentifierNode) id).name,((InstanceNode) type).instance));
+            }
+
         } else{
-            
+            System.out.println("Variable " + ((IdentifierNode) id).name + " already exists in this context");
         }
     }
     public Boolean LookUp(String varName)
     {
-        for (Variable var: symbolTables.peek().Variables
+        for (SymbolTable s: symbolTables
              ) {
-            if (var.Name.equals(varName)){
-                return true;
+            for (Variable var: s.Variables
+                    ) {
+                if (var.Name.equals(varName)){
+                    return true;
+                }
             }
         }
         return false;
     }
-
 }
