@@ -8,5 +8,5 @@ import java.util.List;
 public class ForNode extends Node {
     public Node startNumber;
     public Node endNumber;
-    public List<Node> body;
+    public Node block;
 }

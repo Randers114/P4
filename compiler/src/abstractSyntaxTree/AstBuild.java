@@ -3,7 +3,7 @@ package abstractSyntaxTree;
 import abstractSyntaxTree.nodes.*;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import sourceParser.*;
-
+import org.apache.commons.collections4.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,8 +13,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
     public Node visitProgram(FinalGrammarParser.ProgramContext ctx) {
         ProgramNode prognode = new ProgramNode();
 
-        prognode.leftMain = new ArrayList<>(visitBodyList(ctx.body()));
-
+        prognode.leftMain = visitBlock(ctx.body());
 
         for (FinalGrammarParser.MethodsContext m: ctx.methods()
                 ) {
@@ -22,11 +21,21 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
                 prognode.methods.add(visitMethods(m));
             }
         }
+        prognode.ChildrenList.addAll(prognode.methods);
+        CollectionUtils.addIgnoreNull(prognode.ChildrenList, prognode.leftMain);
 
         return prognode;
     }
 
-    public List<Node> visitBodyList(List<FinalGrammarParser.BodyContext> bodyContexts){
+    private Node visitBlock(List<FinalGrammarParser.BodyContext> bodyContexts){
+        BlockNode blockNode = new BlockNode();
+
+        blockNode.ChildrenList = new ArrayList<>(visitBodyList(bodyContexts));
+
+        return blockNode;
+    }
+
+    private List<Node> visitBodyList(List<FinalGrammarParser.BodyContext> bodyContexts){
         List<Node> nodeList = new ArrayList<>();
         for (FinalGrammarParser.BodyContext bodyContext: bodyContexts
              ) {
@@ -43,12 +52,14 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
 
         if (ctx.dcl() != null) {
             body.content = visitDcl(ctx.dcl());
-        }
-        else if (ctx.call() != null){
+        } else if (ctx.call() != null){
             body.content = visitCall(ctx.call());
         } else if(ctx.stmt() != null) {
             body.content = visitStmt(ctx.stmt());
         }
+
+        CollectionUtils.addIgnoreNull(body.ChildrenList, body.content);
+
         return body;
     }
 
@@ -58,15 +69,21 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
 
         methodNode.type = visitType(ctx.type());
         methodNode.id = visitTerminal(ctx.Identifier());
-        if (methodNode.fprmt != null) {
+        if (ctx.fprmt() != null) {
             methodNode.fprmt = visitFprmt(ctx.fprmt());
         }
 
-        methodNode.body = new ArrayList<>(visitBodyList(ctx.body()));
+        methodNode.block = visitBlock(ctx.body());
 
         if(ctx.returnval() != null) {
             methodNode.returnval = visitReturnval(ctx.returnval());
         }
+
+        methodNode.ChildrenList.add(methodNode.type);
+        methodNode.ChildrenList.add(methodNode.id);
+        CollectionUtils.addIgnoreNull(methodNode.ChildrenList, methodNode.fprmt);
+        CollectionUtils.addIgnoreNull(methodNode.ChildrenList, methodNode.block);
+        CollectionUtils.addIgnoreNull(methodNode.ChildrenList, methodNode.returnval);
 
         return methodNode;
     }
@@ -89,14 +106,15 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
             dclNode.right = visitTerminal(ctx.Identifier(1));
         }
 
-
+        CollectionUtils.addIgnoreNull(dclNode.ChildrenList, dclNode.left);
+        CollectionUtils.addIgnoreNull(dclNode.ChildrenList, dclNode.middle);
+        CollectionUtils.addIgnoreNull(dclNode.ChildrenList, dclNode.right);
         return dclNode;
     }
 
     @Override
     public Node visitStmt(FinalGrammarParser.StmtContext ctx) {
         StmtNode stmtNode = new StmtNode();
-
 
         if (ctx.getText().contains("=")){
             stmtNode.child = visitAssign(ctx);
@@ -108,55 +126,72 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
             stmtNode.child = visitFor(ctx);
         }
 
+        CollectionUtils.addIgnoreNull(stmtNode.ChildrenList, stmtNode.child);
 
         return stmtNode;
     }
 
-    public Node visitWhile(FinalGrammarParser.StmtContext ctx){
+    private Node visitWhile(FinalGrammarParser.StmtContext ctx){
         WhileNode whileNode = new WhileNode();
 
         whileNode.bool = visitR_boolean(ctx.r_boolean());
+        whileNode.block = visitBlock(ctx.body());
 
-        whileNode.body = new ArrayList<>(visitBodyList(ctx.body()));
+        CollectionUtils.addIgnoreNull(whileNode.ChildrenList, whileNode.bool);
+        whileNode.ChildrenList.add(whileNode.block);
 
         return whileNode;
     }
 
-    public Node visitFor(FinalGrammarParser.StmtContext ctx){
+    private Node visitFor(FinalGrammarParser.StmtContext ctx){
         ForNode forNode = new ForNode();
 
         forNode.startNumber = visitTerminal(ctx.Num(0));
         forNode.endNumber = visitTerminal(ctx.Num(1));
+        forNode.block = visitBlock(ctx.body());
 
-        forNode.body = new ArrayList<>(visitBodyList(ctx.body()));
+        forNode.ChildrenList.add(forNode.startNumber);
+        forNode.ChildrenList.add(forNode.endNumber);
+        forNode.ChildrenList.add(forNode.block);
 
         return forNode;
     }
 
-    public Node visitIf(FinalGrammarParser.StmtContext ctx){
+    private Node visitIf(FinalGrammarParser.StmtContext ctx){
         IfNode ifNode = new IfNode();
 
         ifNode.bool = visitR_boolean(ctx.r_boolean());
-
-        ifNode.body = new ArrayList<>(visitBodyList(ctx.body()));
+        ifNode.block = visitBlock(ctx.body());
 
         for (FinalGrammarParser.ElseifContext elseifContext: ctx.elseif()){
-            ifNode.elseif.add(visitElseif(elseifContext));
+            if (elseifContext != null) {
+                ifNode.elseif.add(visitElseif(elseifContext));
+            }
         }
 
         if(ctx.elsel() != null) {
             ifNode.el = visitElsel(ctx.elsel());
         }
 
+        ifNode.ChildrenList.add(ifNode.bool);
+        ifNode.ChildrenList.add(ifNode.block);
+        if(ifNode.elseif != null){
+            ifNode.ChildrenList.addAll(ifNode.elseif);
+        }
+
+        CollectionUtils.addIgnoreNull(ifNode.ChildrenList, ifNode.el);
+
         return ifNode;
     }
 
-    public Node visitAssign(FinalGrammarParser.StmtContext ctx){
+    private Node visitAssign(FinalGrammarParser.StmtContext ctx){
         AssignNode assignNode = new AssignNode();
 
         assignNode.left = visitTerminal(ctx.Identifier());
         assignNode.right = visitExpr(ctx.expr());
 
+        assignNode.ChildrenList.add(assignNode.left);
+        assignNode.ChildrenList.add(assignNode.right);
         return assignNode;
     }
 
@@ -168,12 +203,13 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
         if(ctx.statid() != null){
             callNode.statId = visitStatid(ctx.statid());
         }
-
         if (ctx.prmt() != null){
             callNode.parameter = visitPrmt(ctx.prmt());
         }
 
-
+        callNode.ChildrenList.add(callNode.id);
+        CollectionUtils.addIgnoreNull(callNode.ChildrenList, callNode.statId);
+        CollectionUtils.addIgnoreNull(callNode.ChildrenList, callNode.parameter);
         return callNode;
     }
 
@@ -187,6 +223,9 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
         if (ctx.fprmt() != null){
             formalParameterNode.fprmt = visitFprmt(ctx.fprmt());
         }
+        formalParameterNode.ChildrenList.add(formalParameterNode.type);
+        formalParameterNode.ChildrenList.add(formalParameterNode.id);
+        CollectionUtils.addIgnoreNull(formalParameterNode.ChildrenList, formalParameterNode.fprmt);
         return formalParameterNode;
     }
 
@@ -194,12 +233,13 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
     public Node visitPrmt(FinalGrammarParser.PrmtContext ctx) {
         ParameterNode parameterNode = new ParameterNode();
 
-        parameterNode.Parameter = ctx.getChild(0).getText();
+        parameterNode.Parameter = visitVal(ctx.val());
 
         if (ctx.prmt() != null){
             parameterNode.prmt = visitPrmt(ctx.prmt());
         }
-
+        parameterNode.ChildrenList.add(parameterNode.Parameter);
+        CollectionUtils.addIgnoreNull(parameterNode.ChildrenList, parameterNode.prmt);
         return parameterNode;
     }
 
@@ -213,6 +253,8 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
         } else if (ctx.boolexpr() != null){
             returnValNode.returnvalue = visitBoolexpr(ctx.boolexpr());
         }
+
+        CollectionUtils.addIgnoreNull(returnValNode.ChildrenList, returnValNode.returnvalue);
 
         return returnValNode;
     }
@@ -232,16 +274,19 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
 
         elseIfNode.bool = visitR_boolean(ctx.r_boolean());
 
-        elseIfNode.body = new ArrayList<>(visitBodyList(ctx.body()));
+        elseIfNode.block = visitBlock(ctx.body());
 
+        elseIfNode.ChildrenList.add(elseIfNode.bool);
+        elseIfNode.ChildrenList.add(elseIfNode.block);
         return elseIfNode;
     }
 
     @Override
     public Node visitElsel(FinalGrammarParser.ElselContext ctx) {
         ElseNode elseNode = new ElseNode();
-        elseNode.body = new ArrayList<>(visitBodyList(ctx.body()));
+        elseNode.block = visitBlock(ctx.body());
 
+        elseNode.ChildrenList.add(elseNode.block);
         return elseNode;
     }
 
@@ -272,13 +317,15 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
             return null;
         }
 
+        valueNode.ChildrenList.add(valueNode.child);
         return valueNode;
     }
 
-    public Node visitUnary(FinalGrammarParser.ExprContext ctx){
+    private Node visitUnary(FinalGrammarParser.ExprContext ctx){
         UnaryMinusNode unaryMinusNode = new UnaryMinusNode();
         unaryMinusNode.child = visitExpr(ctx.expr());
 
+        unaryMinusNode.ChildrenList.add(unaryMinusNode.child);
         return unaryMinusNode;
     }
 
@@ -288,18 +335,24 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
         if (ctx.getChildCount() == 1){
             TermNode termNode = new TermNode();
             termNode.child = visitTerm(ctx.term());
+            termNode.ChildrenList.add(termNode.child);
             return termNode;
         } else if(ctx.getText().contains("+")){
             PlusNode plusNode = new PlusNode();
             plusNode.left = visitTerm(ctx.term());
             plusNode.right = visitExpr(ctx.expr());
+            plusNode.ChildrenList.add(plusNode.left);
+            plusNode.ChildrenList.add(plusNode.right);
             return plusNode;
         } else if (ctx.getText().contains("-")){
             MinusNode minusNode = new MinusNode();
             minusNode.left = visitTerm(ctx.term());
             minusNode.right = visitExpr(ctx.expr());
+            minusNode.ChildrenList.add(minusNode.left);
+            minusNode.ChildrenList.add(minusNode.right);
             return minusNode;
         }
+
 
         return null;
     }
@@ -308,18 +361,20 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
     public Node visitTerm(FinalGrammarParser.TermContext ctx) {
 
         if (ctx.getChildCount() == 1){
-            ValueNode valueNode = new ValueNode();
-            valueNode.child = visitVal(ctx.val());
-            return valueNode;
+            return visitVal(ctx.val());
         } else if (ctx.getChild(1).getText().equals("*")){
             TimesNode timesNode = new TimesNode();
             timesNode.left = visitVal(ctx.val());
             timesNode.right = visitTerm(ctx.term());
+            timesNode.ChildrenList.add(timesNode.left);
+            timesNode.ChildrenList.add(timesNode.right);
             return timesNode;
         } else if (ctx.getChild(1).getText().equals("/")){
             DivideNode divideNode = new DivideNode();
             divideNode.left = visitVal(ctx.val());
             divideNode.right = visitTerm(ctx.term());
+            divideNode.ChildrenList.add(divideNode.left);
+            divideNode.ChildrenList.add(divideNode.right);
             return divideNode;
         }
 
@@ -333,35 +388,34 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
         if(ctx.Identifier() != null && ctx.getChildCount() < 3){
             if(ctx.getChildCount() == 1){
                 rBooleanNode.left = visitTerminal(ctx.Identifier());
-                return rBooleanNode;
             } else if(ctx.getChildCount() == 2){
                 NotBoolNode notBoolNode = new NotBoolNode();
                 notBoolNode.child = visitTerminal(ctx.Identifier());
+                notBoolNode.ChildrenList.add(notBoolNode.child);
                 rBooleanNode.left = notBoolNode;
-                return rBooleanNode;
             }
-
         } else if(ctx.call() != null){
             rBooleanNode.left = visitCall(ctx.call());
-            return rBooleanNode;
         } else if(ctx.boolexpr() != null){
             rBooleanNode.left = visitBoolexpr(ctx.boolexpr());
-            return rBooleanNode;
         } else if(ctx.getChildCount() == 3){
             if(ctx.getChild(0) == ctx.expr()){
                 rBooleanNode.left = visitExpr(ctx.expr());
                 rBooleanNode.middle = visitBoolvalop(ctx.boolvalop());
                 rBooleanNode.right = visitTerminal(ctx.Identifier());
-                return rBooleanNode;
             } else if(ctx.getChild(0) == ctx.Identifier()){
                 rBooleanNode.left = visitTerminal(ctx.Identifier());
                 rBooleanNode.middle = visitBoolvalop(ctx.boolvalop());
                 rBooleanNode.right = visitExpr(ctx.expr());
-                return rBooleanNode;
             }
+        } else {
+            return null;
         }
 
-        return null;
+        rBooleanNode.ChildrenList.add(rBooleanNode.left);
+        CollectionUtils.addIgnoreNull(rBooleanNode.ChildrenList, rBooleanNode.middle);
+        CollectionUtils.addIgnoreNull(rBooleanNode.ChildrenList, rBooleanNode.right);
+        return rBooleanNode;
     }
 
     @Override
@@ -376,7 +430,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
             statIdNode.instance = visitStatsensorid(ctx.statsensorid());
         }
 
-
+        statIdNode.ChildrenList.add(statIdNode.instance);
         return statIdNode;
     }
 
@@ -402,10 +456,13 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
             boolExprNode.right = visitR_boolean(ctx.r_boolean());
         }
 
+        boolExprNode.ChildrenList.add(boolExprNode.left);
+        CollectionUtils.addIgnoreNull(boolExprNode.ChildrenList, boolExprNode.middle);
+        CollectionUtils.addIgnoreNull(boolExprNode.ChildrenList, boolExprNode.right);
         return boolExprNode;
     }
 
-    public Node visitUnaryBoolExpr(FinalGrammarParser.BoolexprContext ctx){
+    private Node visitUnaryBoolExpr(FinalGrammarParser.BoolexprContext ctx){
         NegatedBoolNode negatedBoolNode = new NegatedBoolNode();
 
         if (ctx.Bool() != null) {
@@ -418,6 +475,9 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
         negatedBoolNode.middle = visitBoolop(ctx.boolop());
         negatedBoolNode.right = visitR_boolean(ctx.r_boolean());
 
+        negatedBoolNode.ChildrenList.add(negatedBoolNode.left);
+        negatedBoolNode.ChildrenList.add(negatedBoolNode.middle);
+        negatedBoolNode.ChildrenList.add(negatedBoolNode.right);
         return negatedBoolNode;
     }
 

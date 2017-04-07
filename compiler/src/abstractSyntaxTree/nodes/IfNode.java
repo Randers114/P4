@@ -7,7 +7,7 @@ import java.util.List;
  */
 public class IfNode extends Node {
     public Node bool;
-    public List<Node> body;
+    public Node block;
     public List<Node> elseif;
     public Node el;
 }

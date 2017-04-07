@@ -9,7 +9,7 @@ import java.util.List;
 
 
 public class ProgramNode extends Node {
-    public List<Node> leftMain = new ArrayList<>();
+    public Node leftMain;
     public List<Node> methods = new ArrayList<>();
 }
 

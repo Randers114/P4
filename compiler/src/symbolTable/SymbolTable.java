@@ -1,48 +1,55 @@
 package symbolTable;
 
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.List;
+import abstractSyntaxTree.nodes.IdentifierNode;
+import abstractSyntaxTree.nodes.InstanceNode;
+import abstractSyntaxTree.nodes.Node;
+import abstractSyntaxTree.nodes.TypesNode;
 
-/**
- * Created by Simon on 4/5/2017.
- */
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
+
 public class SymbolTable {
-    public final int NUMBER = 1;
-    public final int BOOL = 2;
-    public final int MOTOR = 3;
-    public final int SENSOR = 4;
-    public final int TOUCH_SENSOR = 5;
-    public final int ULTRASONIC_SENSOR = 6;
-    public final int LIST = 7;
-    public final int VOID = 8;
+    private List<Variable> Variables;
+    public static List<SymbolTable> symbolTables = new ArrayList<>();
 
     public SymbolTable()
     {
-        hashtable = new Hashtable<String, String>();
-        childTables = new ArrayList<SymbolTable>();
-        parentTables = new ArrayList<SymbolTable>();
+        Variables = new ArrayList<>();
     }
 
-    public Hashtable<String, String> hashtable;
-    public List<SymbolTable> childTables;
-    public List<SymbolTable> parentTables;
-
-    public void Insert(String varName, int dataType)
-    {
-        hashtable.Put(varName, dataType);
+    public void OpenScope(){
+        SymbolTable nextScope = new SymbolTable();
+        symbolTables.add(nextScope);
+    }
+    public void CloseScope(){
+        symbolTables.remove((symbolTables.size() - 1));
     }
 
-    public void LookUp(String varName)
+    public void Insert(Node id, Node type)
     {
-        return hashtable.con;
-    }
+        if (!LookUp(((IdentifierNode) id).name)){
+            if (type instanceof TypesNode){
+                symbolTables.get((symbolTables.size() - 1)).Variables.add(new Variable(((IdentifierNode) id).name,((TypesNode) type).type));
+            } else {
+                symbolTables.get((symbolTables.size() - 1)).Variables.add(new Variable(((IdentifierNode) id).name,((InstanceNode) type).instance));
+            }
 
-    public int GetDataTypeByKey_InHashTable(varName)
+        } else{
+            System.out.println("Variable " + ((IdentifierNode) id).name + " already exists in this context");
+        }
+    }
+    public Boolean LookUp(String varName)
     {
-        if (LookUp(varName))
-            return
-        else
-            return -1;
+        for (SymbolTable s: symbolTables
+             ) {
+            for (Variable var: s.Variables
+                    ) {
+                if (var.Name.equals(varName)){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

@@ -10,6 +10,6 @@ public class MethodNode extends Node {
     public Node type;
     public Node id;
     public Node fprmt;
-    public List<Node> body = new ArrayList<>();
+    public Node block;
     public Node returnval;
 }

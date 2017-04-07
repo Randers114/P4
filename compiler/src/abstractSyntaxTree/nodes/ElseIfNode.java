@@ -7,5 +7,5 @@ import java.util.List;
  */
 public class ElseIfNode extends Node {
     public Node bool;
-    public List<Node> body;
+    public Node block;
 }

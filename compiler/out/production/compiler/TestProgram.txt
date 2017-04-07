@@ -10,6 +10,7 @@ main
 
      }
      new Motor[d] hey;
+
      addMethod(a, b);
 
     if(not false) then {  }
@@ -17,9 +18,9 @@ main
  }
 
 
- number Method addMethod(number a, number b)
- {
-     number c = a + b;
+number Method addMethod(number k, number p)
+{
+    number x = l;
 
-     return c;
- }
+    return x;
+}

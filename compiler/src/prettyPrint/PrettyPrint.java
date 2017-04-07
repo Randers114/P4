@@ -10,10 +10,7 @@ public class PrettyPrint
 	}
 	private static void VisitNode(ProgramNode node) {
 		System.out.println("main {");
-		for (Node item : node.leftMain)
-		{
-			VisitNode(item);
-		}
+		VisitNode(node.leftMain);
 		System.out.println("}");
 
 		for (Node item : node.methods)
@@ -53,10 +50,7 @@ public class PrettyPrint
 		VisitNode(node.fprmt);
 		System.out.print(")");
 		System.out.println("{");
-		for (Node item: node.body
-			 ) {
-			VisitNode(item);
-		}
+		VisitNode(node.block);
 		VisitNode(node.returnval);
 		System.out.println(";");
 		System.out.println("}");
@@ -87,10 +81,7 @@ public class PrettyPrint
 		System.out.print("While (");
 		VisitNode(node.bool);
 		System.out.print(") \n{ \n");
-		for (Node item: node.body
-			 ) {
-			VisitNode(item);
-		}
+		VisitNode(node.block);
 		System.out.println("}");
 
 	}
@@ -101,10 +92,7 @@ public class PrettyPrint
 		VisitNode(node.endNumber);
 		System.out.println(" )\n{");
 
-		for (Node item: node.body
-			 ) {
-			VisitNode(item);
-		}
+		VisitNode(node.block);
 		System.out.println("}");
 	}
 	private static void VisitNode(IfNode node){
@@ -112,10 +100,7 @@ public class PrettyPrint
 		VisitNode(node.bool);
 		System.out.println(")\n{");
 
-		for (Node item: node.body
-			 ) {
-			VisitNode(item);
-		}
+		VisitNode(node.block);
 		System.out.println("}");
 
 		if (node.elseif != null) {
@@ -129,20 +114,14 @@ public class PrettyPrint
 	}
 	private static void VisitNode(ElseNode node){
 		System.out.println("else\n{");
-		for (Node item: node.body
-			 ) {
-			VisitNode(item);
-		}
+		VisitNode(node.block);
 		System.out.println("}");
 	}
 	private static void VisitNode(ElseIfNode node){
 		System.out.print("else if(");
 		VisitNode(node.bool);
 		System.out.print(")\n{");
-		for (Node item: node.body
-			 ) {
-			VisitNode(item);
-		}
+		VisitNode(node.block);
 		System.out.println("}");
 	}
 	private static void VisitNode(TypesNode node){
@@ -234,6 +213,12 @@ public class PrettyPrint
 		System.out.printf("not ");
 		VisitNode(node.child);
 	}
+	private static void VisitNode(BlockNode node){
+		for (Node item : node.ChildrenList)
+		{
+			VisitNode(item);
+		}
+	}
 	private static void VisitNode(Node node){
 		if (node instanceof BodyNode){
 			VisitNode((BodyNode) node);
@@ -307,6 +292,8 @@ public class PrettyPrint
 			VisitNode((NotBoolNode) node);
 		} else if (node instanceof BoolNode){
 			VisitNode((BoolNode) node);
+		} else if (node instanceof BlockNode){
+			VisitNode((BlockNode) node);
 		}
 	}
 }
