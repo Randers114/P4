@@ -1,26 +1,26 @@
 main
- {
-     number a = 25 * 100 * 99 / 50;
-     number b = 50;
-     number c;
-     bool k = true;
+{
+    number a = 25 * 100 * 99 / 50;
+    number b = 50;
+    number c;
+    bool k = true;
 
-     for(1 to 10) do
-     {
+    for(1 to 10) do
+    {
 
-     }
-     new Motor[d] hey;
+    }
+    new Motor[d] hey;
 
-     addMethod(a, b);
+    addMethod(a, b);
 
     if(not false) then {  }
 
- }
+}
 
 
 number Method addMethod(number k, number p)
 {
-    number x = l;
+    number x = h + p;
 
     return x;
 }

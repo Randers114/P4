@@ -20,7 +20,7 @@ main
 
 number Method addMethod(number k, number p)
 {
-    number x = k + p;
+    number x = h + p;
 
     return x;
 }
