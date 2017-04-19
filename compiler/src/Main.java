@@ -14,12 +14,12 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
         Scanner scanner = new Scanner(System.in);
-        String InputPath = scanner.nextLine();
+        String inputPath = scanner.nextLine();
         
-        org.antlr.v4.runtime.CharStream charStream = new ANTLRFileStream(InputPath);
+        org.antlr.v4.runtime.CharStream charStream = new ANTLRFileStream(inputPath);
 
         //PrettyPrint.Init(InitAST(RunParser(charStream)));
-        BuildSymbolTable buildSymbolTable = new BuildSymbolTable(InitAST(RunParser(charStream)));
+        BuildSymbolTable buildSymbolTable = new BuildSymbolTable(InitAST(RunParser(charStream)), inputPath);
     }
 
     private static FinalGrammarParser InitParser(org.antlr.v4.runtime.CharStream charStream){

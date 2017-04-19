@@ -17,10 +17,13 @@ main
 
 }
 
-
 number Method addMethod(number k, number p)
 {
-    number x = h + p;
+    number x = k + p;
+
+    number h = x + x + x;
+
+    number x = p;
 
     return x;
 }

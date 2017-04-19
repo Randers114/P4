@@ -7,8 +7,8 @@ public class BuildSymbolTable {
 
     private SymbolTable symbolTable;
 
-    public BuildSymbolTable(ProgramNode node) {
-        symbolTable = new SymbolTable();
+    public BuildSymbolTable(ProgramNode node, String inputPath) {
+        symbolTable = new SymbolTable(inputPath);
         Build(node);
     }
 

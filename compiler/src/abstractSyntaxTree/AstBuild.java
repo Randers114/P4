@@ -21,8 +21,8 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
                 prognode.methods.add(visitMethods(m));
             }
         }
-        prognode.ChildrenList.addAll(prognode.methods);
         CollectionUtils.addIgnoreNull(prognode.ChildrenList, prognode.leftMain);
+        prognode.ChildrenList.addAll(prognode.methods);
 
         return prognode;
     }
