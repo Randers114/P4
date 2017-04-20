@@ -59,8 +59,8 @@ public class SymbolTable {
                 }
                 int k = 1;
                 while (scanner.hasNext()){
-                    if (scanner.nextLine().contains("number" + " " + ((IdentifierNode) id).name + " ") || scanner.nextLine().contains("bool" + " " + ((IdentifierNode) id).name + " ")){
-                        if (k == 2){
+                    if (scanner.nextLine().contains("number" + " " + ((IdentifierNode) id).name) || scanner.nextLine().contains("bool" + " " + ((IdentifierNode) id).name)){
+                        if (k != 1){
                             line++;
                             System.out.println("Variable " + ((IdentifierNode) id).name + " already exists in this context, error at line: " + line);
                             break;
