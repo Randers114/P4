@@ -46,26 +46,23 @@ public class SymbolTable {
                 symbolTables.get((symbolTables.size() - 1)).Variables.add(new Variable(((IdentifierNode) id).name,((InstanceNode) type).instance));
             }
 
-        } else{
-            int scope = 0, line = 0;
+        } else {
+
             try {
                 File file = new File(InputPath);
                 Scanner scanner = new Scanner(file);
-                while (scanner.hasNext() && scope < CurrentScope){
-                    if (scanner.nextLine().contains("{")){
-                        scope++;
-                    }
-                    line++;
-                }
-                int k = 1;
+                int line = 0, k = 1;
+                String currentline;
+                line = ScopeLineStart(scanner, line);
+
                 while (scanner.hasNext()){
-                    if (scanner.nextLine().contains("number" + " " + ((IdentifierNode) id).name) || scanner.nextLine().contains("bool" + " " + ((IdentifierNode) id).name)){
+                    currentline = scanner.nextLine();
+                    if (currentline.contains("number " + ((IdentifierNode) id).name) || currentline.contains("bool " + ((IdentifierNode) id).name)){
                         if (k != 1){
                             line++;
                             System.out.println("Variable " + ((IdentifierNode) id).name + " already exists in this context, error at line: " + line);
                             break;
                         }
-
                         k++;
                     }
                     line++;
@@ -77,17 +74,28 @@ public class SymbolTable {
 
         }
     }
-    public Boolean LookUp(String varName)
+    Boolean LookUp(String varName)
     {
-        for (SymbolTable s: symbolTables
+        for (Variable var: symbolTables.get(symbolTables.size() - 1).Variables
              ) {
-            for (Variable var: s.Variables
-                    ) {
-                if (var.Name.equals(varName)){
-                    return true;
-                }
+            if (var.Name.equals(varName)){
+                return true;
             }
         }
+
         return false;
+    }
+
+    int ScopeLineStart(Scanner scanner, int line){
+        int scope = 0;
+
+        while (scanner.hasNext() && scope < CurrentScope){
+            if (scanner.nextLine().contains("{")){
+                scope++;
+            }
+            line++;
+        }
+
+        return line;
     }
 }

@@ -21,9 +21,7 @@ number Method addMethod(number k, number p)
 {
     number x = k + p;
 
-    number h = x + x + x;
-
-    number x = p;
+    number h = x + x + q;
 
     return x;
 }

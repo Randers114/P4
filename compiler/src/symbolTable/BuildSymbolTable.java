@@ -1,14 +1,20 @@
 package symbolTable;
 
 import abstractSyntaxTree.nodes.*;
+
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.List;
+import java.util.Scanner;
 
 public class BuildSymbolTable {
 
     private SymbolTable symbolTable;
+    private String InputPath;
 
     public BuildSymbolTable(ProgramNode node, String inputPath) {
         symbolTable = new SymbolTable(inputPath);
+        InputPath = inputPath;
         Build(node);
     }
 
@@ -53,7 +59,28 @@ public class BuildSymbolTable {
 
         } else if (node instanceof IdentifierNode){
             if (!symbolTable.LookUp(((IdentifierNode) node).name)){
-                System.out.println("Variable: " + ((IdentifierNode) node).name + " does not exist in this context");
+                int errorLine = 0;
+
+                File file = new File(InputPath);
+                try {
+                    Scanner scanner = new Scanner(file);
+                    errorLine = symbolTable.ScopeLineStart(scanner, errorLine);
+                    String currentLine = scanner.nextLine();
+
+                    while (scanner.hasNext()){
+                        errorLine++;
+
+                        if (currentLine.contains(((IdentifierNode) node).name)){
+                            System.out.println("Variable: " + ((IdentifierNode) node).name + " does not exist in this context. Error at line: " + errorLine);
+                        }
+                        currentLine = scanner.nextLine();
+                    }
+
+                } catch (FileNotFoundException e){
+
+                }
+
+
             }
         } else {
             TraverseChildren(node.ChildrenList);
