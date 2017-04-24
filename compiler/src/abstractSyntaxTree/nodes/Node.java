@@ -5,4 +5,6 @@ import java.util.List;
 
 public abstract class Node {
     public List<Node> ChildrenList = new ArrayList<>();
+
+    public abstract Node Type();
 }
