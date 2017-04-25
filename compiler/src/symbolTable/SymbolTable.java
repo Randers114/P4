@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-
 public class SymbolTable {
     private List<Variable> Variables;
     public static List<SymbolTable> symbolTables = new ArrayList<>();
