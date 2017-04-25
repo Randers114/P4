@@ -60,9 +60,8 @@ public class BuildSymbolTable {
         }
     }
 
-    private void TraverseChildren(List<Node> childrenList){
-        for (Node a: childrenList
-                ) {
+    public void TraverseChildren(List<Node> childrenList){
+        for (Node a: childrenList) {
             if (a != null) {
                 Build(a);
             }

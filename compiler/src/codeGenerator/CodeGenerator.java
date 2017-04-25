@@ -1,5 +1,7 @@
 package codeGenerator;
 
+import abstractSyntaxTree.nodes.*;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -35,13 +37,10 @@ public class CodeGenerator {
         }
     }
 
-   /* public int treewalk(Node node)
+    public void treewalk(Node node)
     {
-        int result = 0;
 
-
-        return result;
-    }*/
+    }
 
 
     }
