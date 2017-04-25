@@ -2,6 +2,7 @@ package abstractSyntaxTree;
 
 import abstractSyntaxTree.nodes.*;
 import org.antlr.v4.runtime.tree.TerminalNode;
+import org.jetbrains.annotations.NotNull;
 import sourceParser.*;
 import org.apache.commons.collections4.*;
 import java.util.ArrayList;
@@ -11,20 +12,20 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
 
     @Override
     public Node visitProgram(FinalGrammarParser.ProgramContext ctx) {
-        ProgramNode prognode = new ProgramNode();
+        ProgramNode programNode = new ProgramNode();
 
-        prognode.leftMain = visitBlock(ctx.body());
+        programNode.leftMain = visitBlock(ctx.body());
 
         for (FinalGrammarParser.MethodsContext m: ctx.methods()
                 ) {
             if (m != null) {
-                prognode.methods.add(visitMethods(m));
+                programNode.methods.add(visitMethods(m));
             }
         }
-        CollectionUtils.addIgnoreNull(prognode.ChildrenList, prognode.leftMain);
-        prognode.ChildrenList.addAll(prognode.methods);
+        CollectionUtils.addIgnoreNull(programNode.ChildrenList, programNode.leftMain);
+        programNode.ChildrenList.addAll(programNode.methods);
 
-        return prognode;
+        return programNode;
     }
 
     private Node visitBlock(List<FinalGrammarParser.BodyContext> bodyContexts){
@@ -46,6 +47,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
 
         return nodeList;
     }
+
     @Override
     public Node visitBody(FinalGrammarParser.BodyContext ctx) {
         BodyNode body = new BodyNode();
@@ -261,42 +263,26 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
 
     @Override
     public Node visitInstancedcl(FinalGrammarParser.InstancedclContext ctx) {
-        InstanceNode instanceNode = new InstanceNode();
-
-        instanceNode.instance = ctx.getText();
-
-        return instanceNode;
+        return new InstanceNode(){{instance = ctx.getText();}};
     }
 
     @Override
     public Node visitElseif(FinalGrammarParser.ElseifContext ctx) {
-        ElseIfNode elseIfNode = new ElseIfNode();
-
-        elseIfNode.bool = visitR_boolean(ctx.r_boolean());
-
-        elseIfNode.block = visitBlock(ctx.body());
-
-        elseIfNode.ChildrenList.add(elseIfNode.bool);
-        elseIfNode.ChildrenList.add(elseIfNode.block);
-        return elseIfNode;
+        return new ElseIfNode(){{
+            bool = visitR_boolean(ctx.r_boolean());
+            block = visitBlock(ctx.body());
+            ChildrenList.add(bool);
+            ChildrenList.add(block);}};
     }
 
     @Override
     public Node visitElsel(FinalGrammarParser.ElselContext ctx) {
-        ElseNode elseNode = new ElseNode();
-        elseNode.block = visitBlock(ctx.body());
-
-        elseNode.ChildrenList.add(elseNode.block);
-        return elseNode;
+        return new ElseNode(){{block = visitBlock(ctx.body()); ChildrenList.add(block);}};
     }
 
     @Override
     public Node visitType(FinalGrammarParser.TypeContext ctx) {
-        TypesNode typesNode = new TypesNode();
-
-        typesNode.type = ctx.getText();
-
-        return typesNode;
+        return new TypesNode(){{type = ctx.getText();}};
     }
 
     @Override
@@ -321,12 +307,11 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
         return valueNode;
     }
 
+    @NotNull
     private Node visitUnary(FinalGrammarParser.ExprContext ctx){
-        UnaryMinusNode unaryMinusNode = new UnaryMinusNode();
-        unaryMinusNode.child = visitExpr(ctx.expr());
-
-        unaryMinusNode.ChildrenList.add(unaryMinusNode.child);
-        return unaryMinusNode;
+        return new UnaryMinusNode(){{
+            child = visitExpr(ctx.expr());
+            ChildrenList.add(child);}};
     }
 
     @Override
@@ -483,38 +468,22 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
 
     @Override
     public Node visitBoolvalop(FinalGrammarParser.BoolvalopContext ctx) {
-        BoolValOpNode boolValOpNode = new BoolValOpNode();
-
-        boolValOpNode.boolValOperator = ctx.getText();
-
-        return boolValOpNode;
+        return new BoolValOpNode(){{boolValOperator = ctx.getText();}};
     }
 
     @Override
     public Node visitStatmotorid(FinalGrammarParser.StatmotoridContext ctx) {
-        StatMotorNode statMotorNode = new StatMotorNode();
-
-        statMotorNode.instance = ctx.getText();
-
-        return statMotorNode;
+        return new StatMotorNode(){{instance = ctx.getText();}};
     }
 
     @Override
     public Node visitStatsensorid(FinalGrammarParser.StatsensoridContext ctx) {
-        StatSensorNode statSensorNode = new StatSensorNode();
-
-        statSensorNode.instance = ctx.getText();
-
-        return statSensorNode;
+        return new StatSensorNode(){{instance = ctx.getText();}};
     }
 
     @Override
     public Node visitStatlistid(FinalGrammarParser.StatlistidContext ctx) {
-        StatListNode statListNode = new StatListNode();
-
-        statListNode.instance = ctx.getText();
-
-        return statListNode;
+        return new StatListNode(){{instance = ctx.getText();}};
     }
 
     @Override
