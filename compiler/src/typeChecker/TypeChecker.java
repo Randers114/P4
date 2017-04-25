@@ -7,7 +7,6 @@ import symbolTable.*;
 
 import javax.print.attribute.standard.MediaSize;
 
-/*
 public class TypeChecker
 {
 	public void TypeCheckProgram(ProgramNode rootnode)
@@ -118,4 +117,3 @@ public class TypeChecker
 
 	public void print(String s) {System.out.println(s);}
 }
-*/
