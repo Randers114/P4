@@ -1,9 +1,13 @@
 package abstractSyntaxTree.nodes;
 
-/**
- * Created by Stefan on 29-03-2017.
- */
+import AVisitor.Visitor;
+
 public class ParameterNode extends Node {
     public Node Parameter;
     public Node prmt;
+
+    @Override
+    public void Accept(Visitor visitor) {
+        visitor.Visit(this);
+    }
 }
