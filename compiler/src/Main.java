@@ -3,23 +3,31 @@ import abstractSyntaxTree.nodes.ProgramNode;
 import kotlin.SinceKotlin;
 import org.antlr.v4.runtime.ANTLRFileStream;
 import org.antlr.v4.runtime.TokenStream;
+import prettyPrint.APrettyPrint;
 import prettyPrint.PrettyPrint;
 import sourceParser.*;
 import symbolTable.BuildSymbolTable;
+import typeChecker.ATypeChecker;
 
 import java.util.Scanner;
 
 public class Main {
 
     public static void main(String[] args) throws Exception {
-
+        ProgramNode root = new ProgramNode();
         Scanner scanner = new Scanner(System.in);
         String inputPath = scanner.nextLine();
         
         org.antlr.v4.runtime.CharStream charStream = new ANTLRFileStream(inputPath);
+        root = InitAST(RunParser(charStream));
+        APrettyPrint aPrettyPrint = new APrettyPrint();
+        //aPrettyPrint.Visit(root);
+        BuildSymbolTable buildSymbolTable = new BuildSymbolTable(root, inputPath);
 
-        //PrettyPrint.Init(InitAST(RunParser(charStream)));
-        BuildSymbolTable buildSymbolTable = new BuildSymbolTable(InitAST(RunParser(charStream)), inputPath);
+        ATypeChecker typeChecker = new ATypeChecker();
+
+        typeChecker.Visit(root);
+
     }
 
     private static FinalGrammarParser InitParser(org.antlr.v4.runtime.CharStream charStream){

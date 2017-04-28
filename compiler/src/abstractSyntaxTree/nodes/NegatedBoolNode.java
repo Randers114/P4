@@ -8,7 +8,7 @@ public class NegatedBoolNode extends Node {
     public Node right;
 
     @Override
-    public void Accept(Visitor visitor) {
-        visitor.Visit(this);
+    public Object Accept(Visitor visitor) {
+        return visitor.Visit(this);
     }
 }

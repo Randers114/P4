@@ -5,7 +5,7 @@ import AVisitor.Visitor;
 public class ValueNode extends Single {
 
     @Override
-    public void Accept(Visitor visitor) {
-        visitor.Visit(this);
+    public Object Accept(Visitor visitor) {
+        return visitor.Visit(this);
     }
 }

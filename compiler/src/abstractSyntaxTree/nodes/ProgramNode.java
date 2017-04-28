@@ -1,6 +1,7 @@
 package abstractSyntaxTree.nodes;
 
 import AVisitor.Visitor;
+import symbolTable.SymbolTable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,10 +9,11 @@ import java.util.List;
 public class ProgramNode extends Node {
     public Node leftMain;
     public List<Node> methods = new ArrayList<>();
+    public SymbolTable symbolTable;
 
     @Override
-    public void Accept(Visitor visitor) {
-        visitor.Visit(this);
+    public Object Accept(Visitor visitor) {
+        return visitor.Visit(this);
     }
 }
 

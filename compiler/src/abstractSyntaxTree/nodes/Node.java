@@ -7,5 +7,5 @@ import AVisitor.*;
 public abstract class Node{
     public List<Node> ChildrenList = new ArrayList<>();
 
-    public abstract void Accept(Visitor visitor);
+    public abstract Object Accept(Visitor visitor);
 }
