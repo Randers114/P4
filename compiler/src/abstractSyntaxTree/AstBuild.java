@@ -375,6 +375,8 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
             rBooleanNode.left = visitCall(ctx.call());
         } else if(ctx.boolexpr() != null){
             rBooleanNode.left = visitBoolexpr(ctx.boolexpr());
+        } else if(ctx.Bool() != null){
+            rBooleanNode.left = visitTerminal(ctx.Bool());
         } else if(ctx.getChildCount() == 3){
             if(ctx.getChild(0) == ctx.expr()){
                 rBooleanNode.left = visitExpr(ctx.expr());

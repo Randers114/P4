@@ -1,6 +1,5 @@
 import abstractSyntaxTree.AstBuild;
 import abstractSyntaxTree.nodes.ProgramNode;
-import kotlin.SinceKotlin;
 import org.antlr.v4.runtime.ANTLRFileStream;
 import org.antlr.v4.runtime.TokenStream;
 import prettyPrint.APrettyPrint;

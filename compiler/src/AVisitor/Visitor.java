@@ -17,7 +17,7 @@ public abstract class Visitor<D, S, B>{
     public abstract Void Visit(ElseNode node);
     public abstract Void Visit(FormalParameterNode node);
     public abstract Void Visit(ForNode node);
-    public abstract Void Visit(IdentifierNode node);
+    public abstract S Visit(IdentifierNode node);
     public abstract Void Visit(IfNode node);
     public abstract S Visit(InstanceNode node);
     public abstract Void Visit(MethodNode node);

@@ -1,6 +1,15 @@
 main
 {
-    number a = true;
+    bool k = true;
+    number a = 50;
+    number b = 10;
 
+
+
+    a = hey(a, b)
 }
 
+number Method hey(number v, number m){
+
+    return 10;
+}

@@ -12,6 +12,13 @@ public class ATypeChecker extends Visitor<Double, String, Boolean> {
 
     @Override
     public Void Visit(AssignNode node){
+        String type, type2;
+        type = (String) node.left.Accept(this);
+        type2 = (String) node.right.Accept(this);
+
+        if (!type.equals(type2)){
+            System.out.println("Mistakes have been made");
+        }
 
         return null;
     }
@@ -43,7 +50,7 @@ public class ATypeChecker extends Visitor<Double, String, Boolean> {
 
     @Override
     public Boolean Visit(BoolNode node) {
-        return null;
+        return node.aBoolean;
     }
 
     @Override
@@ -58,19 +65,23 @@ public class ATypeChecker extends Visitor<Double, String, Boolean> {
 
     @Override
     public String Visit(CallNode node) {
-        return null;
+
+        return (String) node.id.Accept(this);
     }
 
     @Override
     public Void Visit(DclNode node) {
-        String type, type2 = "";
+        String type, type2, rightNode;
+        type = node.left.Accept(this).toString();
 
-        type = (String) node.left.Accept(this);
+
 
         if (node.right != null){
-            if (node.right.Accept(this).getClass() == Boolean.class){
+            rightNode = node.right.Accept(this).toString();
+
+            if (rightNode.equals("true") || rightNode.equals("false")) {
                 type2 = "bool";
-            } else if (node.right.Accept(this).getClass() == Double.class){
+            } else {
                 type2 = "number";
             }
 
@@ -107,10 +118,8 @@ public class ATypeChecker extends Visitor<Double, String, Boolean> {
     }
 
     @Override
-    public Void Visit(IdentifierNode node) {
-
-
-        return null;
+    public String Visit(IdentifierNode node) {
+        return SymbolTable.GetTypeByID(node.name, CurrentSymbolTable.peek());
     }
 
     @Override
@@ -173,7 +182,7 @@ public class ATypeChecker extends Visitor<Double, String, Boolean> {
 
     @Override
     public Boolean Visit(RBooleanNode node) {
-        return null;
+        return (Boolean) node.left.Accept(this);
     }
 
     @Override
@@ -208,8 +217,8 @@ public class ATypeChecker extends Visitor<Double, String, Boolean> {
     }
 
     @Override
-    public Double Visit(TermNode node) {
-        return (Double) node.child.Accept(this);
+    public String Visit(TermNode node) {
+        return node.child.Accept(this).toString();
     }
 
     @Override
@@ -224,7 +233,7 @@ public class ATypeChecker extends Visitor<Double, String, Boolean> {
 
     @Override
     public Double Visit(UnaryMinusNode node) {
-        return null;
+        return - (Double) node.child.Accept(this);
     }
 
     @Override

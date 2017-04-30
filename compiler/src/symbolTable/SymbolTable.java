@@ -97,4 +97,15 @@ public class SymbolTable {
 
         return line;
     }
+
+    public static String GetTypeByID(String name, SymbolTable symbolTable){
+        String type = null;
+        for (Variable var: symbolTable.Variables
+                ) {
+            if (var.Name.equals(name)){
+                type = var.Type;
+            }
+        }
+        return type;
+    }
 }
