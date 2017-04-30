@@ -1,4 +1,4 @@
-// Generated from C:/Users/Stefan/Desktop/4. Semester/Git/compiler/src/sourceParser\FinalGrammar.g4 by ANTLR 4.6
+// Generated from F:/Source Tree/Programmer/P4/compiler/src/sourceParser\FinalGrammar.g4 by ANTLR 4.6
 package sourceParser;
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
@@ -22,8 +22,8 @@ public class FinalGrammarLexer extends Lexer {
 		T__17=18, T__18=19, T__19=20, T__20=21, T__21=22, T__22=23, T__23=24, 
 		T__24=25, T__25=26, T__26=27, T__27=28, T__28=29, T__29=30, T__30=31, 
 		T__31=32, T__32=33, T__33=34, T__34=35, T__35=36, T__36=37, T__37=38, 
-		T__38=39, T__39=40, T__40=41, T__41=42, T__42=43, Num=44, Identifier=45, 
-		Bool=46, WS=47;
+		T__38=39, T__39=40, T__40=41, T__41=42, T__42=43, Num=44, Bool=45, Identifier=46, 
+		WS=47;
 	public static String[] modeNames = {
 		"DEFAULT_MODE"
 	};
@@ -34,7 +34,7 @@ public class FinalGrammarLexer extends Lexer {
 		"T__17", "T__18", "T__19", "T__20", "T__21", "T__22", "T__23", "T__24", 
 		"T__25", "T__26", "T__27", "T__28", "T__29", "T__30", "T__31", "T__32", 
 		"T__33", "T__34", "T__35", "T__36", "T__37", "T__38", "T__39", "T__40", 
-		"T__41", "T__42", "Num", "Identifier", "Bool", "WS"
+		"T__41", "T__42", "Num", "Bool", "Identifier", "WS"
 	};
 
 	private static final String[] _LITERAL_NAMES = {
@@ -50,7 +50,7 @@ public class FinalGrammarLexer extends Lexer {
 		null, null, null, null, null, null, null, null, null, null, null, null, 
 		null, null, null, null, null, null, null, null, null, null, null, null, 
 		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, "Num", "Identifier", "Bool", 
+		null, null, null, null, null, null, null, null, "Num", "Bool", "Identifier", 
 		"WS"
 	};
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
@@ -128,8 +128,8 @@ public class FinalGrammarLexer extends Lexer {
 		"&\3&\3&\3&\3&\3&\3&\3\'\3\'\3\'\3\'\3\'\3\'\3\'\3\'\3\'\3(\3(\3(\3(\3"+
 		"(\3(\3(\3(\3(\3(\3(\3(\3)\3)\3)\3)\3)\3)\3)\3)\3)\3)\3)\3)\3)\3*\3*\3"+
 		"*\3*\3*\3*\3*\3*\3*\3*\3*\3+\3+\3+\3+\3,\3,\3,\3-\6-\u0152\n-\r-\16-\u0153"+
-		"\3-\3-\6-\u0158\n-\r-\16-\u0159\5-\u015c\n-\3.\5.\u015f\n.\3.\7.\u0162"+
-		"\n.\f.\16.\u0165\13.\3/\3/\3/\3/\3/\3/\3/\3/\3/\5/\u0170\n/\3\60\6\60"+
+		"\3-\3-\6-\u0158\n-\r-\16-\u0159\5-\u015c\n-\3.\3.\3.\3.\3.\3.\3.\3.\3"+
+		".\5.\u0167\n.\3/\5/\u016a\n/\3/\7/\u016d\n/\f/\16/\u0170\13/\3\60\6\60"+
 		"\u0173\n\60\r\60\16\60\u0174\3\60\3\60\2\2\61\3\3\5\4\7\5\t\6\13\7\r\b"+
 		"\17\t\21\n\23\13\25\f\27\r\31\16\33\17\35\20\37\21!\22#\23%\24\'\25)\26"+
 		"+\27-\30/\31\61\32\63\33\65\34\67\359\36;\37= ?!A\"C#E$G%I&K\'M(O)Q*S"+
@@ -151,7 +151,7 @@ public class FinalGrammarLexer extends Lexer {
 		"\3\2\2\2=\u00c7\3\2\2\2?\u00ce\3\2\2\2A\u00d3\3\2\2\2C\u00d8\3\2\2\2E"+
 		"\u00e4\3\2\2\2G\u00f0\3\2\2\2I\u00f6\3\2\2\2K\u0109\3\2\2\2M\u011c\3\2"+
 		"\2\2O\u0125\3\2\2\2Q\u0131\3\2\2\2S\u013e\3\2\2\2U\u0149\3\2\2\2W\u014d"+
-		"\3\2\2\2Y\u0151\3\2\2\2[\u015e\3\2\2\2]\u016f\3\2\2\2_\u0172\3\2\2\2a"+
+		"\3\2\2\2Y\u0151\3\2\2\2[\u0166\3\2\2\2]\u0169\3\2\2\2_\u0172\3\2\2\2a"+
 		"b\7o\2\2bc\7c\2\2cd\7k\2\2de\7p\2\2e\4\3\2\2\2fg\7}\2\2g\6\3\2\2\2hi\7"+
 		"\177\2\2i\b\3\2\2\2jk\7=\2\2k\n\3\2\2\2lm\7O\2\2mn\7g\2\2no\7v\2\2op\7"+
 		"j\2\2pq\7q\2\2qr\7f\2\2r\f\3\2\2\2st\7*\2\2t\16\3\2\2\2uv\7+\2\2v\20\3"+
@@ -215,15 +215,15 @@ public class FinalGrammarLexer extends Lexer {
 		"\u015b\3\2\2\2\u0155\u0157\7\60\2\2\u0156\u0158\t\2\2\2\u0157\u0156\3"+
 		"\2\2\2\u0158\u0159\3\2\2\2\u0159\u0157\3\2\2\2\u0159\u015a\3\2\2\2\u015a"+
 		"\u015c\3\2\2\2\u015b\u0155\3\2\2\2\u015b\u015c\3\2\2\2\u015cZ\3\2\2\2"+
-		"\u015d\u015f\t\3\2\2\u015e\u015d\3\2\2\2\u015f\u0163\3\2\2\2\u0160\u0162"+
-		"\t\4\2\2\u0161\u0160\3\2\2\2\u0162\u0165\3\2\2\2\u0163\u0161\3\2\2\2\u0163"+
-		"\u0164\3\2\2\2\u0164\\\3\2\2\2\u0165\u0163\3\2\2\2\u0166\u0167\7v\2\2"+
-		"\u0167\u0168\7t\2\2\u0168\u0169\7w\2\2\u0169\u0170\7g\2\2\u016a\u016b"+
-		"\7h\2\2\u016b\u016c\7c\2\2\u016c\u016d\7n\2\2\u016d\u016e\7u\2\2\u016e"+
-		"\u0170\7g\2\2\u016f\u0166\3\2\2\2\u016f\u016a\3\2\2\2\u0170^\3\2\2\2\u0171"+
-		"\u0173\t\5\2\2\u0172\u0171\3\2\2\2\u0173\u0174\3\2\2\2\u0174\u0172\3\2"+
-		"\2\2\u0174\u0175\3\2\2\2\u0175\u0176\3\2\2\2\u0176\u0177\b\60\2\2\u0177"+
-		"`\3\2\2\2\n\2\u0153\u0159\u015b\u015e\u0163\u016f\u0174\3\b\2\2";
+		"\u015d\u015e\7v\2\2\u015e\u015f\7t\2\2\u015f\u0160\7w\2\2\u0160\u0167"+
+		"\7g\2\2\u0161\u0162\7h\2\2\u0162\u0163\7c\2\2\u0163\u0164\7n\2\2\u0164"+
+		"\u0165\7u\2\2\u0165\u0167\7g\2\2\u0166\u015d\3\2\2\2\u0166\u0161\3\2\2"+
+		"\2\u0167\\\3\2\2\2\u0168\u016a\t\3\2\2\u0169\u0168\3\2\2\2\u016a\u016e"+
+		"\3\2\2\2\u016b\u016d\t\4\2\2\u016c\u016b\3\2\2\2\u016d\u0170\3\2\2\2\u016e"+
+		"\u016c\3\2\2\2\u016e\u016f\3\2\2\2\u016f^\3\2\2\2\u0170\u016e\3\2\2\2"+
+		"\u0171\u0173\t\5\2\2\u0172\u0171\3\2\2\2\u0173\u0174\3\2\2\2\u0174\u0172"+
+		"\3\2\2\2\u0174\u0175\3\2\2\2\u0175\u0176\3\2\2\2\u0176\u0177\b\60\2\2"+
+		"\u0177`\3\2\2\2\n\2\u0153\u0159\u015b\u0166\u0169\u016e\u0174\3\b\2\2";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

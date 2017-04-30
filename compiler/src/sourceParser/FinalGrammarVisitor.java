@@ -1,4 +1,4 @@
-// Generated from C:/Users/Stefan/Desktop/4. Semester/Git/compiler/src/sourceParser\FinalGrammar.g4 by ANTLR 4.6
+// Generated from F:/Source Tree/Programmer/P4/compiler/src/sourceParser\FinalGrammar.g4 by ANTLR 4.6
 package sourceParser;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 

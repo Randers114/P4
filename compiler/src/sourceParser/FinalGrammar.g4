@@ -1,8 +1,8 @@
 grammar FinalGrammar;
 
 Num: [0-9]+ ('.' [0-9]+)?;
-Identifier: ([a-zA-Z] | '_') [a-zA-Z0-9]*;
 Bool: 'true' | 'false';
+Identifier: ([a-zA-Z] | '_') [a-zA-Z0-9]*;
 WS: [ \t\r\n]+ -> skip;
 
 
@@ -55,7 +55,8 @@ r_boolean   : call
 		    | 'not'? Identifier
 		    | boolexpr
 		    | expr boolvalop Identifier
-		    | Identifier boolvalop expr;
+		    | Identifier boolvalop expr
+		    | Bool;
 
 instancedcl	: 'Motor'
             | 'Sensor'
