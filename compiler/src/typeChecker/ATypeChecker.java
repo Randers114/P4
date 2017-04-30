@@ -4,10 +4,13 @@ import AVisitor.Visitor;
 import abstractSyntaxTree.nodes.*;
 import symbolTable.SymbolTable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
 public class ATypeChecker extends Visitor<Double, String, Boolean> {
     private Stack<SymbolTable> CurrentSymbolTable = new Stack<>();
+    private ProgramNode Root;
 
 
     @Override
@@ -65,8 +68,25 @@ public class ATypeChecker extends Visitor<Double, String, Boolean> {
 
     @Override
     public String Visit(CallNode node) {
+        List<String> formal, actual = new ArrayList<>();
+        if (node.parameter != null){
+            formal = FindMethodFormalParameterTypes(((IdentifierNode) node.id).name);
+            FindMethodParameterTypes((ParameterNode) node.parameter, actual);
 
-        return (String) node.id.Accept(this);
+            if (formal.size() != 0 || actual.size() != 0){
+                if (formal.size() == actual.size()){
+                    for (int i = 0; i < formal.size(); i++){
+                        if (!formal.get(i).equals(actual.get(i))){
+                            System.out.println("Mistake at parameter: " + (i + 1) );
+                        }
+                    }
+                } else {
+                    System.out.println("Mistakes have been made");
+                }
+            }
+        }
+
+        return node.id.Accept(this).toString();
     }
 
     @Override
@@ -94,7 +114,13 @@ public class ATypeChecker extends Visitor<Double, String, Boolean> {
 
     @Override
     public Double Visit(DivideNode node) {
-        return (Double) node.left.Accept(this) / (Double) node.right.Accept(this);
+        try {
+            return Double.parseDouble(node.left.Accept(this).toString()) / Double.parseDouble(node.right.Accept(this).toString());
+        } catch (Exception e){
+            System.out.println("Invalid input");
+        }
+
+        return null;
     }
 
     @Override
@@ -139,7 +165,13 @@ public class ATypeChecker extends Visitor<Double, String, Boolean> {
 
     @Override
     public Double Visit(MinusNode node) {
-        return (Double) node.left.Accept(this) - (Double) node.right.Accept(this);
+        try {
+            return Double.parseDouble(node.left.Accept(this).toString()) - Double.parseDouble(node.right.Accept(this).toString());
+        } catch (Exception e){
+            System.out.println("Invalid input");
+        }
+
+        return null;
     }
 
     @Override
@@ -164,12 +196,19 @@ public class ATypeChecker extends Visitor<Double, String, Boolean> {
 
     @Override
     public Double Visit(PlusNode node) {
-        return (Double) node.left.Accept(this) + (Double) node.right.Accept(this);
+        try {
+            return Double.parseDouble(node.left.Accept(this).toString()) + Double.parseDouble(node.right.Accept(this).toString());
+        } catch (Exception e){
+            System.out.println("Invalid input");
+        }
+
+        return null;
     }
 
     @Override
     public Void Visit(ProgramNode node) {
         CurrentSymbolTable.push(node.symbolTable);
+        Root = node;
 
         for (Node n: node.ChildrenList
                 ) {
@@ -223,7 +262,13 @@ public class ATypeChecker extends Visitor<Double, String, Boolean> {
 
     @Override
     public Double Visit(TimesNode node) {
-        return (Double) node.left.Accept(this) * (Double) node.right.Accept(this);
+        try {
+            return Double.parseDouble(node.left.Accept(this).toString()) * Double.parseDouble(node.right.Accept(this).toString());
+        } catch (Exception e){
+            System.out.println("Invalid input");
+        }
+
+        return null;
     }
 
     @Override
@@ -244,6 +289,45 @@ public class ATypeChecker extends Visitor<Double, String, Boolean> {
     @Override
     public Void Visit(WhileNode node) {
         return null;
+    }
+
+
+
+
+    private List<String> FindMethodFormalParameterTypes(String id){
+        MethodNode method = new MethodNode();
+        List<String> typeList = new ArrayList<>();
+
+        for (Node n: Root.methods
+             ) {
+            if (((IdentifierNode)((MethodNode) n).id).name.equals(id)){
+                method = (MethodNode) n;
+            }
+        }
+
+        if (method.fprmt != null){
+            CurrentSymbolTable.push(((BlockNode) method.block).symbolTable);
+            TraverseParameters((FormalParameterNode) method.fprmt, typeList);
+            CurrentSymbolTable.pop();
+        }
+
+        return typeList;
+    }
+
+    private void FindMethodParameterTypes(ParameterNode node, List<String> parameterList){
+        parameterList.add(node.Parameter.Accept(this).toString());
+
+        if (node.prmt != null){
+            FindMethodParameterTypes((ParameterNode) node.prmt, parameterList);
+        }
+    }
+
+    private void TraverseParameters(FormalParameterNode node, List<String> list){
+        list.add(node.id.Accept(this).toString());
+
+        if (node.fprmt != null){
+            TraverseParameters((FormalParameterNode) node.fprmt, list);
+        }
     }
 }
 

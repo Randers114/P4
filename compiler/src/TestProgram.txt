@@ -1,12 +1,12 @@
 main
 {
     bool k = true;
-    number a = 50;
+    number a = 50 + 10 * 4 / 10;
     number b = 10;
 
 
 
-    a = hey(a, b)
+    a = hey(k, b)
 }
 
 number Method hey(number v, number m){
