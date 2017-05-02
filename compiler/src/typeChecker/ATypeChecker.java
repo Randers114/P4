@@ -12,7 +12,6 @@ public class ATypeChecker extends Visitor<Double, String, Boolean> {
     private Stack<SymbolTable> CurrentSymbolTable = new Stack<>();
     private ProgramNode Root;
 
-
     @Override
     public Void Visit(AssignNode node){
         String type, type2;
@@ -57,18 +56,19 @@ public class ATypeChecker extends Visitor<Double, String, Boolean> {
     }
 
     @Override
-    public Boolean Visit(BoolOpNode node) {
-        return null;
+    public String Visit(BoolOpNode node) {
+        return node.child;
     }
 
     @Override
-    public Boolean Visit(BoolValOpNode node) {
-        return null;
+    public String Visit(BoolValOpNode node) {
+        return node.boolValOperator;
     }
 
     @Override
     public String Visit(CallNode node) {
         List<String> formal, actual = new ArrayList<>();
+
         if (node.parameter != null){
             formal = FindMethodFormalParameterTypes(((IdentifierNode) node.id).name);
             FindMethodParameterTypes((ParameterNode) node.parameter, actual);
@@ -94,12 +94,10 @@ public class ATypeChecker extends Visitor<Double, String, Boolean> {
         String type, type2, rightNode;
         type = node.left.Accept(this).toString();
 
-
-
         if (node.right != null){
             rightNode = node.right.Accept(this).toString();
 
-            if (rightNode.equals("true") || rightNode.equals("false")) {
+            if (rightNode.equals("true") || rightNode.equals("false") || rightNode.equals("bool")) {
                 type2 = "bool";
             } else {
                 type2 = "number";
@@ -125,11 +123,16 @@ public class ATypeChecker extends Visitor<Double, String, Boolean> {
 
     @Override
     public Void Visit(ElseIfNode node) {
+        node.bool.Accept(this);
+        node.block.Accept(this);
+
         return null;
     }
 
     @Override
     public Void Visit(ElseNode node) {
+        node.block.Accept(this);
+
         return null;
     }
 
@@ -140,6 +143,7 @@ public class ATypeChecker extends Visitor<Double, String, Boolean> {
 
     @Override
     public Void Visit(ForNode node) {
+        node.block.Accept(this);
         return null;
     }
 
@@ -150,16 +154,39 @@ public class ATypeChecker extends Visitor<Double, String, Boolean> {
 
     @Override
     public Void Visit(IfNode node) {
+        node.bool.Accept(this);
+        node.block.Accept(this);
+        for (Node n: node.elseif
+             ) {
+            n.Accept(this);
+        }
+        if (node.el != null) {
+            node.el.Accept(this);
+        }
+
         return null;
     }
 
     @Override
     public String Visit(InstanceNode node) {
-        return null;
+        return node.instance;
     }
 
     @Override
     public Void Visit(MethodNode node) {
+        String type, type2;
+        type = node.type.Accept(this).toString();
+
+        if (!type.equals("void")){
+            type2 = node.returnval.Accept(this).toString();
+
+            if (!type.equals(type2)){
+                System.out.println("Mistakes have been made");
+            }
+        }
+
+        node.block.Accept(this);
+
         return null;
     }
 
@@ -181,7 +208,7 @@ public class ATypeChecker extends Visitor<Double, String, Boolean> {
 
     @Override
     public Boolean Visit(NotBoolNode node) {
-        return null;
+        return !(boolean) node.child.Accept(this);
     }
 
     @Override
@@ -225,8 +252,16 @@ public class ATypeChecker extends Visitor<Double, String, Boolean> {
     }
 
     @Override
-    public Void Visit(ReturnValNode node) {
-        return null;
+    public String Visit(ReturnValNode node) {
+        String type = node.returnvalue.Accept(this).toString();
+
+        if (type.equals("true") || type.equals("false") || type.equals("bool")) {
+            type = "bool";
+        } else {
+            type = "number";
+        }
+
+        return type;
     }
 
     @Override
@@ -288,11 +323,10 @@ public class ATypeChecker extends Visitor<Double, String, Boolean> {
 
     @Override
     public Void Visit(WhileNode node) {
+        node.bool.Accept(this);
+        node.block.Accept(this);
         return null;
     }
-
-
-
 
     private List<String> FindMethodFormalParameterTypes(String id){
         MethodNode method = new MethodNode();

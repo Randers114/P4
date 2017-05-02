@@ -1,4 +1,4 @@
-// Generated from F:/Source Tree/Programmer/P4/compiler/src/sourceParser\FinalGrammar.g4 by ANTLR 4.6
+// Generated from C:/Users/Simon/Documents/P4/compiler/src/sourceParser\FinalGrammar.g4 by ANTLR 4.7
 package sourceParser;
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 
@@ -101,7 +101,35 @@ public class FinalGrammarBaseVisitor<T> extends AbstractParseTreeVisitor<T> impl
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitR_boolean(FinalGrammarParser.R_booleanContext ctx) { return visitChildren(ctx); }
+	@Override public T visitB(FinalGrammarParser.BContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitT(FinalGrammarParser.TContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitF(FinalGrammarParser.FContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitH(FinalGrammarParser.HContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitI(FinalGrammarParser.IContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -137,13 +165,6 @@ public class FinalGrammarBaseVisitor<T> extends AbstractParseTreeVisitor<T> impl
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitStatid(FinalGrammarParser.StatidContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public T visitBoolexpr(FinalGrammarParser.BoolexprContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *

@@ -2,14 +2,26 @@ main
 {
     bool k = true;
     number a = 50 + 10 * 4 / 10;
-    number b = 10;
+    number b = a;
+    bool l = k;
 
+    a = b
+    l = k
 
+    a = hey(a, b)
 
-    a = hey(k, b)
+    k = hh(k)
 }
 
 number Method hey(number v, number m){
 
     return 10;
+}
+
+
+bool Method hh(bool a){
+
+    bool l = true;
+
+    return l;
 }
