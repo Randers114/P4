@@ -3,12 +3,77 @@ package prettyPrint;
 import AVisitor.Visitor;
 import abstractSyntaxTree.nodes.*;
 
-public class APrettyPrint extends Visitor<Void, Void, Void> {
+public class APrettyPrint extends Visitor {
+    @Override
+    public Object Visit(AndNode node) {
+        node.left.Accept(this);
+        System.out.print(" and ");
+        node.right.Accept(this);
+        return null;
+    }
+
+    @Override
+    public Object Visit(EqualNode node) {
+        node.left.Accept(this);
+        System.out.print(" equal ");
+        node.right.Accept(this);
+        return null;
+    }
+
+    @Override
+    public Object Visit(GreaterThanNode node) {
+        node.left.Accept(this);
+        System.out.print(" greaterThan ");
+        node.right.Accept(this);
+        return null;
+    }
+
+    @Override
+    public Object Visit(GreaterThanOrEqualNode node) {
+        node.left.Accept(this);
+        System.out.print(" greaterThanOrEqual ");
+        node.right.Accept(this);
+        return null;
+    }
+
+    @Override
+    public Object Visit(LessThanNode node) {
+        node.left.Accept(this);
+        System.out.print(" lessThan ");
+        node.right.Accept(this);
+        return null;
+    }
+
+    @Override
+    public Object Visit(LessThanOrEqualNode node) {
+        node.left.Accept(this);
+        System.out.print(" lessThanOrEqual ");
+        node.right.Accept(this);
+        return null;
+    }
+
+    @Override
+    public Object Visit(NotEqualNode node) {
+        node.left.Accept(this);
+        System.out.print(" notEqual ");
+        node.right.Accept(this);
+        return null;
+    }
+
+    @Override
+    public Object Visit(OrNode node) {
+        node.left.Accept(this);
+        System.out.print(" or ");
+        node.right.Accept(this);
+        return null;
+    }
+
     @Override
     public Void Visit(AssignNode node) {
         node.left.Accept(this);
         System.out.printf(" = ");
         node.left.Accept(this);
+        System.out.println(";");
         return null;
     }
 
@@ -28,28 +93,8 @@ public class APrettyPrint extends Visitor<Void, Void, Void> {
     }
 
     @Override
-    public Void Visit(BoolExprNode node) {
-        node.left.Accept(this);
-        node.middle.Accept(this);
-        node.right.Accept(this);
-        return null;
-    }
-
-    @Override
     public Void Visit(BoolNode node) {
         System.out.print(node.aBoolean);
-        return null;
-    }
-
-    @Override
-    public Void Visit(BoolOpNode node) {
-        System.out.print(" " + node.child + " ");
-        return null;
-    }
-
-    @Override
-    public Void Visit(BoolValOpNode node) {
-        System.out.print(" " + node.boolValOperator + " ");
         return null;
     }
 
@@ -184,13 +229,6 @@ public class APrettyPrint extends Visitor<Void, Void, Void> {
     }
 
     @Override
-    public Void Visit(NegatedBoolNode node) {
-        System.out.printf("not ");
-        node.left.Accept(this);
-        return null;
-    }
-
-    @Override
     public Void Visit(NotBoolNode node) {
         System.out.printf("not ");
         node.child.Accept(this);
@@ -232,19 +270,6 @@ public class APrettyPrint extends Visitor<Void, Void, Void> {
         for (Node item : node.methods)
         {
             item.Accept(this);
-        }
-        return null;
-    }
-
-    @Override
-    public Void Visit(RBooleanNode node) {
-        node.left.Accept(this);
-
-        if (node.middle != null) {
-            node.middle.Accept(this);
-        }
-        if (node.right != null) {
-            node.right.Accept(this);
         }
         return null;
     }

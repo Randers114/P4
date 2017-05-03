@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
+
+/*
 public class ATypeChecker extends Visitor<Double, String, Boolean> {
     private Stack<SymbolTable> CurrentSymbolTable = new Stack<>();
     private ProgramNode Root;
@@ -365,7 +367,7 @@ public class ATypeChecker extends Visitor<Double, String, Boolean> {
     }
 }
 
-
+*/
 
 
 

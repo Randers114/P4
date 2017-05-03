@@ -13,15 +13,14 @@ body	: dcl ';' | stmt | call ';';
 methods	: type 'Method' Identifier '(' fprmt? ')' '{' body* 'return' returnval ';' '}'
         | 'void' 'Method' Identifier '(' fprmt? ')' '{' body* '}';
 
-dcl		: type Identifier '=' expr
-		| type Identifier '=' r_boolean
+dcl		: type Identifier '=' b
 		| type Identifier
 		| 'new' instancedcl '[' Identifier ']' Identifier;
 
-stmt	: Identifier '=' expr
-		| 'if' '(' r_boolean ')' 'then' '{' body* '}' elseif* elsel?
-		| 'while' '(' r_boolean ')' 'do' '{' body* '}'
-		| 'for' '(' Num 'to' Num ')' 'do' '{' body* '}';
+stmt	: Identifier '=' b ';'
+		| 'if' '(' b ')' 'then' '{' body* '}' elseif* elsel?
+		| 'while' '(' b ')' 'do' '{' body* '}'
+		| 'for' '(' (Num | Identifier) 'to' (Num | Identifier) ')' 'do' '{' body* '}';
 
 call	: Identifier '(' prmt? ')'
 		| Identifier '.' statid '(' prmt? ')';
@@ -32,13 +31,11 @@ type	: 'number'
 fprmt	: type Identifier
         | type Identifier ',' fprmt;
 
-returnval   : expr
-            | boolexpr;
+returnval   : b;
 
 val		: Num
         | Identifier
         | call
-        | '(' expr ')'
         | '-' expr
         ;
 
@@ -51,12 +48,18 @@ term    : val '*' term
         | val '/' term
         | val;
 
-r_boolean   : call
-		    | 'not'? Identifier
-		    | boolexpr
-		    | expr boolvalop Identifier
-		    | Identifier boolvalop expr
-		    | Bool;
+b       : t 'and' b
+        | t;
+t       : f 'or' t
+        | f;
+f       : h boolop f
+        | h;
+h       : i boolvalop h
+        | i;
+i       : expr
+        | Bool
+        | '(' b ')'
+        | 'not' b;
 
 instancedcl	: 'Motor'
             | 'Sensor'
@@ -64,7 +67,7 @@ instancedcl	: 'Motor'
 
 elsel	: 'else' '{' body* '}';
 
-elseif	: 'else' 'if' '(' r_boolean ')' 'then' '{' body* '}';
+elseif	: 'else' 'if' '(' b ')' 'then' '{' body* '}';
 
 prmt	: val
         | val ',' prmt;
@@ -73,19 +76,11 @@ statid	: statmotorid
         | statsensorid
         | statlistid;
 
-boolexpr: expr boolvalop boolexpr
-		| Bool boolop r_boolean
-		| call boolop r_boolean
-		| Identifier boolop r_boolean
-		| 'not' Bool boolop r_boolean
-		| 'not' call boolop r_boolean
-		| 'not' Identifier boolop r_boolean;
-
-boolvalop	: 'smallerThan'
+boolvalop	: 'lessThan'
 		| 'greaterThan'
 		| 'equal'
 		| 'greaterThanOrEqual'
-		| 'smallerThanOrEqual'
+		| 'lessThanOrEqual'
 		| 'notEqual';
 
 statmotorid	: 'motormethod';
@@ -96,6 +91,4 @@ statlistid	: 'listmethod';
 
 
 boolop	: 'equal'
-		| 'notEqual'
-		| 'and'
-		| 'or';
+		| 'notEqual';

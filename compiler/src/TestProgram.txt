@@ -5,12 +5,15 @@ main
     number b = a;
     bool l = k;
 
-    a = b
-    l = k
+    bool aaa = 10 greaterThan 5 and 14 lessThan 20 or true ;
 
-    a = hey(a, b)
 
-    k = hh(k)
+    a = b ;
+    l = k ;
+
+    a = hey(a, b) ;
+
+    k = hh(k) ;
 }
 
 number Method hey(number v, number m){

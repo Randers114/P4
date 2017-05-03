@@ -13,15 +13,11 @@ body	: dcl ';' | stmt | call ';';
 methods	: type 'Method' Identifier '(' fprmt? ')' '{' body* 'return' returnval ';' '}'
         | 'void' 'Method' Identifier '(' fprmt? ')' '{' body* '}';
 
-dcl		: type Identifier '=' expr
-		| type Identifier '=' b
+dcl		: type Identifier '=' b
 		| type Identifier
 		| 'new' instancedcl '[' Identifier ']' Identifier;
 
 stmt	: Identifier '=' b ';'
-        | Identifier '=' 'not' Identifier ';'
-        | Identifier '=' expr boolvalop expr ';'
-        | Identifier '=' Bool ';'
 		| 'if' '(' b ')' 'then' '{' body* '}' elseif* elsel?
 		| 'while' '(' b ')' 'do' '{' body* '}'
 		| 'for' '(' (Num | Identifier) 'to' (Num | Identifier) ')' 'do' '{' body* '}';
@@ -35,13 +31,11 @@ type	: 'number'
 fprmt	: type Identifier
         | type Identifier ',' fprmt;
 
-returnval   : expr
-            | b;
+returnval   : b;
 
 val		: Num
         | Identifier
         | call
-        | '(' expr ')'
         | '-' expr
         ;
 
@@ -54,19 +48,16 @@ term    : val '*' term
         | val '/' term
         | val;
 
-b       : t boolvalop b
+b       : t 'and' b
         | t;
-t       : f boolop t
+t       : f 'or' t
         | f;
-f       : h 'or' f
+f       : h boolop f
         | h;
-h       : i 'and' h
+h       : i boolvalop h
         | i;
-i       : Num
-        | expr
+i       : expr
         | Bool
-        | call
-        | Identifier
         | '(' b ')'
         | 'not' b;
 

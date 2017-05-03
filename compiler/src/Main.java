@@ -3,10 +3,9 @@ import abstractSyntaxTree.nodes.ProgramNode;
 import org.antlr.v4.runtime.ANTLRFileStream;
 import org.antlr.v4.runtime.TokenStream;
 import prettyPrint.APrettyPrint;
-import prettyPrint.PrettyPrint;
 import sourceParser.*;
 import symbolTable.BuildSymbolTable;
-import typeChecker.ATypeChecker;
+//import typeChecker.ATypeChecker;
 
 import java.util.Scanner;
 
@@ -20,12 +19,12 @@ public class Main {
         org.antlr.v4.runtime.CharStream charStream = new ANTLRFileStream(inputPath);
         root = InitAST(RunParser(charStream));
         APrettyPrint aPrettyPrint = new APrettyPrint();
-        //aPrettyPrint.Visit(root);
+        aPrettyPrint.Visit(root);
         BuildSymbolTable buildSymbolTable = new BuildSymbolTable(root, inputPath);
 
-        ATypeChecker typeChecker = new ATypeChecker();
+        //ATypeChecker typeChecker = new ATypeChecker();
 
-        typeChecker.Visit(root);
+        //typeChecker.Visit(root);
 
     }
 

@@ -3,6 +3,7 @@ package prettyPrint;
 import abstractSyntaxTree.nodes.*;
 import abstractSyntaxTree.nodes.ProgramNode;
 
+/*
 public class PrettyPrint
 {
 	public static void Init(ProgramNode node){
@@ -297,3 +298,5 @@ public class PrettyPrint
 		}
 	}
 }
+
+*/
