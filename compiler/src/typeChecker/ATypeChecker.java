@@ -9,10 +9,90 @@ import java.util.List;
 import java.util.Stack;
 
 
-/*
-public class ATypeChecker extends Visitor<Double, String, Boolean> {
+
+public class ATypeChecker extends Visitor {
     private Stack<SymbolTable> CurrentSymbolTable = new Stack<>();
     private ProgramNode Root;
+
+    @Override
+    public Boolean Visit(AndNode node) {
+        try {
+            return (Boolean) node.left.Accept(this) && (Boolean) node.right.Accept(this);
+        } catch (Exception e) {
+            System.out.println("Mistakes were made AndNode");
+        }
+        return null;
+    }
+
+    @Override
+    public Boolean Visit(EqualNode node) {
+        try {
+            return node.left.Accept(this) == node.right.Accept(this);
+        } catch (Exception e){
+            System.out.println("Mistakes were made EqualNode");
+        }
+        return null;
+    }
+
+    @Override
+    public Boolean Visit(GreaterThanNode node) {
+        try {
+            return (Double) node.left.Accept(this) > (Double) node.right.Accept(this);
+        } catch (Exception e){
+            System.out.println("Mistakes were made >node");
+        }
+        return null;
+    }
+
+    @Override
+    public Object Visit(GreaterThanOrEqualNode node) {
+        try {
+            return (Double) node.left.Accept(this) >= (Double) node.right.Accept(this);
+        } catch (Exception e) {
+            System.out.println("Mistakes were made >= node");
+        }
+        return null;
+    }
+
+    @Override
+    public Object Visit(LessThanNode node) {
+        try {
+            return (Double) node.left.Accept(this) <  (Double) node.right.Accept(this);
+        } catch (Exception e){
+            System.out.println("Mistakes were made <node");
+        }
+        return null;
+    }
+
+    @Override
+    public Boolean Visit(LessThanOrEqualNode node) {
+        try {
+            return (Double) node.left.Accept(this) <=  (Double) node.right.Accept(this);
+        } catch (Exception e){
+            System.out.println("Mistakes were made <= node");
+        }
+        return null;
+    }
+
+    @Override
+    public Boolean Visit(NotEqualNode node) {
+        try {
+            return node.left.Accept(this) !=  node.right.Accept(this);
+        } catch (Exception e){
+            System.out.println("Mistakes were made != node");
+        }
+        return null;
+    }
+
+    @Override
+    public Object Visit(OrNode node) {
+        try {
+            return (Boolean) node.left.Accept(this) || (Boolean) node.right.Accept(this);
+        } catch (Exception e){
+            System.out.println("Mistakes were made || node");
+        }
+        return null;
+    }
 
     @Override
     public Void Visit(AssignNode node){
@@ -48,23 +128,8 @@ public class ATypeChecker extends Visitor<Double, String, Boolean> {
     }
 
     @Override
-    public Boolean Visit(BoolExprNode node) {
-        return null;
-    }
-
-    @Override
     public Boolean Visit(BoolNode node) {
         return node.aBoolean;
-    }
-
-    @Override
-    public String Visit(BoolOpNode node) {
-        return node.child;
-    }
-
-    @Override
-    public String Visit(BoolValOpNode node) {
-        return node.boolValOperator;
     }
 
     @Override
@@ -204,11 +269,6 @@ public class ATypeChecker extends Visitor<Double, String, Boolean> {
     }
 
     @Override
-    public Boolean Visit(NegatedBoolNode node) {
-        return null;
-    }
-
-    @Override
     public Boolean Visit(NotBoolNode node) {
         return !(boolean) node.child.Accept(this);
     }
@@ -246,11 +306,6 @@ public class ATypeChecker extends Visitor<Double, String, Boolean> {
 
         CurrentSymbolTable.pop();
         return null;
-    }
-
-    @Override
-    public Boolean Visit(RBooleanNode node) {
-        return (Boolean) node.left.Accept(this);
     }
 
     @Override
@@ -367,7 +422,6 @@ public class ATypeChecker extends Visitor<Double, String, Boolean> {
     }
 }
 
-*/
 
 
 
