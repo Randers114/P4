@@ -37,6 +37,7 @@ val		: Num
         | Identifier
         | call
         | '-' expr
+        | '(' b ')'
         ;
 
 expr	: term '+' expr
@@ -58,7 +59,6 @@ h       : i boolvalop h
         | i;
 i       : expr
         | Bool
-        | '(' b ')'
         | 'not' b;
 
 instancedcl	: 'Motor'
