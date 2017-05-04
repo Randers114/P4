@@ -1,9 +1,6 @@
 package symbolTable;
 
-import abstractSyntaxTree.nodes.IdentifierNode;
-import abstractSyntaxTree.nodes.InstanceNode;
-import abstractSyntaxTree.nodes.Node;
-import abstractSyntaxTree.nodes.TypesNode;
+import abstractSyntaxTree.nodes.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,4 +49,34 @@ public class SymbolTable {
         }
         return false;
     }
+
+    public boolean LookUpAndIsType(String name, String type)
+    {
+        for (SymbolTable s: symbolTables
+                ) {
+            for (Variable var: s.Variables
+                    ) {
+                if (var.Name.equals(name) && var.Type.equals(type)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public String GetType(String name)
+    {
+        for (SymbolTable s: symbolTables
+                ) {
+            for (Variable var: s.Variables
+                    ) {
+                if (var.Name.equals(name)){
+                    return var.Type;
+                }
+                else return null;
+            }
+        }
+        return null;
+    }
+
 }

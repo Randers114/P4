@@ -11,7 +11,8 @@ public class TypeChecker
 {
 	public void TypeCheckProgram(ProgramNode rootnode)
 	{
-		for (Node child: rootnode.ChildrenList)
+		TypeCheckChildren(rootnode.leftMain, ((BlockNode) rootnode.leftMain).table);
+		for (Node child: rootnode.methods)
 		{
 			if (child != null)
 				TypeCheckChildren(child, ((BlockNode) rootnode.leftMain).table);
@@ -21,13 +22,11 @@ public class TypeChecker
 	public void TypeCheckChildren (Node node, SymbolTable ST)
 	{
 		if (node instanceof MethodNode)
-			TypeCheckMethod(node, ST);
+			TypeCheckMethod((MethodNode)node, ST);
 		else if (node instanceof BlockNode)
-			TypeCheckBlock(node, ST);
+			TypeCheckBlock((BlockNode)node, ST);
 		else if (node instanceof BodyNode)
-			TypeCheckBody(node, ST);
-		else if (node instanceof PlusNode)
-			TypeCheckOpNode(node, ST);
+			TypeCheckBody((BodyNode)node, ST);
 	}
 
 	public boolean SameType(Node node1, Node node2)
@@ -38,70 +37,86 @@ public class TypeChecker
 			return false;
 	}
 
-	public void TypeCheckMethod(Node node, SymbolTable ST)
+	public void TypeCheckMethod(MethodNode node, SymbolTable ST)
 	{
-		if(SameType(((MethodNode) node).returnval, ((MethodNode) node).type))
+		ST = ((BlockNode)((node).block)).table;
+		if(SameType(( node).returnval, (( node).type)))
 		{
-			System.out.println("method " + ((MethodNode) node).id + "is type correct");
+			System.out.println("method " + (node).id + "is type correct");
 			TypeCheckChildren(((MethodNode) node).block, ST);
 		}
 		else
 			System.out.println("method " + ((MethodNode) node).id + "is NOT type correct");
 	}
 
-	public void TypeCheckBlock(Node node, SymbolTable ST)
+	public void TypeCheckBlock(BlockNode node, SymbolTable ST)
 	{
-		for (Node child: (((BlockNode)node).ChildrenList))
+		for (Node child: ((node).ChildrenList))
 		{
 			TypeCheckChildren(child, ST);
 		}
 	}
 
-	public void TypeCheckBody(Node node, SymbolTable ST)
+	public void TypeCheckBody(BodyNode node, SymbolTable ST)
 	{
-		if (node instanceof StmtNode)
-			TypeCheckStmtNode(node);
-		else if (node instanceof DclNode)
-			TypeCheckDclNode((DclNode)node, ST);
-		else if (node instanceof CallNode)
-			TypeCheckCallNode(node);
+		if (node.content instanceof StmtNode)
+			TypeCheckStmtNode((StmtNode)node.content, ST);
+		else if (node.content instanceof DclNode)
+			TypeCheckDclNode((DclNode)node.content, ST);
+		else if (node.content instanceof CallNode)
+			TypeCheckCallNode((CallNode)node.content, ST);
 	}
 
 	public void TypeCheckDclNode(DclNode node, SymbolTable ST)
 	{
 		if (IsOpNode((node).right) && ((TypesNode)((node).left)).type == "number")
-			TypeCheckOpNode((((node).right), ST);
+			TypeCheckOpNode((OpNode) node.right, ST);
 		else if (((node).right) instanceof BoolValOpNode || (((node).right) instanceof BoolOpNode && ((TypesNode)((node).left)).type == "boolean"))
-			TypeCheckBoolValOpNode(((node).right), ST);
+			TypeCheckBoolValOpNode((BoolValOpNode) node.right, ST);
 		else if ((node).right instanceof NumberNode && ((TypesNode)((node).left)).type == "number")
 			print("dcl number " + (node).middle + " = " + ((NumberNode)(node).right).value + " evalutaed correctly");
 		else if((node).right instanceof BoolNode && ((TypesNode) ((node).left)).type == "bool")
 			print("dcl bool " + (node).middle + " = " + ((BoolNode)(node).right).aBoolean + " evaluted correctly");
 	}
 
-	public void TypeCheckOpNode(Node node, SymbolTable ST)
+	public void TypeCheckOpNode(OpNode node, SymbolTable ST)
 	{
-		if (IsOpNode(((OpNode)node).left))
-			TypeCheckOpNode(((OpNode)node).left, ST);
-		if (IsOpNode(((OpNode)node).right))
-			TypeCheckOpNode(((OpNode)node).right, ST);
+		if (IsOpNode((node).left))
+			TypeCheckOpNode((OpNode)node.left, ST);
+		if (IsOpNode(node.right))
+			TypeCheckOpNode((OpNode)node.right, ST);
 		if (((OpNode)node).left instanceof  NumberNode || ST.LookUp((((IdentifierNode)((OpNode)node).left).name))  && ((OpNode)node).right instanceof NumberNode || ST.LookUp((((IdentifierNode)((OpNode)node).right).name)) )
 			print("Expr eval correctly");
 		else
 			print("Expr cold not svalutae correctly");
 
 	}
-	public void TypeCheckBoolValOpNode(Node node, SymbolTable ST)
+	public void TypeCheckBoolValOpNode(BoolValOpNode node, SymbolTable ST)
+	{
+		if (IsOpNodeExtended(node.left))
+
+		if (IsOpNodeExtended(node.right))
+
+			if (node.
+
+	}
+
+	public void
 	{
 
 	}
 
-	public void TypeCheckCallNode(Node node)
+	public void TypeCheckBoolOpNode(BoolOpNode node, SymbolTable ST)
 	{
 
 	}
 
-	public void TypeCheckStmtNode(Node node)
+	public void TypeCheckCallNode(Node node, SymbolTable ST)
+	{
+
+	}
+
+	public void TypeCheckStmtNode(Node node, SymbolTable ST)
 	{
 		if (node instanceof WhileNode)
 			TypeCheckWhileNode(node);
