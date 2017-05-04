@@ -1,19 +1,10 @@
 main
 {
-    bool k = true;
-    number a = 50 + 10 * 4 / 10;
-    number b = a;
-    bool l = k;
 
     bool aaa = 10 greaterThan 5 and 14 lessThan 20 or true ;
 
 
-    a = b ;
-    l = k ;
 
-    a = hey(a, b) ;
-
-    k = hh(k) ;
 }
 
 number Method hey(number v, number m){
@@ -21,10 +12,10 @@ number Method hey(number v, number m){
     return 10;
 }
 
+bool Method hh(){
 
-bool Method hh(bool a){
+bool l = true;
 
-    bool l = true;
+return l;
 
-    return l;
 }

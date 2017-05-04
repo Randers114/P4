@@ -37,7 +37,7 @@ public class ATypeChecker extends Visitor {
     @Override
     public Boolean Visit(GreaterThanNode node) {
         try {
-            return (Double) node.left.Accept(this) > (Double) node.right.Accept(this);
+            return (Double.parseDouble(node.left.Accept(this).toString())) > (Double.parseDouble(node.right.Accept(this).toString()));
         } catch (Exception e){
             System.out.println("Mistakes were made >node");
         }
@@ -57,7 +57,7 @@ public class ATypeChecker extends Visitor {
     @Override
     public Object Visit(LessThanNode node) {
         try {
-            return (Double) node.left.Accept(this) <  (Double) node.right.Accept(this);
+            return (Double.parseDouble(node.left.Accept(this).toString())) < (Double.parseDouble(node.right.Accept(this).toString()));
         } catch (Exception e){
             System.out.println("Mistakes were made <node");
         }
@@ -67,7 +67,7 @@ public class ATypeChecker extends Visitor {
     @Override
     public Boolean Visit(LessThanOrEqualNode node) {
         try {
-            return (Double) node.left.Accept(this) <=  (Double) node.right.Accept(this);
+            return Double.parseDouble(node.left.Accept(this).toString()) <=  Double.parseDouble(node.right.Accept(this).toString());
         } catch (Exception e){
             System.out.println("Mistakes were made <= node");
         }
@@ -244,6 +244,8 @@ public class ATypeChecker extends Visitor {
         String type, type2;
         type = node.type.Accept(this).toString();
 
+        CurrentSymbolTable.push(((BlockNode) node.block).symbolTable);
+
         if (!type.equals("void")){
             type2 = node.returnval.Accept(this).toString();
 
@@ -252,7 +254,11 @@ public class ATypeChecker extends Visitor {
             }
         }
 
+        CurrentSymbolTable.pop();
+
         node.block.Accept(this);
+
+
 
         return null;
     }
