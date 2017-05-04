@@ -2,6 +2,7 @@ package abstractSyntaxTree;
 
 import abstractSyntaxTree.nodes.*;
 import org.antlr.v4.runtime.tree.TerminalNode;
+import org.jetbrains.annotations.NotNull;
 import sourceParser.*;
 import org.apache.commons.collections4.*;
 import java.util.ArrayList;
@@ -11,28 +12,23 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
 
     @Override
     public Node visitProgram(FinalGrammarParser.ProgramContext ctx) {
-        ProgramNode prognode = new ProgramNode();
+        return new ProgramNode(){{
+            leftMain = visitBlock(ctx.body());
 
-        prognode.leftMain = visitBlock(ctx.body());
-
-        for (FinalGrammarParser.MethodsContext m: ctx.methods()
-                ) {
-            if (m != null) {
-                prognode.methods.add(visitMethods(m));
+            for (FinalGrammarParser.MethodsContext m: ctx.methods()
+                    ) {
+                if (m != null) {
+                    methods.add(visitMethods(m));
+                }
             }
-        }
-        prognode.ChildrenList.addAll(prognode.methods);
-        CollectionUtils.addIgnoreNull(prognode.ChildrenList, prognode.leftMain);
-
-        return prognode;
+            CollectionUtils.addIgnoreNull(ChildrenList, leftMain);
+            ChildrenList.addAll(methods);
+        }};
     }
 
+    @NotNull
     private Node visitBlock(List<FinalGrammarParser.BodyContext> bodyContexts){
-        BlockNode blockNode = new BlockNode();
-
-        blockNode.ChildrenList = new ArrayList<>(visitBodyList(bodyContexts));
-
-        return blockNode;
+        return new BlockNode(){{ChildrenList = new ArrayList<>(visitBodyList(bodyContexts));}};
     }
 
     private List<Node> visitBodyList(List<FinalGrammarParser.BodyContext> bodyContexts){
@@ -46,21 +42,20 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
 
         return nodeList;
     }
+
     @Override
     public Node visitBody(FinalGrammarParser.BodyContext ctx) {
-        BodyNode body = new BodyNode();
+        return new BodyNode(){{
+            if (ctx.dcl() != null) {
+                content = visitDcl(ctx.dcl());
+            } else if (ctx.call() != null){
+                content = visitCall(ctx.call());
+            } else if(ctx.stmt() != null) {
+                content = visitStmt(ctx.stmt());
+            }
 
-        if (ctx.dcl() != null) {
-            body.content = visitDcl(ctx.dcl());
-        } else if (ctx.call() != null){
-            body.content = visitCall(ctx.call());
-        } else if(ctx.stmt() != null) {
-            body.content = visitStmt(ctx.stmt());
-        }
-
-        CollectionUtils.addIgnoreNull(body.ChildrenList, body.content);
-
-        return body;
+            CollectionUtils.addIgnoreNull(ChildrenList, content);
+        }};
     }
 
     @Override
@@ -95,10 +90,8 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
         if (ctx.type() != null){
             dclNode.left = visitType(ctx.type());
             dclNode.middle = visitTerminal(ctx.Identifier(0));
-            if (ctx.expr() != null){
-                dclNode.right = visitExpr(ctx.expr());
-            } else if (ctx.r_boolean() != null){
-                dclNode.right = visitR_boolean(ctx.r_boolean());
+            if (ctx.b() != null){
+                dclNode.right = visitB(ctx.b());
             }
         } else if (ctx.instancedcl() != null){
             dclNode.left = visitInstancedcl(ctx.instancedcl());
@@ -134,7 +127,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
     private Node visitWhile(FinalGrammarParser.StmtContext ctx){
         WhileNode whileNode = new WhileNode();
 
-        whileNode.bool = visitR_boolean(ctx.r_boolean());
+        whileNode.bool = visitB(ctx.b());
         whileNode.block = visitBlock(ctx.body());
 
         CollectionUtils.addIgnoreNull(whileNode.ChildrenList, whileNode.bool);
@@ -160,7 +153,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
     private Node visitIf(FinalGrammarParser.StmtContext ctx){
         IfNode ifNode = new IfNode();
 
-        ifNode.bool = visitR_boolean(ctx.r_boolean());
+        ifNode.bool = visitB(ctx.b());
         ifNode.block = visitBlock(ctx.body());
 
         for (FinalGrammarParser.ElseifContext elseifContext: ctx.elseif()){
@@ -185,14 +178,16 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
     }
 
     private Node visitAssign(FinalGrammarParser.StmtContext ctx){
-        AssignNode assignNode = new AssignNode();
+        return new AssignNode(){{
+            left = visitTerminal(ctx.Identifier(0));
 
-        assignNode.left = visitTerminal(ctx.Identifier());
-        assignNode.right = visitExpr(ctx.expr());
+            if (ctx.b() != null) {
+                right = visitB(ctx.b());
+            }
 
-        assignNode.ChildrenList.add(assignNode.left);
-        assignNode.ChildrenList.add(assignNode.right);
-        return assignNode;
+            ChildrenList.add(left);
+            CollectionUtils.addIgnoreNull(ChildrenList, right);
+        }};
     }
 
     @Override
@@ -246,57 +241,34 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
 
     @Override
     public Node visitReturnval(FinalGrammarParser.ReturnvalContext ctx) {
-        ReturnValNode returnValNode = new ReturnValNode();
-
-        if (ctx.expr() != null){
-            returnValNode.returnvalue = visitExpr(ctx.expr());
-        } else if (ctx.boolexpr() != null){
-            returnValNode.returnvalue = visitBoolexpr(ctx.boolexpr());
-        }
-
-        CollectionUtils.addIgnoreNull(returnValNode.ChildrenList, returnValNode.returnvalue);
-
-        return returnValNode;
+        return new ReturnValNode(){{
+            returnvalue = visitB(ctx.b());
+            CollectionUtils.addIgnoreNull(ChildrenList, returnvalue);
+        }};
     }
 
     @Override
     public Node visitInstancedcl(FinalGrammarParser.InstancedclContext ctx) {
-        InstanceNode instanceNode = new InstanceNode();
-
-        instanceNode.instance = ctx.getText();
-
-        return instanceNode;
+        return new InstanceNode(){{instance = ctx.getText();}};
     }
 
     @Override
     public Node visitElseif(FinalGrammarParser.ElseifContext ctx) {
-        ElseIfNode elseIfNode = new ElseIfNode();
-
-        elseIfNode.bool = visitR_boolean(ctx.r_boolean());
-
-        elseIfNode.block = visitBlock(ctx.body());
-
-        elseIfNode.ChildrenList.add(elseIfNode.bool);
-        elseIfNode.ChildrenList.add(elseIfNode.block);
-        return elseIfNode;
+        return new ElseIfNode(){{
+            bool = visitB(ctx.b());
+            block = visitBlock(ctx.body());
+            ChildrenList.add(bool);
+            ChildrenList.add(block);}};
     }
 
     @Override
     public Node visitElsel(FinalGrammarParser.ElselContext ctx) {
-        ElseNode elseNode = new ElseNode();
-        elseNode.block = visitBlock(ctx.body());
-
-        elseNode.ChildrenList.add(elseNode.block);
-        return elseNode;
+        return new ElseNode(){{block = visitBlock(ctx.body()); ChildrenList.add(block);}};
     }
 
     @Override
     public Node visitType(FinalGrammarParser.TypeContext ctx) {
-        TypesNode typesNode = new TypesNode();
-
-        typesNode.type = ctx.getText();
-
-        return typesNode;
+        return new TypesNode(){{type = ctx.getText();}};
     }
 
     @Override
@@ -321,36 +293,35 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
         return valueNode;
     }
 
+    @NotNull
     private Node visitUnary(FinalGrammarParser.ExprContext ctx){
-        UnaryMinusNode unaryMinusNode = new UnaryMinusNode();
-        unaryMinusNode.child = visitExpr(ctx.expr());
-
-        unaryMinusNode.ChildrenList.add(unaryMinusNode.child);
-        return unaryMinusNode;
+        return new UnaryMinusNode(){{
+            child = visitExpr(ctx.expr());
+            ChildrenList.add(child);}};
     }
 
     @Override
     public Node visitExpr(FinalGrammarParser.ExprContext ctx) {
 
         if (ctx.getChildCount() == 1){
-            TermNode termNode = new TermNode();
-            termNode.child = visitTerm(ctx.term());
-            termNode.ChildrenList.add(termNode.child);
-            return termNode;
+            return new TermNode(){{
+                child = visitTerm(ctx.term());
+                ChildrenList.add(child);
+            }};
         } else if(ctx.getText().contains("+")){
-            PlusNode plusNode = new PlusNode();
-            plusNode.left = visitTerm(ctx.term());
-            plusNode.right = visitExpr(ctx.expr());
-            plusNode.ChildrenList.add(plusNode.left);
-            plusNode.ChildrenList.add(plusNode.right);
-            return plusNode;
+            return new PlusNode(){{
+                left = visitTerm(ctx.term());
+                right = visitExpr(ctx.expr());
+                ChildrenList.add(left);
+                ChildrenList.add(right);
+            }};
         } else if (ctx.getText().contains("-")){
-            MinusNode minusNode = new MinusNode();
-            minusNode.left = visitTerm(ctx.term());
-            minusNode.right = visitExpr(ctx.expr());
-            minusNode.ChildrenList.add(minusNode.left);
-            minusNode.ChildrenList.add(minusNode.right);
-            return minusNode;
+            return new MinusNode(){{
+                left = visitTerm(ctx.term());
+                right = visitExpr(ctx.expr());
+                ChildrenList.add(left);
+                ChildrenList.add(right);
+            }};
         }
 
 
@@ -359,167 +330,199 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
 
     @Override
     public Node visitTerm(FinalGrammarParser.TermContext ctx) {
-
         if (ctx.getChildCount() == 1){
             return visitVal(ctx.val());
         } else if (ctx.getChild(1).getText().equals("*")){
-            TimesNode timesNode = new TimesNode();
-            timesNode.left = visitVal(ctx.val());
-            timesNode.right = visitTerm(ctx.term());
-            timesNode.ChildrenList.add(timesNode.left);
-            timesNode.ChildrenList.add(timesNode.right);
-            return timesNode;
+            return new TimesNode(){{
+                left = visitVal(ctx.val());
+                right = visitTerm(ctx.term());
+                ChildrenList.add(left);
+                ChildrenList.add(right);
+            }};
         } else if (ctx.getChild(1).getText().equals("/")){
-            DivideNode divideNode = new DivideNode();
-            divideNode.left = visitVal(ctx.val());
-            divideNode.right = visitTerm(ctx.term());
-            divideNode.ChildrenList.add(divideNode.left);
-            divideNode.ChildrenList.add(divideNode.right);
-            return divideNode;
+            return new DivideNode(){{
+                left = visitVal(ctx.val());
+                right = visitTerm(ctx.term());
+                ChildrenList.add(left);
+                ChildrenList.add(right);
+            }};
+        }
+        return null;
+    }
+
+    @Override
+    public Node visitStatid(FinalGrammarParser.StatidContext ctx) {
+        return new StatIdNode(){{
+            if (ctx.statlistid() != null){
+                instance = visitStatlistid(ctx.statlistid());
+            } else if (ctx.statmotorid() != null) {
+                instance = visitStatmotorid(ctx.statmotorid());
+            } else if (ctx.statsensorid() != null) {
+                instance = visitStatsensorid(ctx.statsensorid());
+            }
+            ChildrenList.add(instance);
+        }};
+    }
+
+    @Override
+    public Node visitB(FinalGrammarParser.BContext ctx) {
+        if (ctx.getChildCount() == 1){
+            return visitT(ctx.t());
+        } else if (ctx.getText().contains("and")) {
+            return new AndNode() {{
+                left = visitT(ctx.t());
+                right = visitB(ctx.b());
+
+                ChildrenList.add(left);
+                ChildrenList.add(right);
+            }};
         }
 
         return null;
     }
 
     @Override
-    public Node visitR_boolean(FinalGrammarParser.R_booleanContext ctx) {
-        RBooleanNode rBooleanNode = new RBooleanNode();
+    public Node visitT(FinalGrammarParser.TContext ctx) {
+        if (ctx.getChildCount() == 1){
+            return visitF(ctx.f());
+        } else if (ctx.getText().contains("or")) {
+            return new OrNode() {{
+                left = visitF(ctx.f());
+                right = visitT(ctx.t());
 
-        if(ctx.Identifier() != null && ctx.getChildCount() < 3){
-            if(ctx.getChildCount() == 1){
-                rBooleanNode.left = visitTerminal(ctx.Identifier());
-            } else if(ctx.getChildCount() == 2){
-                NotBoolNode notBoolNode = new NotBoolNode();
-                notBoolNode.child = visitTerminal(ctx.Identifier());
-                notBoolNode.ChildrenList.add(notBoolNode.child);
-                rBooleanNode.left = notBoolNode;
-            }
-        } else if(ctx.call() != null){
-            rBooleanNode.left = visitCall(ctx.call());
-        } else if(ctx.boolexpr() != null){
-            rBooleanNode.left = visitBoolexpr(ctx.boolexpr());
-        } else if(ctx.getChildCount() == 3){
-            if(ctx.getChild(0) == ctx.expr()){
-                rBooleanNode.left = visitExpr(ctx.expr());
-                rBooleanNode.middle = visitBoolvalop(ctx.boolvalop());
-                rBooleanNode.right = visitTerminal(ctx.Identifier());
-            } else if(ctx.getChild(0) == ctx.Identifier()){
-                rBooleanNode.left = visitTerminal(ctx.Identifier());
-                rBooleanNode.middle = visitBoolvalop(ctx.boolvalop());
-                rBooleanNode.right = visitExpr(ctx.expr());
-            }
-        } else {
-            return null;
+                ChildrenList.add(left);
+                ChildrenList.add(right);
+            }};
         }
 
-        rBooleanNode.ChildrenList.add(rBooleanNode.left);
-        CollectionUtils.addIgnoreNull(rBooleanNode.ChildrenList, rBooleanNode.middle);
-        CollectionUtils.addIgnoreNull(rBooleanNode.ChildrenList, rBooleanNode.right);
-        return rBooleanNode;
+        return null;
     }
 
     @Override
-    public Node visitStatid(FinalGrammarParser.StatidContext ctx) {
-        StatIdNode statIdNode = new StatIdNode();
+    public Node visitF(FinalGrammarParser.FContext ctx) {
+        if (ctx.getChildCount() == 1){
+            return visitH(ctx.h());
+        } else if (ctx.getText().contains("equal")) {
+            return new EqualNode() {{
+                left = visitH(ctx.h());
+                right = visitF(ctx.f());
 
-        if (ctx.statlistid() != null){
-            statIdNode.instance = visitStatlistid(ctx.statlistid());
-        } else if (ctx.statmotorid() != null) {
-            statIdNode.instance = visitStatmotorid(ctx.statmotorid());
-        } else if (ctx.statsensorid() != null) {
-            statIdNode.instance = visitStatsensorid(ctx.statsensorid());
+                ChildrenList.add(left);
+                ChildrenList.add(right);
+            }};
+        } else if (ctx.getText().contains("notEqual")) {
+            return new NotEqualNode() {{
+                left = visitH(ctx.h());
+                right = visitF(ctx.f());
+
+                ChildrenList.add(left);
+                ChildrenList.add(right);
+            }};
         }
 
-        statIdNode.ChildrenList.add(statIdNode.instance);
-        return statIdNode;
+        return null;
     }
 
     @Override
-    public Node visitBoolexpr(FinalGrammarParser.BoolexprContext ctx) {
-        BoolExprNode boolExprNode = new BoolExprNode();
+    public Node visitH(FinalGrammarParser.HContext ctx) {
+        if (ctx.getChildCount() == 1){
+            return visitI(ctx.i());
+        } else if (ctx.getText().contains("lessThan")) {
+            return new LessThanNode() {{
+                left = visitI(ctx.i());
+                right = visitH(ctx.h());
 
-        if (ctx.expr() != null){
-            boolExprNode.left = visitExpr(ctx.expr());
-            boolExprNode.middle = visitBoolvalop(ctx.boolvalop());
-            boolExprNode.right = visitBoolexpr(ctx.boolexpr());
-        } else if (ctx.getChild(1).getText().equals("not")){
-            boolExprNode.left = visitUnaryBoolExpr(ctx);
-        } else {
-            if (ctx.Bool() != null) {
-                boolExprNode.left = visitTerminal(ctx.Bool());
-            } else if (ctx.Identifier() != null){
-                boolExprNode.left = visitTerminal(ctx.Identifier());
-            } else if (ctx.call() != null){
-                boolExprNode.left = visitCall(ctx.call());
-            }
-            boolExprNode.middle = visitBoolop(ctx.boolop());
-            boolExprNode.right = visitR_boolean(ctx.r_boolean());
+                ChildrenList.add(left);
+                ChildrenList.add(right);
+            }};
+        } else if (ctx.getText().contains("lessThanOrEqual")) {
+            return new LessThanOrEqualNode() {{
+                left = visitI(ctx.i());
+                right = visitH(ctx.h());
+
+                ChildrenList.add(left);
+                ChildrenList.add(right);
+            }};
+        } else if (ctx.getText().contains("greaterThan")) {
+            return new GreaterThanNode() {{
+                left = visitI(ctx.i());
+                right = visitH(ctx.h());
+
+                ChildrenList.add(left);
+                ChildrenList.add(right);
+            }};
+        } else if (ctx.getText().contains("greaterThanOrEqual")) {
+            return new GreaterThanOrEqualNode() {{
+                left = visitI(ctx.i());
+                right = visitH(ctx.h());
+
+                ChildrenList.add(left);
+                ChildrenList.add(right);
+            }};
+        } else if (ctx.getText().contains("equal")) {
+            return new EqualNode() {{
+                left = visitI(ctx.i());
+                right = visitH(ctx.h());
+
+                ChildrenList.add(left);
+                ChildrenList.add(right);
+            }};
+        } else if (ctx.getText().contains("notEqual")) {
+            return new NotEqualNode() {{
+                left = visitI(ctx.i());
+                right = visitH(ctx.h());
+
+                ChildrenList.add(left);
+                ChildrenList.add(right);
+            }};
         }
 
-        boolExprNode.ChildrenList.add(boolExprNode.left);
-        CollectionUtils.addIgnoreNull(boolExprNode.ChildrenList, boolExprNode.middle);
-        CollectionUtils.addIgnoreNull(boolExprNode.ChildrenList, boolExprNode.right);
-        return boolExprNode;
+        return null;
     }
 
-    private Node visitUnaryBoolExpr(FinalGrammarParser.BoolexprContext ctx){
-        NegatedBoolNode negatedBoolNode = new NegatedBoolNode();
-
+    @Override
+    public Node visitI(FinalGrammarParser.IContext ctx) {
+        /*
+        if (ctx.Num() != null) {
+            return visitTerminal(ctx.Num());
+        } else if (ctx.Bool() != null) {
+            return visitTerminal(ctx.Bool());
+        } else if (ctx.Identifier() != null) {
+            return visitTerminal(ctx.Identifier());
+        } else if (ctx.call() != null) {
+            return visitCall(ctx.call());
+        } else
+        */
         if (ctx.Bool() != null) {
-            negatedBoolNode.left = visitTerminal(ctx.Bool());
-        } else if (ctx.Identifier() != null){
-            negatedBoolNode.left = visitTerminal(ctx.Identifier());
-        } else if (ctx.call() != null){
-            negatedBoolNode.left = visitCall(ctx.call());
+            return visitTerminal(ctx.Bool());
+        } else if (ctx.expr() != null) {
+            return visitExpr(ctx.expr());
+        } else if (ctx.getText().contains("not")) {
+            return new NotBoolNode(){{
+                child = visitB(ctx.b());
+
+                ChildrenList.add(child);
+            }};
+        } else if (ctx.b() != null) {
+            return visitB(ctx.b());
         }
-        negatedBoolNode.middle = visitBoolop(ctx.boolop());
-        negatedBoolNode.right = visitR_boolean(ctx.r_boolean());
 
-        negatedBoolNode.ChildrenList.add(negatedBoolNode.left);
-        negatedBoolNode.ChildrenList.add(negatedBoolNode.middle);
-        negatedBoolNode.ChildrenList.add(negatedBoolNode.right);
-        return negatedBoolNode;
-    }
-
-    @Override
-    public Node visitBoolvalop(FinalGrammarParser.BoolvalopContext ctx) {
-        BoolValOpNode boolValOpNode = new BoolValOpNode();
-
-        boolValOpNode.boolValOperator = ctx.getText();
-
-        return boolValOpNode;
+        return null;
     }
 
     @Override
     public Node visitStatmotorid(FinalGrammarParser.StatmotoridContext ctx) {
-        StatMotorNode statMotorNode = new StatMotorNode();
-
-        statMotorNode.instance = ctx.getText();
-
-        return statMotorNode;
+        return new StatMotorNode(){{instance = ctx.getText();}};
     }
 
     @Override
     public Node visitStatsensorid(FinalGrammarParser.StatsensoridContext ctx) {
-        StatSensorNode statSensorNode = new StatSensorNode();
-
-        statSensorNode.instance = ctx.getText();
-
-        return statSensorNode;
+        return new StatSensorNode(){{instance = ctx.getText();}};
     }
 
     @Override
     public Node visitStatlistid(FinalGrammarParser.StatlistidContext ctx) {
-        StatListNode statListNode = new StatListNode();
-
-        statListNode.instance = ctx.getText();
-
-        return statListNode;
-    }
-
-    @Override
-    public Node visitBoolop(FinalGrammarParser.BoolopContext ctx) {
-        return new BoolOpNode(){{child = ctx.getText();}};
+        return new StatListNode(){{instance = ctx.getText();}};
     }
 
     @Override

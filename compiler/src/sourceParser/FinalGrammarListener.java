@@ -1,4 +1,4 @@
-// Generated from C:/Users/Stefan/Desktop/4. Semester/Git/compiler/src/sourceParser\FinalGrammar.g4 by ANTLR 4.6
+// Generated from C:/Users/Simon/Documents/P4/compiler/src/sourceParser\FinalGrammar.g4 by ANTLR 4.7
 package sourceParser;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
@@ -128,15 +128,55 @@ public interface FinalGrammarListener extends ParseTreeListener {
 	 */
 	void exitTerm(FinalGrammarParser.TermContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link FinalGrammarParser#r_boolean}.
+	 * Enter a parse tree produced by {@link FinalGrammarParser#b}.
 	 * @param ctx the parse tree
 	 */
-	void enterR_boolean(FinalGrammarParser.R_booleanContext ctx);
+	void enterB(FinalGrammarParser.BContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link FinalGrammarParser#r_boolean}.
+	 * Exit a parse tree produced by {@link FinalGrammarParser#b}.
 	 * @param ctx the parse tree
 	 */
-	void exitR_boolean(FinalGrammarParser.R_booleanContext ctx);
+	void exitB(FinalGrammarParser.BContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link FinalGrammarParser#t}.
+	 * @param ctx the parse tree
+	 */
+	void enterT(FinalGrammarParser.TContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link FinalGrammarParser#t}.
+	 * @param ctx the parse tree
+	 */
+	void exitT(FinalGrammarParser.TContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link FinalGrammarParser#f}.
+	 * @param ctx the parse tree
+	 */
+	void enterF(FinalGrammarParser.FContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link FinalGrammarParser#f}.
+	 * @param ctx the parse tree
+	 */
+	void exitF(FinalGrammarParser.FContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link FinalGrammarParser#h}.
+	 * @param ctx the parse tree
+	 */
+	void enterH(FinalGrammarParser.HContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link FinalGrammarParser#h}.
+	 * @param ctx the parse tree
+	 */
+	void exitH(FinalGrammarParser.HContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link FinalGrammarParser#i}.
+	 * @param ctx the parse tree
+	 */
+	void enterI(FinalGrammarParser.IContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link FinalGrammarParser#i}.
+	 * @param ctx the parse tree
+	 */
+	void exitI(FinalGrammarParser.IContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link FinalGrammarParser#instancedcl}.
 	 * @param ctx the parse tree
@@ -187,16 +227,6 @@ public interface FinalGrammarListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitStatid(FinalGrammarParser.StatidContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link FinalGrammarParser#boolexpr}.
-	 * @param ctx the parse tree
-	 */
-	void enterBoolexpr(FinalGrammarParser.BoolexprContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link FinalGrammarParser#boolexpr}.
-	 * @param ctx the parse tree
-	 */
-	void exitBoolexpr(FinalGrammarParser.BoolexprContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link FinalGrammarParser#boolvalop}.
 	 * @param ctx the parse tree

@@ -1,26 +1,48 @@
 main
 {
-    number a = 25 * 100 * 99 / 50;
-    number b = 50;
-    number c;
-    bool k = true;
 
-    for(1 to 10) do
-    {
+    bool aaa = 10 greaterThan 5 and 14 lessThan 20 or true ;
+
+    if (aaa) then {
+        number b = 25;
+        number a = 30;
+
+        a = a + b * b + ( 25 + b ) ;
+    } else {
+        number a = 10;
+
+        while (a lessThan 199) do {
+            for(a to  10) do {
+                number b;
+            }
+            number b = 10;
+        }
 
     }
-    new Motor[d] hey;
 
-    addMethod(a, b);
 
-    if(not false) then {  }
+    if (hh()) then {
+        number g = hey(25, 100);
+    } else if (hh() or aaa and true) then {
+        number a = 10;
+        number b = 10;
 
+        a = hey(a, b);
+    }
 }
 
+number Method hey(number v, number m){
 
-number Method addMethod(number k, number p)
-{
-    number x = k + p;
+    number a = v + m;
 
-    return x;
+
+    return a;
+}
+
+bool Method hh(){
+
+    bool l = true;
+
+    return l;
+
 }

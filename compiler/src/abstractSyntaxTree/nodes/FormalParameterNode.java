@@ -1,10 +1,14 @@
 package abstractSyntaxTree.nodes;
 
-/**
- * Created by Stefan on 29-03-2017.
- */
+import AVisitor.Visitor;
+
 public class FormalParameterNode extends Node {
     public Node id;
     public Node type;
     public Node fprmt;
+
+    @Override
+    public Object Accept(Visitor visitor) {
+        return visitor.Visit(this);
+    }
 }

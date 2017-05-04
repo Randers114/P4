@@ -1,8 +1,12 @@
 package abstractSyntaxTree.nodes;
 
-/**
- * Created by Stefan on 29-03-2017.
- */
+import AVisitor.Visitor;
+
 public class BodyNode extends Node {
     public Node content;
+
+    @Override
+    public Object Accept(Visitor visitor) {
+        return visitor.Visit(this);
+    }
 }
