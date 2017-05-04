@@ -100,8 +100,14 @@ public class ATypeChecker extends Visitor {
         type = (String) node.left.Accept(this);
         type2 = (String) node.right.Accept(this);
 
+        if (type2.equals("true") || type2.equals("false") || type2.equals("bool")) {
+            type2 = "bool";
+        } else {
+            type2 = "number";
+        }
+
         if (!type.equals(type2)){
-            System.out.println("Mistakes have been made");
+            System.out.println("Mistakes have been made assignNode");
         }
 
         return null;
@@ -148,7 +154,7 @@ public class ATypeChecker extends Visitor {
                         }
                     }
                 } else {
-                    System.out.println("Mistakes have been made");
+                    System.out.println("Mistakes have been made callnode");
                 }
             }
         }
@@ -158,7 +164,7 @@ public class ATypeChecker extends Visitor {
 
     @Override
     public Void Visit(DclNode node) {
-        String type, type2, rightNode;
+        String type, type2 = "", rightNode;
         type = node.left.Accept(this).toString();
 
         if (node.right != null){
@@ -171,21 +177,15 @@ public class ATypeChecker extends Visitor {
             }
 
             if (!type.equals(type2)){
-                System.out.println("Mistakes have been made");
+                System.out.println("Mistakes have been made dclNode");
             }
         }
         return null;
     }
 
     @Override
-    public Double Visit(DivideNode node) {
-        try {
-            return Double.parseDouble(node.left.Accept(this).toString()) / Double.parseDouble(node.right.Accept(this).toString());
-        } catch (Exception e){
-            System.out.println("Invalid input");
-        }
-
-        return null;
+    public String Visit(DivideNode node) {
+        return CheckForNumber(node);
     }
 
     @Override
@@ -223,10 +223,13 @@ public class ATypeChecker extends Visitor {
     public Void Visit(IfNode node) {
         node.bool.Accept(this);
         node.block.Accept(this);
-        for (Node n: node.elseif
-             ) {
-            n.Accept(this);
+        if (node.elseif != null) {
+            for (Node n: node.elseif
+                    ) {
+                n.Accept(this);
+            }
         }
+
         if (node.el != null) {
             node.el.Accept(this);
         }
@@ -250,7 +253,7 @@ public class ATypeChecker extends Visitor {
             type2 = node.returnval.Accept(this).toString();
 
             if (!type.equals(type2)){
-                System.out.println("Mistakes have been made");
+                System.out.println("Mistakes have been made methodNode");
             }
         }
 
@@ -264,14 +267,8 @@ public class ATypeChecker extends Visitor {
     }
 
     @Override
-    public Double Visit(MinusNode node) {
-        try {
-            return Double.parseDouble(node.left.Accept(this).toString()) - Double.parseDouble(node.right.Accept(this).toString());
-        } catch (Exception e){
-            System.out.println("Invalid input");
-        }
-
-        return null;
+    public String Visit(MinusNode node) {
+        return CheckForNumber(node);
     }
 
     @Override
@@ -290,14 +287,8 @@ public class ATypeChecker extends Visitor {
     }
 
     @Override
-    public Double Visit(PlusNode node) {
-        try {
-            return Double.parseDouble(node.left.Accept(this).toString()) + Double.parseDouble(node.right.Accept(this).toString());
-        } catch (Exception e){
-            System.out.println("Invalid input");
-        }
-
-        return null;
+    public String Visit(PlusNode node) {
+        return CheckForNumber(node);
     }
 
     @Override
@@ -359,14 +350,8 @@ public class ATypeChecker extends Visitor {
     }
 
     @Override
-    public Double Visit(TimesNode node) {
-        try {
-            return Double.parseDouble(node.left.Accept(this).toString()) * Double.parseDouble(node.right.Accept(this).toString());
-        } catch (Exception e){
-            System.out.println("Invalid input");
-        }
-
-        return null;
+    public String Visit(TimesNode node) {
+        return CheckForNumber(node);
     }
 
     @Override
@@ -375,8 +360,8 @@ public class ATypeChecker extends Visitor {
     }
 
     @Override
-    public Double Visit(UnaryMinusNode node) {
-        return - (Double) node.child.Accept(this);
+    public String Visit(UnaryMinusNode node) {
+        return CheckForNumber(node);
     }
 
     @Override
@@ -425,6 +410,32 @@ public class ATypeChecker extends Visitor {
         if (node.fprmt != null){
             TraverseParameters((FormalParameterNode) node.fprmt, list);
         }
+    }
+
+    private String CheckForNumber(OpNode node){
+        String type, type2;
+
+        type = node.left.Accept(this).toString();
+        type2 = node.right.Accept(this).toString();
+
+        if (type.equals("number") && type2.equals("number") || type.equals("number") && type2.matches(".*[0-9]+.*") || type.matches(".*[0-9]+.*") && type2.equals("number")){
+            return "number";
+        } else {
+            System.out.println("Invalid input");
+        }
+
+        return null;
+    }
+
+    private String CheckForNumber(Single node){
+        String type;
+
+        type = node.child.Accept(this).toString();
+
+        if (type.equals("number") || type.matches(".*[0-9]+.*")){
+            return "number";
+        }
+        return null;
     }
 }
 

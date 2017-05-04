@@ -7,7 +7,7 @@ main
         number b = 25;
         number a = 30;
 
-        a = a + b * b + ( 25 + b ) ;
+        a = a + b * b + ( 25 + b );
     } else {
         number a = 10;
 

@@ -8,6 +8,8 @@ import org.apache.commons.collections4.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javafx.scene.input.KeyCode.Z;
+
 public class AstBuild extends FinalGrammarBaseVisitor<Node> {
 
     @Override
@@ -109,14 +111,14 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
     public Node visitStmt(FinalGrammarParser.StmtContext ctx) {
         StmtNode stmtNode = new StmtNode();
 
-        if (ctx.getText().contains("=")){
-            stmtNode.child = visitAssign(ctx);
-        } else if (ctx.getText().contains("if")){
+        if (ctx.getText().contains("if")){
             stmtNode.child = visitIf(ctx);
         } else if (ctx.getText().contains("while")){
             stmtNode.child = visitWhile(ctx);
         } else if (ctx.getText().contains("for")){
             stmtNode.child = visitFor(ctx);
+        } else if (ctx.Identifier() != null){
+            stmtNode.child = visitAssign(ctx);
         }
 
         CollectionUtils.addIgnoreNull(stmtNode.ChildrenList, stmtNode.child);
@@ -138,9 +140,20 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
 
     private Node visitFor(FinalGrammarParser.StmtContext ctx){
         ForNode forNode = new ForNode();
+        if (ctx.Num().size() > 1){
+            forNode.startNumber = visitTerminal(ctx.Num(0));
+            forNode.endNumber = visitTerminal(ctx.Num(1));
+        } else if (ctx.Identifier().size() > 1){
+            forNode.startNumber = visitTerminal(ctx.Identifier(0));
+            forNode.endNumber = visitTerminal(ctx.Identifier(1));
+        } else if (ctx.getChild(2).getText().matches(".*[a-z A-Z]+.*")) {
+            forNode.startNumber = visitTerminal(ctx.Num(0));
+            forNode.endNumber = visitTerminal(ctx.Identifier(0));
+        } else {
+            forNode.startNumber = visitTerminal(ctx.Identifier(0));
+            forNode.endNumber = visitTerminal(ctx.Num(0));
+        }
 
-        forNode.startNumber = visitTerminal(ctx.Num(0));
-        forNode.endNumber = visitTerminal(ctx.Num(1));
         forNode.block = visitBlock(ctx.body());
 
         forNode.ChildrenList.add(forNode.startNumber);
@@ -281,9 +294,9 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
             valueNode.child = visitCall(ctx.call());
         } else if (ctx.Identifier() != null){
             valueNode.child = visitTerminal(ctx.Identifier());
-        } else if(ctx.getStart().getText().equals("(")){
-            valueNode.child = visitExpr(ctx.expr());
-        } else if(ctx.getStart().getText().equals("-")){
+        } else if(ctx.b() != null){
+            valueNode.child = visitB(ctx.b());
+        } else if(ctx.expr() != null){
             valueNode.child = visitUnary(ctx.expr());
         } else {
             return null;
@@ -482,17 +495,6 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
 
     @Override
     public Node visitI(FinalGrammarParser.IContext ctx) {
-        /*
-        if (ctx.Num() != null) {
-            return visitTerminal(ctx.Num());
-        } else if (ctx.Bool() != null) {
-            return visitTerminal(ctx.Bool());
-        } else if (ctx.Identifier() != null) {
-            return visitTerminal(ctx.Identifier());
-        } else if (ctx.call() != null) {
-            return visitCall(ctx.call());
-        } else
-        */
         if (ctx.Bool() != null) {
             return visitTerminal(ctx.Bool());
         } else if (ctx.expr() != null) {
@@ -503,8 +505,6 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
 
                 ChildrenList.add(child);
             }};
-        } else if (ctx.b() != null) {
-            return visitB(ctx.b());
         }
 
         return null;
