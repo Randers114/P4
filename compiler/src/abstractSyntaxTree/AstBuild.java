@@ -106,6 +106,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
         CollectionUtils.addIgnoreNull(dclNode.ChildrenList, dclNode.left);
         CollectionUtils.addIgnoreNull(dclNode.ChildrenList, dclNode.middle);
         CollectionUtils.addIgnoreNull(dclNode.ChildrenList, dclNode.right);
+        dclNode.middle.LineNumber = ctx.start.getLine();
         dclNode.LineNumber = ctx.start.getLine();
         return dclNode;
     }
@@ -156,7 +157,8 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
             forNode.startNumber = visitTerminal(ctx.Identifier(0));
             forNode.endNumber = visitTerminal(ctx.Num(0));
         }
-
+        forNode.startNumber.LineNumber = ctx.start.getLine();
+        forNode.endNumber.LineNumber = ctx.start.getLine();
         forNode.block = visitBlock(ctx.body());
 
         forNode.ChildrenList.add(forNode.startNumber);
@@ -197,7 +199,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
     private Node visitAssign(FinalGrammarParser.StmtContext ctx){
         return new AssignNode(){{
             left = visitTerminal(ctx.Identifier(0));
-
+            left.LineNumber = ctx.Identifier(0).getSymbol().getLine();
             if (ctx.b() != null) {
                 right = visitB(ctx.b());
             }
@@ -213,6 +215,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
         CallNode callNode = new CallNode();
 
         callNode.id = visitTerminal(ctx.Identifier());
+        callNode.id.LineNumber = ctx.Identifier().getSymbol().getLine();
         if(ctx.statid() != null){
             callNode.statId = visitStatid(ctx.statid());
         }
@@ -233,6 +236,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
 
         formalParameterNode.type = visitType(ctx.type());
         formalParameterNode.id = visitTerminal(ctx.Identifier());
+        formalParameterNode.id.LineNumber = ctx.Identifier().getSymbol().getLine();
 
         if (ctx.fprmt() != null){
             formalParameterNode.fprmt = visitFprmt(ctx.fprmt());
@@ -310,10 +314,12 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
 
         if (ctx.Num() != null){
             valueNode.child = visitTerminal(ctx.Num());
+            valueNode.child.LineNumber = ctx.Num().getSymbol().getLine();
         } else if (ctx.call() != null){
             valueNode.child = visitCall(ctx.call());
         } else if (ctx.Identifier() != null){
             valueNode.child = visitTerminal(ctx.Identifier());
+            valueNode.child.LineNumber = ctx.Identifier().getSymbol().getLine();
         } else if(ctx.b() != null){
             valueNode.child = visitB(ctx.b());
         } else if(ctx.expr() != null){
