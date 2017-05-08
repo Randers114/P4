@@ -370,7 +370,7 @@ public class ATypeChecker extends Visitor {
     @Override
     public Void Visit(WhileNode node) {
         if (!node.bool.Accept(this).toString().equals("bool")){
-            System.out.println("while bool error");
+            System.out.println("while bool error " + node.LineNumber);
         }
         node.block.Accept(this);
         return null;

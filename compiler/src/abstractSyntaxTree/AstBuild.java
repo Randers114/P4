@@ -25,6 +25,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
             }
             CollectionUtils.addIgnoreNull(ChildrenList, leftMain);
             ChildrenList.addAll(methods);
+            LineNumber = ctx.start.getLine();
         }};
     }
 
@@ -57,6 +58,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
             }
 
             CollectionUtils.addIgnoreNull(ChildrenList, content);
+            LineNumber = ctx.start.getLine();
         }};
     }
 
@@ -81,7 +83,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
         CollectionUtils.addIgnoreNull(methodNode.ChildrenList, methodNode.fprmt);
         CollectionUtils.addIgnoreNull(methodNode.ChildrenList, methodNode.block);
         CollectionUtils.addIgnoreNull(methodNode.ChildrenList, methodNode.returnval);
-
+        methodNode.LineNumber = ctx.start.getLine();
         return methodNode;
     }
 
@@ -104,6 +106,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
         CollectionUtils.addIgnoreNull(dclNode.ChildrenList, dclNode.left);
         CollectionUtils.addIgnoreNull(dclNode.ChildrenList, dclNode.middle);
         CollectionUtils.addIgnoreNull(dclNode.ChildrenList, dclNode.right);
+        dclNode.LineNumber = ctx.start.getLine();
         return dclNode;
     }
 
@@ -122,7 +125,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
         }
 
         CollectionUtils.addIgnoreNull(stmtNode.ChildrenList, stmtNode.child);
-
+        stmtNode.LineNumber = ctx.start.getLine();
         return stmtNode;
     }
 
@@ -134,7 +137,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
 
         CollectionUtils.addIgnoreNull(whileNode.ChildrenList, whileNode.bool);
         whileNode.ChildrenList.add(whileNode.block);
-
+        whileNode.LineNumber = ctx.start.getLine();
         return whileNode;
     }
 
@@ -159,6 +162,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
         forNode.ChildrenList.add(forNode.startNumber);
         forNode.ChildrenList.add(forNode.endNumber);
         forNode.ChildrenList.add(forNode.block);
+        forNode.LineNumber = ctx.start.getLine();
 
         return forNode;
     }
@@ -175,8 +179,6 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
             }
         }
 
-
-
         if(ctx.elsel() != null) {
             ifNode.el = visitElsel(ctx.elsel());
         }
@@ -188,7 +190,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
         }
 
         CollectionUtils.addIgnoreNull(ifNode.ChildrenList, ifNode.el);
-
+        ifNode.LineNumber = ctx.start.getLine();
         return ifNode;
     }
 
@@ -202,6 +204,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
 
             ChildrenList.add(left);
             CollectionUtils.addIgnoreNull(ChildrenList, right);
+            LineNumber = ctx.start.getLine();
         }};
     }
 
@@ -220,6 +223,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
         callNode.ChildrenList.add(callNode.id);
         CollectionUtils.addIgnoreNull(callNode.ChildrenList, callNode.statId);
         CollectionUtils.addIgnoreNull(callNode.ChildrenList, callNode.parameter);
+        callNode.LineNumber = ctx.start.getLine();
         return callNode;
     }
 
@@ -236,6 +240,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
         formalParameterNode.ChildrenList.add(formalParameterNode.type);
         formalParameterNode.ChildrenList.add(formalParameterNode.id);
         CollectionUtils.addIgnoreNull(formalParameterNode.ChildrenList, formalParameterNode.fprmt);
+        formalParameterNode.LineNumber = ctx.start.getLine();
         return formalParameterNode;
     }
 
@@ -250,6 +255,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
         }
         parameterNode.ChildrenList.add(parameterNode.Parameter);
         CollectionUtils.addIgnoreNull(parameterNode.ChildrenList, parameterNode.prmt);
+        parameterNode.LineNumber = ctx.start.getLine();
         return parameterNode;
     }
 
@@ -259,12 +265,16 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
         return new ReturnValNode(){{
             returnvalue = visitB(ctx.b());
             CollectionUtils.addIgnoreNull(ChildrenList, returnvalue);
+            LineNumber = ctx.start.getLine();
         }};
     }
 
     @Override
     public Node visitInstancedcl(FinalGrammarParser.InstancedclContext ctx) {
-        return new InstanceNode(){{instance = ctx.getText();}};
+        return new InstanceNode(){{
+            instance = ctx.getText();
+            LineNumber = ctx.start.getLine();
+        }};
     }
 
     @Override
@@ -273,17 +283,25 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
             bool = visitB(ctx.b());
             block = visitBlock(ctx.body());
             ChildrenList.add(bool);
-            ChildrenList.add(block);}};
+            ChildrenList.add(block);
+            LineNumber = ctx.start.getLine();}};
+
     }
 
     @Override
     public Node visitElsel(FinalGrammarParser.ElselContext ctx) {
-        return new ElseNode(){{block = visitBlock(ctx.body()); ChildrenList.add(block);}};
+        return new ElseNode(){{
+            block = visitBlock(
+            ctx.body());
+            ChildrenList.add(block);
+            LineNumber = ctx.start.getLine();}};
     }
 
     @Override
     public Node visitType(FinalGrammarParser.TypeContext ctx) {
-        return new TypesNode(){{type = ctx.getText();}};
+        return new TypesNode(){{
+            type = ctx.getText();
+            LineNumber = ctx.start.getLine();}};
     }
 
     @Override
@@ -305,6 +323,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
         }
 
         valueNode.ChildrenList.add(valueNode.child);
+        valueNode.LineNumber = ctx.start.getLine();
         return valueNode;
     }
 
@@ -312,7 +331,9 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
     private Node visitUnary(FinalGrammarParser.ExprContext ctx){
         return new UnaryMinusNode(){{
             child = visitExpr(ctx.expr());
-            ChildrenList.add(child);}};
+            ChildrenList.add(child);
+            LineNumber = ctx.start.getLine();}};
+
     }
 
     @Override
@@ -322,6 +343,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
             return new TermNode(){{
                 child = visitTerm(ctx.term());
                 ChildrenList.add(child);
+                LineNumber = ctx.start.getLine();
             }};
         } else if(ctx.getText().contains("+")){
             return new PlusNode(){{
@@ -329,6 +351,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
                 right = visitExpr(ctx.expr());
                 ChildrenList.add(left);
                 ChildrenList.add(right);
+                LineNumber = ctx.start.getLine();
             }};
         } else if (ctx.getText().contains("-")){
             return new MinusNode(){{
@@ -336,6 +359,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
                 right = visitExpr(ctx.expr());
                 ChildrenList.add(left);
                 ChildrenList.add(right);
+                LineNumber = ctx.start.getLine();
             }};
         }
 
@@ -353,6 +377,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
                 right = visitTerm(ctx.term());
                 ChildrenList.add(left);
                 ChildrenList.add(right);
+                LineNumber = ctx.start.getLine();
             }};
         } else if (ctx.getChild(1).getText().equals("/")){
             return new DivideNode(){{
@@ -360,6 +385,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
                 right = visitTerm(ctx.term());
                 ChildrenList.add(left);
                 ChildrenList.add(right);
+                LineNumber = ctx.start.getLine();
             }};
         }
         return null;
@@ -376,6 +402,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
                 instance = visitStatsensorid(ctx.statsensorid());
             }
             ChildrenList.add(instance);
+            LineNumber = ctx.start.getLine();
         }};
     }
 
@@ -390,6 +417,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
 
                 ChildrenList.add(left);
                 ChildrenList.add(right);
+                LineNumber = ctx.start.getLine();
             }};
         }
 
@@ -407,6 +435,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
 
                 ChildrenList.add(left);
                 ChildrenList.add(right);
+                LineNumber = ctx.start.getLine();
             }};
         }
 
@@ -424,6 +453,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
 
                 ChildrenList.add(left);
                 ChildrenList.add(right);
+                LineNumber = ctx.start.getLine();
             }};
         } else if (ctx.getText().contains("notEqual")) {
             return new NotEqualNode() {{
@@ -432,6 +462,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
 
                 ChildrenList.add(left);
                 ChildrenList.add(right);
+                LineNumber = ctx.start.getLine();
             }};
         }
 
@@ -449,6 +480,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
 
                 ChildrenList.add(left);
                 ChildrenList.add(right);
+                LineNumber = ctx.start.getLine();
             }};
         } else if (ctx.getText().contains("lessThanOrEqual")) {
             return new LessThanOrEqualNode() {{
@@ -457,6 +489,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
 
                 ChildrenList.add(left);
                 ChildrenList.add(right);
+                LineNumber = ctx.start.getLine();
             }};
         } else if (ctx.getText().contains("greaterThan")) {
             return new GreaterThanNode() {{
@@ -465,6 +498,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
 
                 ChildrenList.add(left);
                 ChildrenList.add(right);
+                LineNumber = ctx.start.getLine();
             }};
         } else if (ctx.getText().contains("greaterThanOrEqual")) {
             return new GreaterThanOrEqualNode() {{
@@ -473,6 +507,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
 
                 ChildrenList.add(left);
                 ChildrenList.add(right);
+                LineNumber = ctx.start.getLine();
             }};
         } else if (ctx.getText().contains("equal")) {
             return new EqualNode() {{
@@ -481,6 +516,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
 
                 ChildrenList.add(left);
                 ChildrenList.add(right);
+                LineNumber = ctx.start.getLine();
             }};
         } else if (ctx.getText().contains("notEqual")) {
             return new NotEqualNode() {{
@@ -489,6 +525,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
 
                 ChildrenList.add(left);
                 ChildrenList.add(right);
+                LineNumber = ctx.start.getLine();
             }};
         }
 
@@ -506,6 +543,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
                 child = visitB(ctx.b());
 
                 ChildrenList.add(child);
+                LineNumber = ctx.start.getLine();
             }};
         }
 
@@ -514,23 +552,30 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
 
     @Override
     public Node visitStatmotorid(FinalGrammarParser.StatmotoridContext ctx) {
-        return new StatMotorNode(){{instance = ctx.getText();}};
+        return new StatMotorNode(){{
+            instance = ctx.getText();
+            LineNumber = ctx.start.getLine();}};
     }
 
     @Override
     public Node visitStatsensorid(FinalGrammarParser.StatsensoridContext ctx) {
-        return new StatSensorNode(){{instance = ctx.getText();}};
+        return new StatSensorNode(){{
+            instance = ctx.getText();
+            LineNumber = ctx.start.getLine();}};
     }
 
     @Override
     public Node visitStatlistid(FinalGrammarParser.StatlistidContext ctx) {
-        return new StatListNode(){{instance = ctx.getText();}};
+        return new StatListNode(){{
+            instance = ctx.getText();
+            LineNumber = ctx.start.getLine();}};
     }
 
     @Override
     public Node visitTerminal(TerminalNode node) {
         try{
-            return new NumberNode(){{value = Double.parseDouble(node.getText());}};
+            return new NumberNode(){{
+                value = Double.parseDouble(node.getText());}};
         } catch (NumberFormatException e){
             if (node.getText().equals("true")){
                 return new BoolNode(){{aBoolean = true;}};
