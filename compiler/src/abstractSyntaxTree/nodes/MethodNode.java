@@ -10,7 +10,7 @@ public class MethodNode extends Node {
     public Node returnval;
 
     @Override
-    public void Accept(Visitor visitor) {
-        visitor.Visit(this);
+    public Object Accept(Visitor visitor) {
+        return visitor.Visit(this);
     }
 }

@@ -1,0 +1,23 @@
+main{
+    bool aaa = 10 greaterThan 5 and 14 lessThan 20 or true ;
+    number k = 10;
+
+    if(true) then {
+        number a = 10;
+        a = 20;
+        number b = 20;
+        a = a + b * b + ( 25 + b );
+    } else {
+        number a = 10;
+
+        while (a lessThan 199) do {
+          for(a to  10) do {
+              number b;
+          }
+          number b = 10;
+        }
+
+    }
+
+
+}

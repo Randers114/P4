@@ -1,4 +1,4 @@
-// Generated from C:/Users/Stefan/Desktop/4. Semester/Git/compiler/src/sourceParser\FinalGrammar.g4 by ANTLR 4.6
+// Generated from C:/Users/Simon/Documents/P4/compiler/src/sourceParser\FinalGrammar.g4 by ANTLR 4.7
 package sourceParser;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
@@ -83,11 +83,35 @@ public interface FinalGrammarVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitTerm(FinalGrammarParser.TermContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link FinalGrammarParser#r_boolean}.
+	 * Visit a parse tree produced by {@link FinalGrammarParser#b}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitR_boolean(FinalGrammarParser.R_booleanContext ctx);
+	T visitB(FinalGrammarParser.BContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link FinalGrammarParser#t}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitT(FinalGrammarParser.TContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link FinalGrammarParser#f}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitF(FinalGrammarParser.FContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link FinalGrammarParser#h}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitH(FinalGrammarParser.HContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link FinalGrammarParser#i}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitI(FinalGrammarParser.IContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link FinalGrammarParser#instancedcl}.
 	 * @param ctx the parse tree
@@ -118,12 +142,6 @@ public interface FinalGrammarVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitStatid(FinalGrammarParser.StatidContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link FinalGrammarParser#boolexpr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitBoolexpr(FinalGrammarParser.BoolexprContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link FinalGrammarParser#boolvalop}.
 	 * @param ctx the parse tree

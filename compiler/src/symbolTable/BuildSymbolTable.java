@@ -27,6 +27,7 @@ public class BuildSymbolTable {
                 symbolTable.Insert(((MethodNode) a).id, ((MethodNode) a).type);
             }
             TraverseChildren(node.ChildrenList);
+            ((ProgramNode) node).symbolTable = SymbolTable.symbolTables.get(SymbolTable.symbolTables.size() - 1);
 
         } else if (node instanceof MethodNode) {
             symbolTable.OpenScope();
@@ -34,6 +35,7 @@ public class BuildSymbolTable {
                 TraverseFix(((FormalParameterNode) ((MethodNode) node).fprmt));
             }
             TraverseChildren(((MethodNode) node).block.ChildrenList);
+            ((BlockNode)((MethodNode) node).block).symbolTable = SymbolTable.symbolTables.get(SymbolTable.symbolTables.size() - 1);
             symbolTable.CloseScope();
 
         } else if (node instanceof FormalParameterNode) {
@@ -44,6 +46,7 @@ public class BuildSymbolTable {
         } else if (node instanceof BlockNode){
             symbolTable.OpenScope();
             TraverseChildren(node.ChildrenList);
+            ((BlockNode) node).symbolTable = SymbolTable.symbolTables.get(SymbolTable.symbolTables.size() - 1);
             symbolTable.CloseScope();
 
         } else if (node instanceof DclNode){

@@ -4,10 +4,10 @@ import AVisitor.Visitor;
 import symbolTable.SymbolTable;
 
 public class BlockNode extends Node {
-    public SymbolTable table;
+    public SymbolTable symbolTable;
 
     @Override
-    public void Accept(Visitor visitor) {
-        visitor.Visit(this);
+    public Object Accept(Visitor visitor) {
+         return visitor.Visit(this);
     }
 }

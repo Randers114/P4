@@ -1,11 +1,11 @@
 package abstractSyntaxTree.nodes;
 
-import AVisitor.Visitor;
+import AVisitor.*;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
 public class AssignNode extends OpNode {
     @Override
-    public void Accept(Visitor visitor) {
-        visitor.Visit(this);
+    public Object Accept(Visitor visitor) {
+        return visitor.Visit(this);
     }
 }
