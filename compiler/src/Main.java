@@ -1,5 +1,6 @@
 import abstractSyntaxTree.AstBuild;
 import abstractSyntaxTree.nodes.ProgramNode;
+import com.sun.xml.internal.fastinfoset.util.StringArray;
 import org.antlr.v4.runtime.ANTLRFileStream;
 import org.antlr.v4.runtime.TokenStream;
 import prettyPrint.APrettyPrint;
@@ -12,15 +13,22 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) throws Exception {
-        ProgramNode root = new ProgramNode();
+        ProgramNode root;
         Scanner scanner = new Scanner(System.in);
-        String inputPath = scanner.nextLine();
-        
+        String[] inputArray;
+        inputArray = scanner.nextLine().split(" ");
+        String inputPath = inputArray[0];
+        String command = "";
+        if (inputArray.length > 1){
+            command = inputArray[1];
+        }
         org.antlr.v4.runtime.CharStream charStream = new ANTLRFileStream(inputPath);
         root = InitAST(RunParser(charStream));
-        //APrettyPrint aPrettyPrint = new APrettyPrint();
-        //aPrettyPrint.Visit(root);
-        BuildSymbolTable buildSymbolTable = new BuildSymbolTable(root, inputPath);
+        if (command.equals("-p")){
+            APrettyPrint aPrettyPrint = new APrettyPrint();
+            aPrettyPrint.Visit(root);
+        }
+        BuildSymbolTable buildSymbolTable = new BuildSymbolTable(root);
 
         ATypeChecker typeChecker = new ATypeChecker();
 

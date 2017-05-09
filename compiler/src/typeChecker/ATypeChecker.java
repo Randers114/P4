@@ -16,7 +16,13 @@ public class ATypeChecker extends Visitor {
 
     @Override
     public String Visit(AndNode node) {
-        return CheckForBool(node);
+        if (CheckForBool(node).equals("bool")){
+            return "bool";
+        } else {
+            System.out.println("And expression fail, line: " + node.LineNumber);
+        }
+
+        return "";
     }
 
     @Override
@@ -24,10 +30,10 @@ public class ATypeChecker extends Visitor {
         if (CheckForBool(node).equals("bool") || CheckForNumber(node).equals("number")){
             return "bool";
         } else {
-            System.out.println("Equal expression fail");
+            System.out.println("Equal expression fail, line:  " + node.LineNumber);
         }
 
-        return null;
+        return "";
     }
 
     @Override
@@ -35,10 +41,10 @@ public class ATypeChecker extends Visitor {
         if (CheckForNumber(node).equals("number")){
             return "bool";
         } else {
-            System.out.println("greaterthan expression fail");
+            System.out.println("greaterthan expression fail, line: " + node.LineNumber);
         }
 
-        return null;
+        return "";
     }
 
     @Override
@@ -46,10 +52,10 @@ public class ATypeChecker extends Visitor {
         if (CheckForNumber(node).equals("number")){
             return "bool";
         } else {
-            System.out.println("greaterthane expression fail");
+            System.out.println("greaterthane expression fail, line: " + node.LineNumber);
         }
 
-        return null;
+        return "";
     }
 
     @Override
@@ -57,10 +63,10 @@ public class ATypeChecker extends Visitor {
         if (CheckForNumber(node).equals("number")){
             return "bool";
         } else {
-            System.out.println("lessthan expression fail");
+            System.out.println("lessthan expression fail, line: " + node.LineNumber);
         }
 
-        return null;
+        return "";
     }
 
     @Override
@@ -68,10 +74,10 @@ public class ATypeChecker extends Visitor {
         if (CheckForNumber(node).equals("number")){
             return "bool";
         } else {
-            System.out.println("lessthane expression fail");
+            System.out.println("lessthane expression fail, line: " + node.LineNumber);
         }
 
-        return null;
+        return "";
     }
 
     @Override
@@ -79,10 +85,10 @@ public class ATypeChecker extends Visitor {
         if (CheckForBool(node).equals("bool") || CheckForNumber(node).equals("number")){
             return "bool";
         } else {
-            System.out.println("notEqual expression fail");
+            System.out.println("notEqual expression fail, line: " + node.LineNumber);
         }
 
-        return null;
+        return "";
     }
 
     @Override
@@ -103,7 +109,7 @@ public class ATypeChecker extends Visitor {
         }
 
         if (!type.equals(type2)){
-            System.out.println("Mistakes have been made assignNode");
+            System.out.println("Mistakes have been made assignNode, line: " + node.LineNumber);
         }
 
         return null;
@@ -150,7 +156,7 @@ public class ATypeChecker extends Visitor {
                         }
                     }
                 } else {
-                    System.out.println("Mistakes have been made callnode");
+                    System.out.println("Mistakes have been made callnode, line: " + node.LineNumber);
                 }
             }
         }
@@ -173,7 +179,7 @@ public class ATypeChecker extends Visitor {
             }
 
             if (!type.equals(type2)){
-                System.out.println("Mistakes have been made dclNode");
+                System.out.println("Mistakes have been made dclNode, line: " + node.LineNumber);
             }
         }
         return null;
@@ -181,7 +187,12 @@ public class ATypeChecker extends Visitor {
 
     @Override
     public String Visit(DivideNode node) {
-        return CheckForNumber(node);
+        if (CheckForNumber(node).equals("number")){
+            return "number";
+        } else {
+            System.out.println("Mistake at line: " + node.LineNumber);
+        }
+        return "";
     }
 
     @Override
@@ -218,7 +229,7 @@ public class ATypeChecker extends Visitor {
     @Override
     public Void Visit(IfNode node) {
         if (!node.bool.Accept(this).toString().equals("bool")){
-            System.out.println("if bool error");
+            System.out.println("if bool error, line: " + node.LineNumber);
         }
         node.block.Accept(this);
         if (node.elseif != null) {
@@ -266,12 +277,22 @@ public class ATypeChecker extends Visitor {
 
     @Override
     public String Visit(MinusNode node) {
-        return CheckForNumber(node);
+        if (CheckForNumber(node).equals("number")){
+            return "number";
+        } else {
+            System.out.println("Mistake at line: " + node.LineNumber);
+        }
+        return "";
     }
 
     @Override
     public String Visit(NotBoolNode node) {
-        return CheckForBool(node);
+        if (CheckForBool(node).equals("bool")){
+            return "bool";
+        } else {
+            System.out.println("Mistake at line: " + node.LineNumber);
+        }
+        return "";
     }
 
     @Override
@@ -286,7 +307,12 @@ public class ATypeChecker extends Visitor {
 
     @Override
     public String Visit(PlusNode node) {
-        return CheckForNumber(node);
+        if (CheckForNumber(node).equals("number")){
+            return "number";
+        } else {
+            System.out.println("Mistake at line: " + node.LineNumber);
+        }
+        return "";
     }
 
     @Override
@@ -349,7 +375,12 @@ public class ATypeChecker extends Visitor {
 
     @Override
     public String Visit(TimesNode node) {
-        return CheckForNumber(node);
+        if (CheckForNumber(node).equals("number")){
+            return "number";
+        } else {
+            System.out.println("Mistake at line: " + node.LineNumber);
+        }
+        return "";
     }
 
     @Override
@@ -420,8 +451,6 @@ public class ATypeChecker extends Visitor {
 
         if (type.equals("number") && type2.equals("number")){
             return "number";
-        } else {
-            System.out.println("Invalid input number");
         }
 
         return "";
@@ -434,8 +463,6 @@ public class ATypeChecker extends Visitor {
 
         if (type.equals("number")){
             return "number";
-        } else {
-            System.out.println("Invalid input numbers");
         }
         return "";
     }
@@ -448,8 +475,6 @@ public class ATypeChecker extends Visitor {
 
         if ((type.equals("bool") || type.equals("true") || type.equals("false")) && (type2.equals("bool") || type2.equals("true") || type2.equals("false"))){
             return "bool";
-        } else {
-            System.out.println("Invalid input bool");
         }
 
         return "";
@@ -462,8 +487,6 @@ public class ATypeChecker extends Visitor {
 
         if (type.equals("bool") || type.equals("true") || type.equals("false")) {
             return "bool";
-        } else {
-            System.out.println("Invalid input bools");
         }
 
         return "";

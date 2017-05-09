@@ -11,7 +11,7 @@ main
     } else {
         number a = 10;
 
-        while (a) do {
+        while (a lessThan 10) do {
             for(a to  10) do {
                 number b;
             }
