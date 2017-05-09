@@ -1,11 +1,9 @@
 package typeChecker;
 
 
-import abstractSyntaxTree.nodes.*;
-
 /**
  * Created by Nikolaj Ljørring on 11/04/2017.
- */
+
 public class TypeCheck2
 {
     public void TypeCheck(ProgramNode node)
@@ -39,3 +37,4 @@ public class TypeCheck2
         System.out.println(s);
     }
 }
+*/
