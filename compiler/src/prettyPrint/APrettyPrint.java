@@ -4,6 +4,7 @@ import AVisitor.Visitor;
 import abstractSyntaxTree.nodes.*;
 
 public class APrettyPrint extends Visitor {
+    private int tab = 0;
     @Override
     public Object Visit(AndNode node) {
         node.left.Accept(this);
@@ -79,15 +80,18 @@ public class APrettyPrint extends Visitor {
 
     @Override
     public Void Visit(BlockNode node) {
+        tab++;
         for (Node a: node.ChildrenList
              ) {
             a.Accept(this);
         }
+        tab--;
         return null;
     }
 
     @Override
     public Void Visit(BodyNode node) {
+        Indend();
         node.content.Accept(this);
         return null;
     }
@@ -102,8 +106,10 @@ public class APrettyPrint extends Visitor {
     public Void Visit(CallNode node) {
         node.id.Accept(this);
         System.out.print("(");
-        node.parameter.Accept(this);
-        System.out.println(") ;");
+        if (node.parameter != null){
+            node.parameter.Accept(this);
+        }
+        System.out.print(")");
         return null;
     }
 
@@ -130,10 +136,13 @@ public class APrettyPrint extends Visitor {
 
     @Override
     public Void Visit(ElseIfNode node) {
-        System.out.print(" else if(");
+        System.out.print(" else if (");
         node.bool.Accept(this);
-        System.out.print(")\n{");
+        System.out.println(") then");
+        Indend();
+        System.out.println("{");
         node.block.Accept(this);
+        Indend();
         System.out.println("}");
 
         return null;
@@ -141,8 +150,11 @@ public class APrettyPrint extends Visitor {
 
     @Override
     public Void Visit(ElseNode node) {
-        System.out.println("else\n{");
+        System.out.println("else");
+        Indend();
+        System.out.println("{");
         node.block.Accept(this);
+        Indend();
         System.out.println("}");
 
         return null;
@@ -165,8 +177,11 @@ public class APrettyPrint extends Visitor {
         node.startNumber.Accept(this);
         System.out.print(" to ");
         node.endNumber.Accept(this);
-        System.out.println(" )\n{");
+        System.out.println(" )");
+        Indend();
+        System.out.println("{");
         node.block.Accept(this);
+        Indend();
         System.out.println("}");
         return null;
     }
@@ -181,9 +196,12 @@ public class APrettyPrint extends Visitor {
     public Void Visit(IfNode node) {
         System.out.print("if(");
         node.bool.Accept(this);
-        System.out.println(")\n{");
+        System.out.println(") then ");
+        Indend();
+        System.out.println("{");
         node.block.Accept(this);
-        System.out.println("}");
+        Indend();
+        System.out.print("}");
 
         if (node.elseif != null) {
             for (Node item : node.elseif
@@ -209,12 +227,17 @@ public class APrettyPrint extends Visitor {
         System.out.print("Method ");
         node.id.Accept(this);
         System.out.print("(");
-        node.fprmt.Accept(this);
+        if (node.fprmt != null){
+            node.fprmt.Accept(this);
+        }
         System.out.print(")");
         System.out.println("{");
         node.block.Accept(this);
+        tab++;
+        Indend();
         node.returnval.Accept(this);
         System.out.println(";");
+        tab--;
         System.out.println("}");
 
         return null;
@@ -223,7 +246,7 @@ public class APrettyPrint extends Visitor {
     @Override
     public Void Visit(MinusNode node) {
         node.left.Accept(this);
-        System.out.print("-");
+        System.out.print(" - ");
         node.right.Accept(this);
         return null;
     }
@@ -256,7 +279,7 @@ public class APrettyPrint extends Visitor {
     @Override
     public Void Visit(PlusNode node) {
         node.left.Accept(this);
-        System.out.print("+");
+        System.out.print(" + ");
         node.right.Accept(this);
         return null;
     }
@@ -265,10 +288,12 @@ public class APrettyPrint extends Visitor {
     public Void Visit(ProgramNode node) {
         System.out.println("main {");
         node.leftMain.Accept(this);
+
         System.out.println("}");
 
         for (Node item : node.methods)
         {
+            System.out.println();
             item.Accept(this);
         }
         return null;
@@ -320,7 +345,7 @@ public class APrettyPrint extends Visitor {
     @Override
     public Void Visit(TimesNode node) {
         node.left.Accept(this);
-        System.out.print("*");
+        System.out.print(" * ");
         node.right.Accept(this);
         return null;
     }
@@ -348,9 +373,18 @@ public class APrettyPrint extends Visitor {
     public Void Visit(WhileNode node) {
         System.out.print("While (");
         node.bool.Accept(this);
-        System.out.print(") \n{ \n");
+        System.out.println(")");
+        Indend();
+        System.out.println("{");
         node.block.Accept(this);
+        Indend();
         System.out.println("}");
         return null;
+    }
+
+    private void Indend(){
+        for (int i = 0; i <= tab; i++){
+            System.out.print("\t");
+        }
     }
 }

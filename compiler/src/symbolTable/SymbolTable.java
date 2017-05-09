@@ -11,18 +11,14 @@ import java.util.Scanner;
 
 public class SymbolTable {
     private List<Variable> Variables;
-    public static List<SymbolTable> symbolTables = new ArrayList<>();
-    private static int CurrentScope = -1;
-    private static String InputPath;
-    public SymbolTable(String inputPath)
+    static List<SymbolTable> symbolTables = new ArrayList<>();
+    SymbolTable()
     {
         Variables = new ArrayList<>();
-        InputPath = inputPath;
     }
 
-    public void OpenScope(){
-        SymbolTable nextScope = new SymbolTable(InputPath);
-        CurrentScope++;
+    void OpenScope(){
+        SymbolTable nextScope = new SymbolTable();
 
         if (symbolTables.size() == 0){
             symbolTables.add(nextScope);
@@ -32,11 +28,11 @@ public class SymbolTable {
         }
 
     }
-    public void CloseScope(){
+    void CloseScope(){
         symbolTables.remove((symbolTables.size() - 1));
     }
 
-    public void Insert(Node id, Node type)
+    void Insert(Node id, Node type)
     {
         if (!LookUp(((IdentifierNode) id).name)){
             if (type instanceof TypesNode){
@@ -46,31 +42,7 @@ public class SymbolTable {
             }
 
         } else {
-
-            try {
-                File file = new File(InputPath);
-                Scanner scanner = new Scanner(file);
-                int line = 0, k = 1;
-                String currentline;
-                line = ScopeLineStart(scanner, line);
-
-                while (scanner.hasNext()){
-                    currentline = scanner.nextLine();
-                    if (currentline.contains("number " + ((IdentifierNode) id).name) || currentline.contains("bool " + ((IdentifierNode) id).name)){
-                        if (k != 1){
-                            line++;
-                            System.out.println("Variable " + ((IdentifierNode) id).name + " already exists in this context, error at line: " + line);
-                            break;
-                        }
-                        k++;
-                    }
-                    line++;
-                }
-
-            } catch (Exception e){
-
-            }
-
+            System.out.println("Variable " + ((IdentifierNode) id).name + " already exists in this context, error at line: " + id.LineNumber);
         }
     }
     Boolean LookUp(String varName)
@@ -85,21 +57,8 @@ public class SymbolTable {
         return false;
     }
 
-    int ScopeLineStart(Scanner scanner, int line){
-        int scope = 0;
-
-        while (scanner.hasNext() && scope < CurrentScope){
-            if (scanner.nextLine().contains("{")){
-                scope++;
-            }
-            line++;
-        }
-
-        return line;
-    }
-
     public static String GetTypeByID(String name, SymbolTable symbolTable){
-        String type = null;
+        String type = "";
         for (Variable var: symbolTable.Variables
                 ) {
             if (var.Name.equals(name)){
