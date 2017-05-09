@@ -1,10 +1,11 @@
 import abstractSyntaxTree.AstBuild;
 import abstractSyntaxTree.nodes.ProgramNode;
-import com.sun.xml.internal.fastinfoset.util.StringArray;
+import codeGenerator.CodeGenerator;
 import org.antlr.v4.runtime.ANTLRFileStream;
 import org.antlr.v4.runtime.TokenStream;
 import prettyPrint.APrettyPrint;
-import sourceParser.*;
+import sourceParser.FinalGrammarLexer;
+import sourceParser.FinalGrammarParser;
 import symbolTable.BuildSymbolTable;
 import typeChecker.ATypeChecker;
 
@@ -33,6 +34,11 @@ public class Main {
         ATypeChecker typeChecker = new ATypeChecker();
 
         typeChecker.Visit(root);
+
+        CodeGenerator codeGenerator = new CodeGenerator();
+        codeGenerator.Visit(root);
+        codeGenerator.openfile();
+
 
     }
 

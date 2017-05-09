@@ -15,12 +15,11 @@ public class CodeGenerator extends Visitor {
 
     public void openfile() {
         try {
-            File file = new File(("newfile.C"));
 
-            if (file.createNewFile()) {
+            File file = new File("/Users/lassekristensen/P4/compiler/src/codeGenerator/newfile.txt");
+            if (file.createNewFile())
+            {
                 System.out.println("File is created!");
-            } else {
-                System.out.println("File already exists.");
             }
         }
         catch (IOException exception) {
@@ -28,8 +27,8 @@ public class CodeGenerator extends Visitor {
         }
 
         try {
-            PrintWriter writer = new PrintWriter("newfile.C", "UTF-8");
-
+            PrintWriter writer = new PrintWriter("/Users/lassekristensen/P4/compiler/src/codeGenerator/newfile.txt", "UTF-8");
+            writer.flush();
             WriteToFile(writer);
 
             writer.close();
@@ -45,7 +44,7 @@ public class CodeGenerator extends Visitor {
 
         for (String content: Targetcode)
         {
-            writer.println(content);
+            writer.print(content);
         }
 
     }
@@ -54,7 +53,7 @@ public class CodeGenerator extends Visitor {
     @Override
     public Object Visit(AndNode node) {
         node.left.Accept(this);
-        Targetcode.add("&&");
+        Targetcode.add(" && ");
         node.left.Accept(this);
         return null;
     }
@@ -62,9 +61,9 @@ public class CodeGenerator extends Visitor {
     @Override
     public Object Visit(AssignNode node) {
         node.left.Accept(this);
-        Targetcode.add("=");
+        Targetcode.add(" = ");
         node.left.Accept(this);
-        Targetcode.add(";");
+        Targetcode.add(" ; \n");
 
         return null;
     }
@@ -103,7 +102,9 @@ public class CodeGenerator extends Visitor {
     public Object Visit(CallNode node) {
         node.id.Accept(this);
         Targetcode.add("(");
-        node.parameter.Accept(this);
+        if (node.parameter != null) {
+            node.parameter.Accept(this);
+        }
         Targetcode.add(");");
         return null;
     }
@@ -166,7 +167,7 @@ public class CodeGenerator extends Visitor {
         node.id.Accept(this);
         if (node.fprmt != null)
         {
-            System.out.print(", ");
+            Targetcode.add(", ");
             node.fprmt.Accept(this);
         }
 
@@ -175,15 +176,15 @@ public class CodeGenerator extends Visitor {
 
     @Override
     public Object Visit(ForNode node) {
-        System.out.print("for ( ");
+        Targetcode.add("for ( int i = ");
+        node.startNumber.Accept(this);
+        Targetcode.add(" ; i <  ");
+        node.endNumber.Accept(this);
+        Targetcode.add(" ; i++");
 
-        System.out.print(" ; ");
-
-        System.out.print(" ; ");
-
-        System.out.println(" )\n{");
+        Targetcode.add(" )\n{");
         node.block.Accept(this);
-        System.out.println("}");
+        Targetcode.add("}");
 
         return null;
     }
@@ -260,14 +261,16 @@ public class CodeGenerator extends Visitor {
     public Object Visit(MethodNode node) {
         node.type.Accept(this);
         node.id.Accept(this);
-        System.out.print("(");
-        node.fprmt.Accept(this);
-        System.out.print(")");
-        System.out.println("{");
+        Targetcode.add("(");
+        if(node.fprmt != null) {
+            node.fprmt.Accept(this);
+        }
+        Targetcode.add(")");
+        Targetcode.add("{");
         node.block.Accept(this);
         node.returnval.Accept(this);
-        System.out.println(";");
-        System.out.println("}");
+        Targetcode.add(";");
+        Targetcode.add("}");
 
         return null;
     }
@@ -325,16 +328,16 @@ public class CodeGenerator extends Visitor {
     @Override
     public Object Visit(PlusNode node) {
         node.left.Accept(this);
-        Targetcode.add("+");
+        Targetcode.add(" + ");
         node.left.Accept(this);
         return null;
     }
 
     @Override
     public Object Visit(ProgramNode node) {
-        System.out.println("main() {");
+        Targetcode.add("main() {\n");
         node.leftMain.Accept(this);
-        System.out.println("}");
+        Targetcode.add("} \n");
 
         for (Node item : node.methods)
         {
@@ -345,9 +348,9 @@ public class CodeGenerator extends Visitor {
 
     @Override
     public Object Visit(ReturnValNode node) {
-        Targetcode.add("Return");
+        Targetcode.add("Return ");
         node.returnvalue.Accept(this);
-
+        Targetcode.add("\n");
         return null;
     }
 
@@ -389,7 +392,7 @@ public class CodeGenerator extends Visitor {
     @Override
     public Object Visit(TimesNode node) {
         node.left.Accept(this);
-        Targetcode.add("*");
+        Targetcode.add(" * ");
         node.left.Accept(this);
         return null;
     }
