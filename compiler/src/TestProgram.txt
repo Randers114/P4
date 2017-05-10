@@ -12,7 +12,7 @@ main
         number a = 10;
 
         while (a lessThan 10) do {
-            for(a to  10) do {
+        (a to  10) do {
                 number b;
             }
             number b = 10;
