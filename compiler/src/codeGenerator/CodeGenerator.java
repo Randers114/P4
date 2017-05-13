@@ -54,7 +54,7 @@ public class CodeGenerator extends Visitor {
     public Object Visit(AndNode node) {
         node.left.Accept(this);
         Targetcode.add(" && ");
-        node.left.Accept(this);
+        node.right.Accept(this);
         return null;
     }
 
@@ -62,7 +62,7 @@ public class CodeGenerator extends Visitor {
     public Object Visit(AssignNode node) {
         node.left.Accept(this);
         Targetcode.add(" = ");
-        node.left.Accept(this);
+        node.right.Accept(this);
         Targetcode.add(" ; \n");
 
         return null;
@@ -126,7 +126,7 @@ public class CodeGenerator extends Visitor {
     public Object Visit(DivideNode node) {
         node.left.Accept(this);
         Targetcode.add("/");
-        node.left.Accept(this);
+        node.right.Accept(this);
 
         return null;
     }
@@ -156,7 +156,7 @@ public class CodeGenerator extends Visitor {
     public Object Visit(EqualNode node) {
         node.left.Accept(this);
         Targetcode.add(" == ");
-        node.left.Accept(this);
+        node.right.Accept(this);
 
         return null;
     }
@@ -193,7 +193,7 @@ public class CodeGenerator extends Visitor {
     public Object Visit(GreaterThanNode node) {
         node.left.Accept(this);
         Targetcode.add(" > ");
-        node.left.Accept(this);
+        node.right.Accept(this);
         return null;
     }
 
@@ -201,7 +201,7 @@ public class CodeGenerator extends Visitor {
     public Object Visit(GreaterThanOrEqualNode node) {
         node.left.Accept(this);
         Targetcode.add(" >= ");
-        node.left.Accept(this);
+        node.right.Accept(this);
 
         return null;
     }
@@ -243,7 +243,7 @@ public class CodeGenerator extends Visitor {
     public Object Visit(LessThanNode node) {
         node.left.Accept(this);
         Targetcode.add("<");
-        node.left.Accept(this);
+        node.right.Accept(this);
 
         return null;
     }
@@ -252,7 +252,7 @@ public class CodeGenerator extends Visitor {
     public Object Visit(LessThanOrEqualNode node) {
         node.left.Accept(this);
         Targetcode.add("<=");
-        node.left.Accept(this);
+        node.right.Accept(this);
 
         return null;
     }
@@ -279,7 +279,7 @@ public class CodeGenerator extends Visitor {
     public Object Visit(MinusNode node) {
         node.left.Accept(this);
         Targetcode.add(" - ");
-        node.left.Accept(this);
+        node.right.Accept(this);
 
         return null;
     }
@@ -296,7 +296,7 @@ public class CodeGenerator extends Visitor {
     public Object Visit(NotEqualNode node) {
         node.left.Accept(this);
         Targetcode.add(" != ");
-        node.left.Accept(this);
+        node.right.Accept(this);
         return null;
     }
 
@@ -311,7 +311,7 @@ public class CodeGenerator extends Visitor {
     public Object Visit(OrNode node) {
         node.left.Accept(this);
         Targetcode.add(" || ");
-        node.left.Accept(this);
+        node.right.Accept(this);
         return null;
     }
 
@@ -330,7 +330,7 @@ public class CodeGenerator extends Visitor {
     public Object Visit(PlusNode node) {
         node.left.Accept(this);
         Targetcode.add(" + ");
-        node.left.Accept(this);
+        node.right.Accept(this);
         return null;
     }
 
@@ -394,14 +394,13 @@ public class CodeGenerator extends Visitor {
     public Object Visit(TimesNode node) {
         node.left.Accept(this);
         Targetcode.add(" * ");
-        node.left.Accept(this);
+        node.right.Accept(this);
         return null;
     }
 
     @Override
     public Object Visit(TypesNode node) {
         String s = (node.type.toString());
-        System.out.print(s);
         if(s.contains("number"))
         {
             Targetcode.add("double ");
