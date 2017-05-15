@@ -2,7 +2,8 @@ main
 {
 
     bool aaa = 10 greaterThan 5 and 14 lessThan 20 or true ;
-    new Motor[A] m;
+    //tesy
+   // Motor[1] hej
     if (aaa) then {
         number b = 25;
         number a = 30;
@@ -22,7 +23,7 @@ main
 
 
     if (aaa) then {
-        number g = hey(25, 100);
+        number g = hey(25, 100) + 5;
     } else if (hh() or aaa and true) then {
         number a = 10;
         number b = 10;
