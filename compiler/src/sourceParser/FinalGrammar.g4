@@ -1,5 +1,8 @@
 grammar FinalGrammar;
 
+
+COMMENT : '/*' .*? '*/' -> skip;
+LINE_COMMENT: '//' ~[\r\n]* -> skip;
 Num: [0-9]+ ('.' [0-9]+)?;
 Bool: 'true' | 'false';
 Identifier: ([a-zA-Z] | '_') [a-zA-Z0-9]*;
@@ -15,7 +18,7 @@ methods	: type 'Method' Identifier '(' fprmt? ')' '{' body* 'return' returnval '
 
 dcl		: type Identifier '=' b
 		| type Identifier
-		| 'new' instancedcl '[' Identifier ']' Identifier;
+		| instancedcl '[' Identifier ']' Identifier;
 
 stmt	: Identifier '=' b ';'
 		| 'if' '(' b ')' 'then' '{' body* '}' elseif* elsel?
