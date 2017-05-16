@@ -35,9 +35,11 @@ public class Main {
 
         typeChecker.Visit(root);
 
-        CodeGenerator codeGenerator = new CodeGenerator();
-        codeGenerator.Visit(root);
-        codeGenerator.openfile();
+        if (command.equals("-c")) {
+            CodeGenerator codeGenerator = new CodeGenerator();
+            codeGenerator.Visit(root);
+            codeGenerator.openfile();
+        }
 
 
     }
