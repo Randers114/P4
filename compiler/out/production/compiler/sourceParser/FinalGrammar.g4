@@ -19,7 +19,7 @@ methods	: type 'Method' Identifier '(' fprmt? ')' '{' body* 'return' returnval '
 dcl		: type Identifier '=' b
 		| type Identifier
 		| instancedcl '[' Identifier ']' Identifier
-		| 'List' '[' ('number' | 'boolean') ']' Identifier;
+		| 'List' '[' type ']' Identifier;
 
 stmt	: Identifier '=' b ';'
 		| 'if' '(' b ')' 'then' '{' body* '}' elseif* elsel?

@@ -15,6 +15,20 @@ public class ATypeChecker extends Visitor {
     private ProgramNode Root;
 
     @Override
+    public Object Visit (SynchronizationNode node)
+    {
+        if (node.right != null && node.left != null)
+        		CurrentSymbolTable
+        return null;
+    }
+
+    @Override
+    public Object Visit (SleepNode node)
+    {
+        return null;
+    }
+
+    @Override
     public String Visit(AndNode node) {
         if (CheckForBool(node).equals("bool")){
             return "bool";

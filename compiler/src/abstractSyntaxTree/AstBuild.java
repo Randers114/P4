@@ -96,6 +96,11 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
                 middle = visitTerminal(ctx.Identifier(0));
                 right = visitTerminal(ctx.Identifier(1));
             }
+            else if (ctx.Identifier(0) != null)
+			{
+				left = visitType(ctx.type());
+				middle = visitTerminal(ctx.Identifier(0));
+			}
 
             CollectionUtils.addIgnoreNull(ChildrenList, left);
             CollectionUtils.addIgnoreNull(ChildrenList, middle);
@@ -117,6 +122,10 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
             } else if (ctx.Identifier() != null){
                 child = visitAssign(ctx);
             }
+            else if(ctx.getText().contains("Sleep"))
+				child = visitSleep(ctx);
+			else if(ctx.getText().contains("synchronize"))
+				child = visitSynch(ctx);
 
             CollectionUtils.addIgnoreNull(ChildrenList, child);
             LineNumber = ctx.start.getLine();
@@ -574,4 +583,19 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
             }
         }
     }
+
+    public Node visitSleep(FinalGrammarParser.StmtContext ctx)
+	{
+		return new SleepNode(){{
+			child = visitTerminal(ctx.Num(0));
+		}};
+	}
+
+	public Node visitSynch(FinalGrammarParser.StmtContext ctx)
+	{
+		return new SynchronizationNode(){{
+			left = visitTerminal(ctx.Identifier(0));
+			right = visitTerminal(ctx.Identifier(1));
+	}};
+	}
 }
