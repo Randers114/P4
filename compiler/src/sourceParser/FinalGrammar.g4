@@ -18,12 +18,15 @@ methods	: type 'Method' Identifier '(' fprmt? ')' '{' body* 'return' returnval '
 
 dcl		: type Identifier '=' b
 		| type Identifier
-		| instancedcl '[' Identifier ']' Identifier;
+		| instancedcl '[' Identifier ']' Identifier
+		| 'List' '[' ('number' | 'boolean') ']' Identifier;
 
 stmt	: Identifier '=' b ';'
 		| 'if' '(' b ')' 'then' '{' body* '}' elseif* elsel?
 		| 'while' '(' b ')' 'do' '{' body* '}'
-		| 'for' '(' (Num | Identifier) 'to' (Num | Identifier) ')' 'do' '{' body* '}';
+		| 'for' '(' (Num | Identifier) 'to' (Num | Identifier) ')' 'do' '{' body* '}'
+		| 'Sleep' (Num)
+		| Identifier 'synchronize' Identifier;
 
 call	: Identifier '(' prmt? ')'
 		| Identifier '.' statid '(' prmt? ')';
@@ -65,15 +68,14 @@ i       : expr
         | 'not' b;
 
 instancedcl	: 'Motor'
-            | 'Sensor'
-            | 'List';
+            | 'Sensor';
 
 elsel	: 'else' '{' body* '}';
 
 elseif	: 'else' 'if' '(' b ')' 'then' '{' body* '}';
 
-prmt	: val
-        | val ',' prmt;
+prmt	: b
+        | b ',' prmt;
 
 statid	: statmotorid
         | statsensorid
@@ -86,11 +88,12 @@ boolvalop	: 'lessThan'
 		| 'lessThanOrEqual'
 		| 'notEqual';
 
-statmotorid	: 'motormethod';
+statmotorid	: 'Forward' '(' Num | expr ')'
+            | 'Backwards' '(' Num | expr ')';
 
-statsensorid: 'sensormethod';
+statsensorid: 'IsPressed()' | 'Distance()';
 
-statlistid	: 'listmethod';
+statlistid	: 'Add' '(' call |  b ')' | 'Remove' '(' Num ')';
 
 
 boolop	: 'equal'
