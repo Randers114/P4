@@ -14,6 +14,7 @@ public class CodeGenerator extends Visitor {
     private List<String> Targetcode = new ArrayList();
     private List<String> CodeParameters = new ArrayList();
    // private int tab = 0;
+    private boolean isParameter = false;
 
     public void openfile() {
         try {
@@ -42,7 +43,14 @@ public class CodeGenerator extends Visitor {
 
     public void WriteToFile(PrintWriter writer)
     {
-        writer.println("#include <stdio.h>");
+        writer.println("#include <stdio.h> \n");
+
+        for (String parameter: CodeParameters)
+        {
+            writer.print(parameter);
+        }
+
+        writer.println();
 
         for (String content: Targetcode)
         {
@@ -180,6 +188,7 @@ public class CodeGenerator extends Visitor {
         node.id.Accept(this);
         if (node.fprmt != null)
         {
+            CodeParameters.add(", ");
             Targetcode.add(", ");
             node.fprmt.Accept(this);
         }
@@ -222,7 +231,10 @@ public class CodeGenerator extends Visitor {
     @Override
     public Object Visit(IdentifierNode node) {
         Targetcode.add(node.name);
-
+        if(isParameter)
+        {
+            CodeParameters.add(node.name);
+        }
         return null;
     }
 
@@ -276,12 +288,16 @@ public class CodeGenerator extends Visitor {
     @Override
     public Object Visit(MethodNode node) {
         Targetcode.add("\n");
+        isParameter = true;
         node.type.Accept(this);
         node.id.Accept(this);
         Targetcode.add("(");
+        CodeParameters.add("(");
         if(node.fprmt != null) {
             node.fprmt.Accept(this);
         }
+        isParameter = false;
+        CodeParameters.add("); \n");
         Targetcode.add(")\n");
         Targetcode.add("{\n");
         node.block.Accept(this);
@@ -428,6 +444,19 @@ public class CodeGenerator extends Visitor {
             Targetcode.add("bool ");
         }
 
+        if(isParameter)
+        {
+            if(s.contains("number"))
+            {
+                CodeParameters.add("double ");
+            }
+            else
+            {
+                CodeParameters.add("bool ");
+            }
+        }
+
+
 
         return null;
     }
@@ -457,6 +486,7 @@ public class CodeGenerator extends Visitor {
         Targetcode.add("}\n");
         return null;
     }
+
 
  /*   private void Indend(){
         for (int i = 0; i <= tab; i++){
