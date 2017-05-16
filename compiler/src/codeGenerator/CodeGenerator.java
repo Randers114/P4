@@ -102,7 +102,7 @@ public class CodeGenerator extends Visitor {
         {
             Targetcode.add("true");
         }
-        else if(b)
+        else
         {
             Targetcode.add("false");
         }
@@ -482,13 +482,13 @@ public class CodeGenerator extends Visitor {
      //   Indend();
         Targetcode.add("{\n");
         node.block.Accept(this);
-      //  Indend();
+     //   Indend();
         Targetcode.add("}\n");
         return null;
     }
 
 
- /*   private void Indend(){
+    /*private void Indend(){
         for (int i = 0; i <= tab; i++){
             Targetcode.add("\t");
         }
