@@ -12,6 +12,7 @@ import java.util.List;
 
 public class CodeGenerator extends Visitor {
     private List<String> Targetcode = new ArrayList();
+    private List<String> CodeParameters = new ArrayList();
    // private int tab = 0;
 
     public void openfile() {
@@ -54,7 +55,7 @@ public class CodeGenerator extends Visitor {
     @Override
     public Object Visit(AndNode node) {
         node.left.Accept(this);
-        Targetcode.add(" &&");
+        Targetcode.add(" && ");
         node.right.Accept(this);
         return null;
     }
@@ -126,7 +127,7 @@ public class CodeGenerator extends Visitor {
         node.middle.Accept(this);
         if(node.right != null)
         {
-            Targetcode.add(" =");
+            Targetcode.add(" = ");
             node.right.Accept(this);
         }
 
@@ -147,7 +148,7 @@ public class CodeGenerator extends Visitor {
     public Object Visit(ElseIfNode node) {
         Targetcode.add("else if(");
         node.bool.Accept(this);
-        Targetcode.add(")\n{");
+        Targetcode.add(")\n{\n");
         node.block.Accept(this);
         Targetcode.add("}\n");
 
@@ -156,7 +157,7 @@ public class CodeGenerator extends Visitor {
 
     @Override
     public Object Visit(ElseNode node) {
-        Targetcode.add("else{ \n");
+        Targetcode.add("else\n{ \n");
         node.block.Accept(this);
         Targetcode.add("} \n");
 
@@ -204,7 +205,7 @@ public class CodeGenerator extends Visitor {
     @Override
     public Object Visit(GreaterThanNode node) {
         node.left.Accept(this);
-        Targetcode.add(" >");
+        Targetcode.add(" > ");
         node.right.Accept(this);
         return null;
     }
@@ -212,7 +213,7 @@ public class CodeGenerator extends Visitor {
     @Override
     public Object Visit(GreaterThanOrEqualNode node) {
         node.left.Accept(this);
-        Targetcode.add(" >=");
+        Targetcode.add(" >= ");
         node.right.Accept(this);
 
         return null;
@@ -257,7 +258,7 @@ public class CodeGenerator extends Visitor {
     @Override
     public Object Visit(LessThanNode node) {
         node.left.Accept(this);
-        Targetcode.add(" <");
+        Targetcode.add(" < ");
         node.right.Accept(this);
 
         return null;
@@ -266,7 +267,7 @@ public class CodeGenerator extends Visitor {
     @Override
     public Object Visit(LessThanOrEqualNode node) {
         node.left.Accept(this);
-        Targetcode.add(" <=");
+        Targetcode.add(" <= ");
         node.right.Accept(this);
 
         return null;
@@ -321,7 +322,6 @@ public class CodeGenerator extends Visitor {
 
     @Override
     public Object Visit(NumberNode node) {
-        Targetcode.add(" ");
         Targetcode.add(Double.toString(node.value));
         return null;
     }
@@ -368,7 +368,7 @@ public class CodeGenerator extends Visitor {
 
     @Override
     public Object Visit(ReturnValNode node) {
-        Targetcode.add("Return ");
+        Targetcode.add("return ");
         node.returnvalue.Accept(this);
         return null;
     }
