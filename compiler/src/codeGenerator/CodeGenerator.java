@@ -11,9 +11,9 @@ import java.util.List;
 
 
 public class CodeGenerator extends Visitor {
-    private List<String> Targetcode = new ArrayList();
-    private List<String> CodeParameters = new ArrayList();
-   // private int tab = 0;
+    private List<String> Targetcode = new ArrayList<>();
+    private List<String> CodeParameters = new ArrayList<>();
+    private int tab = 0;
     private boolean isParameter = false;
 
     public void openfile() {
@@ -41,7 +41,7 @@ public class CodeGenerator extends Visitor {
         }
     }
 
-    public void WriteToFile(PrintWriter writer)
+    private void WriteToFile(PrintWriter writer)
     {
         writer.println("#include <stdio.h> \n");
 
@@ -70,6 +70,7 @@ public class CodeGenerator extends Visitor {
 
     @Override
     public Object Visit(AssignNode node) {
+        Indend();
         node.left.Accept(this);
         Targetcode.add(" = ");
         node.right.Accept(this);
@@ -80,12 +81,12 @@ public class CodeGenerator extends Visitor {
 
     @Override
     public Object Visit(BlockNode node) {
-        //tab++;
+        tab++;
         for (Node a : node.ChildrenList)
         {
             a.Accept(this);
         }
-       // tab--;
+        tab--;
         return null;
     }
 
@@ -112,7 +113,7 @@ public class CodeGenerator extends Visitor {
     @Override
     public Object Visit(CallNode node) {
         Boolean allowSemicolon = false;
-        String s = Targetcode.get(Targetcode.size()-1).toString();
+        String s = Targetcode.get(Targetcode.size()-1);
         if(s == ";" || s == "{" || s == "}")
         {
             allowSemicolon = true;
@@ -131,6 +132,7 @@ public class CodeGenerator extends Visitor {
 
     @Override
     public Object Visit(DclNode node) {
+        Indend();
         node.left.Accept(this);
         node.middle.Accept(this);
         if(node.right != null)
@@ -154,10 +156,14 @@ public class CodeGenerator extends Visitor {
 
     @Override
     public Object Visit(ElseIfNode node) {
+        Indend();
         Targetcode.add("else if(");
         node.bool.Accept(this);
-        Targetcode.add(")\n{\n");
+        Targetcode.add(")\n");
+        Indend();
+        Targetcode.add("{\n");
         node.block.Accept(this);
+        Indend();
         Targetcode.add("}\n");
 
         return null;
@@ -165,8 +171,12 @@ public class CodeGenerator extends Visitor {
 
     @Override
     public Object Visit(ElseNode node) {
-        Targetcode.add("else\n{ \n");
+        Indend();
+        Targetcode.add("else\n");
+        Indend();
+        Targetcode.add("{\n");
         node.block.Accept(this);
+        Indend();
         Targetcode.add("} \n");
 
 
@@ -198,14 +208,17 @@ public class CodeGenerator extends Visitor {
 
     @Override
     public Object Visit(ForNode node) {
+        Indend();
         Targetcode.add("for ( int i = ");
         node.startNumber.Accept(this);
         Targetcode.add(" ; i <");
         node.endNumber.Accept(this);
         Targetcode.add(" ; i++");
-
-        Targetcode.add(" )\n{ \n");
+        Targetcode.add(" )\n");
+        Indend();
+        Targetcode.add("{ \n");
         node.block.Accept(this);
+        Indend();
         Targetcode.add("}\n");
 
         return null;
@@ -240,13 +253,14 @@ public class CodeGenerator extends Visitor {
 
     @Override
     public Object Visit(IfNode node) {
+        Indend();
         Targetcode.add("if(");
         node.bool.Accept(this);
         Targetcode.add(")\n");
-      //  Indend();
+        Indend();
         Targetcode.add("{\n");
         node.block.Accept(this);
-     //   Indend();
+        Indend();
         Targetcode.add("}\n");
 
         if (node.elseif != null) {
@@ -263,7 +277,7 @@ public class CodeGenerator extends Visitor {
 
     @Override
     public Object Visit(InstanceNode node) {
-        Targetcode.add(node.instance.toString() + " ");
+        Targetcode.add(node.instance + " ");
         return null;
     }
 
@@ -301,11 +315,10 @@ public class CodeGenerator extends Visitor {
         Targetcode.add(")\n");
         Targetcode.add("{\n");
         node.block.Accept(this);
-     //   tab++;
-     //   Indend();
+        tab++;
         node.returnval.Accept(this);
         Targetcode.add(";\n");
-      //  tab--;
+        tab--;
         Targetcode.add("}\n");
 
         return null;
@@ -384,6 +397,8 @@ public class CodeGenerator extends Visitor {
 
     @Override
     public Object Visit(ReturnValNode node) {
+        Targetcode.add("\n");
+        Indend();
         Targetcode.add("return ");
         node.returnvalue.Accept(this);
         return null;
@@ -434,7 +449,7 @@ public class CodeGenerator extends Visitor {
 
     @Override
     public Object Visit(TypesNode node) {
-        String s = (node.type.toString());
+        String s = (node.type);
         if(s.contains("number"))
         {
             Targetcode.add("double ");
@@ -476,23 +491,24 @@ public class CodeGenerator extends Visitor {
 
     @Override
     public Object Visit(WhileNode node) {
+        Indend();
         Targetcode.add("While (");
         node.bool.Accept(this);
         Targetcode.add(")\n");
-     //   Indend();
+        Indend();
         Targetcode.add("{\n");
         node.block.Accept(this);
-     //   Indend();
+        Indend();
         Targetcode.add("}\n");
         return null;
     }
 
 
-    /*private void Indend(){
-        for (int i = 0; i <= tab; i++){
+    private void Indend(){
+        for (int i = 0; i < tab; ++i){
             Targetcode.add("\t");
         }
-    }*/
+    }
 }
 
 
