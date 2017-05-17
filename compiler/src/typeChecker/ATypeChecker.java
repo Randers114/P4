@@ -2,8 +2,10 @@ package typeChecker;
 
 import AVisitor.Visitor;
 import abstractSyntaxTree.nodes.*;
+import com.sun.org.apache.xpath.internal.operations.Number;
 import symbolTable.SymbolTable;
 
+import java.awt.font.NumericShaper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
@@ -13,11 +15,11 @@ public class ATypeChecker extends Visitor {
     private ProgramNode Root;
 
     @Override
-    public Object Visit (SynchronizationNode node)
+    public Object Visit(SynchronizationNode node)
     {
         if (node.right != null
 			&& node.left != null
-			&& SymbolTable.GetTypeByID(((IdentifierNode)node.left).name, CurrentSymbolTable.peek() ).equals("Motor"))
+			&& SymbolTable.GetTypeByID(((IdentifierNode)node.left).name, CurrentSymbolTable.peek()).equals("Motor"))
 			return null;
         else
         	System.out.println("Synchronization node failed. types don't match @" + node.LineNumber);
@@ -26,7 +28,7 @@ public class ATypeChecker extends Visitor {
     }
 
     @Override
-    public Object Visit (SleepNode node)
+    public Object Visit(SleepNode node)
     {
 		node.child.Accept(this);
     	return null;
@@ -193,7 +195,14 @@ public class ATypeChecker extends Visitor {
 
             if (rightNode.equals("true") || rightNode.equals("false") || rightNode.equals("bool")) {
                 type2 = "bool";
-            } else {
+            }
+            else if(rightNode.equals("Motor")) {
+                type2 = "Motor";
+            }
+            else if(rightNode.equals("Sensor")){
+                type2 = "Sensor";
+            }
+            else {
                 type2 = "number";
             }
 
@@ -304,6 +313,11 @@ public class ATypeChecker extends Visitor {
         return "";
     }
 
+   /* public Object Visit(StatSensorNode node)
+	{
+		node.instance.equals("")
+	}*/
+
     @Override
     public String Visit(NotBoolNode node) {
         if (CheckForBool(node).equals("bool")){
@@ -363,6 +377,7 @@ public class ATypeChecker extends Visitor {
 
     @Override
     public Void Visit(StatIdNode node) {
+        node.Accept(this);
         return null;
     }
 
@@ -373,6 +388,9 @@ public class ATypeChecker extends Visitor {
 
     @Override
     public Void Visit(StatMotorNode node) {
+    	String type = node.parameter.Accept(this).toString();
+        if(!(node.instance.equals("Forward") && type.equals("Number")))
+        	System.out.println("Mistakes were made StatMotorNode @ " + node.LineNumber);
         return null;
     }
 

@@ -119,13 +119,14 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
                 child = visitWhile(ctx);
             } else if (ctx.getText().contains("for")){
                 child = visitFor(ctx);
-            } else if (ctx.Identifier() != null){
-                child = visitAssign(ctx);
-            }
-            else if(ctx.getText().contains("Sleep"))
+            } else if(ctx.getText().contains("Sleep"))
 				child = visitSleep(ctx);
 			else if(ctx.getText().contains("synchronize"))
 				child = visitSynch(ctx);
+			else if (ctx.Identifier() != null){
+                child = visitAssign(ctx);
+            }
+
 
             CollectionUtils.addIgnoreNull(ChildrenList, child);
             LineNumber = ctx.start.getLine();
@@ -391,9 +392,9 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
     @Override
     public Node visitStatid(FinalGrammarParser.StatidContext ctx) {
         return new StatIdNode(){{
-            if (ctx.statlistid() != null){
+            /*if (ctx.statlistid() != null){
                 instance = visitStatlistid(ctx.statlistid());
-            } else if (ctx.statmotorid() != null) {
+            } else*/ if (ctx.statmotorid() != null) {
                 instance = visitStatmotorid(ctx.statmotorid());
             } else if (ctx.statsensorid() != null) {
                 instance = visitStatsensorid(ctx.statsensorid());
@@ -550,7 +551,14 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
     @Override
     public Node visitStatmotorid(FinalGrammarParser.StatmotoridContext ctx) {
         return new StatMotorNode(){{
-            instance = ctx.getText();
+            if(ctx.getText().contains("Forward"))
+                instance = "Forward";
+            else
+                instance = "Backwards";
+            if(ctx.expr() != null)
+                parameter = visitExpr(ctx.expr());
+            else
+                parameter = visitTerminal(ctx.Num());
             LineNumber = ctx.start.getLine();}};
     }
 
@@ -588,6 +596,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
 	{
 		return new SleepNode(){{
 			child = visitTerminal(ctx.Num(0));
+			LineNumber = ctx.start.getLine();
 		}};
 	}
 
@@ -596,6 +605,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
 		return new SynchronizationNode(){{
 			left = visitTerminal(ctx.Identifier(0));
 			right = visitTerminal(ctx.Identifier(1));
+			LineNumber = ctx.start.getLine();
 	}};
 	}
 }

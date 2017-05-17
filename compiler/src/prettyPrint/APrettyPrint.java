@@ -5,6 +5,19 @@ import abstractSyntaxTree.nodes.*;
 
 public class APrettyPrint extends Visitor {
     private int tab = 0;
+
+    @Override
+    public Object Visit (SynchronizationNode node)
+    {
+        return null;
+    }
+
+    @Override
+    public Object Visit (SleepNode node)
+    {
+        return null;
+    }
+
     @Override
     public Object Visit(AndNode node) {
         node.left.Accept(this);

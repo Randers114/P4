@@ -26,10 +26,10 @@ stmt	: Identifier '=' b ';'
 		| 'while' '(' b ')' 'do' '{' body* '}'
 		| 'for' '(' (Num | Identifier) 'to' (Num | Identifier) ')' 'do' '{' body* '}'
 		| 'Sleep' (Num)
-		| Identifier 'synchronize' Identifier;
+		| Identifier 'synchronize' Identifier Num?;
 
 call	: Identifier '(' prmt? ')'
-		| Identifier '.' statid '(' prmt? ')';
+		| Identifier '.' statid;
 
 type	: 'number'
         | 'bool';

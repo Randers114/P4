@@ -61,6 +61,18 @@ public class CodeGenerator extends Visitor {
 
 
     @Override
+    public Object Visit (SynchronizationNode node)
+    {
+        return null;
+    }
+
+    @Override
+    public Object Visit (SleepNode node)
+    {
+        return null;
+    }
+
+    @Override
     public Object Visit(AndNode node) {
         node.left.Accept(this);
         Targetcode.add(" && ");
