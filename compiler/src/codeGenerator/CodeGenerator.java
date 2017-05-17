@@ -19,7 +19,7 @@ public class CodeGenerator extends Visitor {
     public void openfile() {
         try {
 
-            File file = new File("/Users/lassekristensen/P4/compiler/src/codeGenerator/newfile.txt");
+            File file = new File("/Users/lassekristensen/P4/compiler/src/codeGenerator/newfile.c");
             if (file.createNewFile())
             {
                 System.out.println("File is created!");
@@ -30,7 +30,7 @@ public class CodeGenerator extends Visitor {
         }
 
         try {
-            PrintWriter writer = new PrintWriter("/Users/lassekristensen/P4/compiler/src/codeGenerator/newfile.txt", "UTF-8");
+            PrintWriter writer = new PrintWriter("/Users/lassekristensen/P4/compiler/src/codeGenerator/newfile.c", "UTF-8");
             writer.flush();
             WriteToFile(writer);
 
@@ -43,8 +43,6 @@ public class CodeGenerator extends Visitor {
 
     private void WriteToFile(PrintWriter writer)
     {
-        writer.println("#include <stdio.h> \n");
-
         for (String parameter: CodeParameters)
         {
             writer.print(parameter);
@@ -398,7 +396,7 @@ public class CodeGenerator extends Visitor {
 
     @Override
     public Void Visit(ProgramNode node) {
-        Targetcode.add("main() \n{\n");
+        Targetcode.add("task main() \n{\n");
         node.leftMain.Accept(this);
         Targetcode.add("} \n");
 
@@ -471,7 +469,7 @@ public class CodeGenerator extends Visitor {
         String s = (node.type);
         if(s.contains("number"))
         {
-            Targetcode.add("double ");
+            Targetcode.add("float ");
         }
         else
         {
@@ -482,7 +480,7 @@ public class CodeGenerator extends Visitor {
         {
             if(s.contains("number"))
             {
-                CodeParameters.add("double ");
+                CodeParameters.add("float ");
             }
             else
             {
@@ -511,7 +509,7 @@ public class CodeGenerator extends Visitor {
     @Override
     public Void Visit(WhileNode node) {
         Indend();
-        Targetcode.add("While (");
+        Targetcode.add("while (");
         node.bool.Accept(this);
         Targetcode.add(")\n");
         Indend();
