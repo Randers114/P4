@@ -96,7 +96,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
                 middle = visitTerminal(ctx.Identifier(0));
                 right = visitTerminal(ctx.Identifier(1));
             }
-            else if (ctx.Identifier(0) != null)
+            else
 			{
 				left = visitType(ctx.type());
 				middle = visitTerminal(ctx.Identifier(0));
