@@ -8,11 +8,30 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-
-
 public class ATypeChecker extends Visitor {
     private Stack<SymbolTable> CurrentSymbolTable = new Stack<>();
     private ProgramNode Root;
+
+    @Override
+    public Object Visit (SynchronizationNode node)
+    {
+        if (node.right != null
+			&& node.left != null
+			&& SymbolTable.GetTypeByID(((IdentifierNode)node.left).name, CurrentSymbolTable.peek() ).equals("Motor"))
+			return null;
+        else
+        	System.out.println("Synchronization node failed. types don't match @" + node.LineNumber);
+
+        return null;
+    }
+
+    @Override
+    public Object Visit (SleepNode node)
+    {
+		node.child.Accept(this);
+    	return null;
+
+    }
 
     @Override
     public String Visit(AndNode node) {

@@ -2,13 +2,10 @@ package abstractSyntaxTree;
 
 import abstractSyntaxTree.nodes.*;
 import org.antlr.v4.runtime.tree.TerminalNode;
-import org.jetbrains.annotations.NotNull;
 import sourceParser.*;
 import org.apache.commons.collections4.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import static javafx.scene.input.KeyCode.Z;
 
 public class AstBuild extends FinalGrammarBaseVisitor<Node> {
 
@@ -29,7 +26,6 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
         }};
     }
 
-    @NotNull
     private Node visitBlock(List<FinalGrammarParser.BodyContext> bodyContexts){
         return new BlockNode(){{ChildrenList = new ArrayList<>(visitBodyList(bodyContexts));}};
     }
@@ -100,6 +96,11 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
                 middle = visitTerminal(ctx.Identifier(0));
                 right = visitTerminal(ctx.Identifier(1));
             }
+            else
+			{
+				left = visitType(ctx.type());
+				middle = visitTerminal(ctx.Identifier(0));
+			}
 
             CollectionUtils.addIgnoreNull(ChildrenList, left);
             CollectionUtils.addIgnoreNull(ChildrenList, middle);
@@ -121,6 +122,10 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
             } else if (ctx.Identifier() != null){
                 child = visitAssign(ctx);
             }
+            else if(ctx.getText().contains("Sleep"))
+				child = visitSleep(ctx);
+			else if(ctx.getText().contains("synchronize"))
+				child = visitSynch(ctx);
 
             CollectionUtils.addIgnoreNull(ChildrenList, child);
             LineNumber = ctx.start.getLine();
@@ -243,7 +248,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
     @Override
     public Node visitPrmt(FinalGrammarParser.PrmtContext ctx) {
         return new ParameterNode(){{
-            Parameter = visitVal(ctx.val());
+            Parameter = visitB(ctx.b());
 
             if (ctx.prmt() != null){
                 prmt = visitPrmt(ctx.prmt());
@@ -321,7 +326,6 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
         }};
     }
 
-    @NotNull
     private Node visitUnary(FinalGrammarParser.ExprContext ctx){
         return new UnaryMinusNode(){{
             child = visitExpr(ctx.expr());
@@ -579,4 +583,19 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
             }
         }
     }
+
+    public Node visitSleep(FinalGrammarParser.StmtContext ctx)
+	{
+		return new SleepNode(){{
+			child = visitTerminal(ctx.Num(0));
+		}};
+	}
+
+	public Node visitSynch(FinalGrammarParser.StmtContext ctx)
+	{
+		return new SynchronizationNode(){{
+			left = visitTerminal(ctx.Identifier(0));
+			right = visitTerminal(ctx.Identifier(1));
+	}};
+	}
 }

@@ -16,6 +16,7 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" exported="" name="annotations-java8" level="project" />
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
@@ -28,6 +29,6 @@
         <jarDirectory url="file://$MODULE_DIR$/../commons-collections4-4.1" recursive="false" />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="annotations-java8" level="project" />
+    <orderEntry type="library" name="KotlinJavaRuntime" level="project" />
   </component>
 </module>
