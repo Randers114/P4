@@ -13,6 +13,7 @@ import java.util.List;
 public class CodeGenerator extends Visitor {
     private List<String> Targetcode = new ArrayList<>();
     private List<String> CodeParameters = new ArrayList<>();
+    private List<String> MotorAndSensor = new ArrayList<>();
     private int tab = 0;
     private boolean isParameter = false;
 
@@ -57,6 +58,23 @@ public class CodeGenerator extends Visitor {
 
     }
 
+
+    @Override
+    public Void Visit(SynchronizationNode node) {
+        node.right.Accept(this);
+        Targetcode.add("=");
+        node.left.Accept(this);
+        Targetcode.add("*");
+        if(node.value != 0) {
+            Targetcode.add(Double.toString(node.value / 100));
+        }
+        return null;
+    }
+
+    @Override
+    public Object Visit(SleepNode node) {
+        return null;
+    }
 
     @Override
     public Void Visit(AndNode node) {
@@ -433,6 +451,9 @@ public class CodeGenerator extends Visitor {
 
     @Override
     public Object Visit(StatMotorNode node) {
+
+
+
         return null;
     }
 
