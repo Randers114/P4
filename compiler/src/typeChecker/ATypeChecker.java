@@ -390,8 +390,12 @@ public class ATypeChecker extends Visitor {
 
     @Override
     public Void Visit(StatMotorNode node) {
-    	String type = node.parameter.Accept(this).toString();
-        if(!(node.instance.equals("Forward") && type.equals("Number")))
+    	String type = node.speed.Accept(this).toString();
+    	String type2 = null;
+    	if(node.time != null)
+    	    type2 = node.time.Accept(this).toString();
+        if( !(node.instance.equals("Forward") && type.equals("Number"))
+            || !((node.instance.equals("ForwardSeconds"))&& type.equals("Number") && type2.equals("Number")))
         	System.out.println("Mistakes were made StatMotorNode @ " + node.LineNumber);
         return null;
     }

@@ -553,12 +553,40 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
         return new StatMotorNode(){{
             if(ctx.getText().contains("Forward"))
                 instance = "Forward";
-            else
+            else if(ctx.getText().contains("Backwards"))
                 instance = "Backwards";
-            if(ctx.expr() != null)
-                parameter = visitExpr(ctx.expr());
+            else if (ctx.getText().contains("ForwardSeconds"))
+                instance = "ForwardSeconds";
+            else if (ctx.getText().contains("BackwardsSeconds"))
+                instance = "BackwardsSeconds";
+
+            if(ctx.expr().size() > 1)
+            {
+                speed = visitExpr(ctx.expr(0));
+                time = visitExpr(ctx.expr(1));
+            }
+            else if (ctx.Num().size() > 1)
+            {
+                speed = visitTerminal(ctx.Num(0));
+                speed = visitTerminal(ctx.Num(1));
+            }
+            else if(ctx.expr().size() == 1)
+                speed = visitExpr(ctx.expr(0));
+            else if (ctx.Num().size() == 1)
+                speed = visitTerminal(ctx.Num(0));
+            else if (ctx.getChild(3) == ctx.Num(0))
+            {
+                speed = visitTerminal(ctx.Num(0));
+                time = visitExpr(ctx.expr(0));
+            }
+
             else
-                parameter = visitTerminal(ctx.Num());
+            {
+                speed = visitExpr(ctx.expr(0));
+                time = visitTerminal(ctx.Num(0));
+            }
+
+
             LineNumber = ctx.start.getLine();}};
     }
 

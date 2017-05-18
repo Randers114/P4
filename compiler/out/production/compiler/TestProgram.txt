@@ -5,6 +5,8 @@ main
     //tesy
     Motor[A] M1;
 
+    //Sleep(500)
+
 
     number x = 5;
     number z;
@@ -13,17 +15,21 @@ main
 
     Motor[B] M2;
 
-    List[bool] list1;
+    /* List[bool] list1;
 
     list1.Add(10);
-    list1.Add(x);
+    list1.Add(10);
 
     list1.Add(false);
-    list1.Add(true);
+    list1.Add(true); */
 
     M1 synchronize M2 50;
 
-    M1.Backwards(x);
+    M1.Backwards(5);
+    M1.Forward(10);
+
+   /* M1.ForwardSeconds(10,11);
+    M1.BackwardsSeconds(10, 10); */
 
     if (aaa) then {
         number b = 25;
