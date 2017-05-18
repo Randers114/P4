@@ -13,7 +13,7 @@ import java.util.List;
 public class CodeGenerator extends Visitor {
     private List<String> Targetcode = new ArrayList<>();
     private List<String> CodeParameters = new ArrayList<>();
-    private List<String> MotorAndSensor = new ArrayList<>();
+    public List<SyncMotor> syncMotors = new ArrayList<>();
     private int tab = 0;
     private boolean isParameter = false;
 
@@ -61,18 +61,27 @@ public class CodeGenerator extends Visitor {
 
     @Override
     public Void Visit(SynchronizationNode node) {
-        node.right.Accept(this);
-        Targetcode.add("=");
-        node.left.Accept(this);
-        Targetcode.add("*");
-        if(node.value != 0) {
-            Targetcode.add(Double.toString(node.value / 100));
+        String motor1 = node.left.Accept(this).toString();
+        String motor2 = node.right.Accept(this).toString();
+
+        if(Double.toString(node.value) != null)
+        {
+            double value = node.value;
+            SyncMotor s = new SyncMotor(motor1, motor2, value);
+            syncMotors.add(s);
+        }
+        else {
+            SyncMotor s = new SyncMotor(motor1, motor2);
+            syncMotors.add(s);
         }
         return null;
     }
 
     @Override
     public Object Visit(SleepNode node) {
+        Targetcode.add("Sleep(");
+        node.child.Accept(this);
+        Targetcode.add(")");
         return null;
     }
 
