@@ -19,10 +19,12 @@ public class ATypeChecker extends Visitor {
     {
         if (node.right != null
 			&& node.left != null
-			&& SymbolTable.GetTypeByID(((IdentifierNode)node.left).name, CurrentSymbolTable.peek()).equals("Motor"))
+			&& SymbolTable.GetTypeByID(((IdentifierNode)node.left).name, CurrentSymbolTable.peek()).equals("Motor")
+            && SymbolTable.GetTypeByID(((IdentifierNode)node.right).name, CurrentSymbolTable.peek()).equals("Motor")
+            && node.relativeSpeed < 101 && node.relativeSpeed > -100)
 			return null;
         else
-        	System.out.println("Synchronization node failed. types don't match @" + node.LineNumber);
+        	System.out.println("Synchronization node failed @" + node.LineNumber);
 
         return null;
     }

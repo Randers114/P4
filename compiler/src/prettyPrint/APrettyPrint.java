@@ -2,6 +2,7 @@ package prettyPrint;
 
 import AVisitor.Visitor;
 import abstractSyntaxTree.nodes.*;
+import com.sun.xml.internal.bind.v2.TODO;
 
 public class APrettyPrint extends Visitor {
     private int tab = 0;
@@ -9,12 +10,14 @@ public class APrettyPrint extends Visitor {
     @Override
     public Object Visit (SynchronizationNode node)
     {
-        return null;
+        //TODO
+         return null;
     }
 
     @Override
     public Object Visit (SleepNode node)
     {
+        //TODO
         return null;
     }
 

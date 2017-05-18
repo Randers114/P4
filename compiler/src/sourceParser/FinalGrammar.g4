@@ -26,7 +26,7 @@ stmt	: Identifier '=' b ';'
 		| 'while' '(' b ')' 'do' '{' body* '}'
 		| 'for' '(' (Num | Identifier) 'to' (Num | Identifier) ')' 'do' '{' body* '}'
 		| 'Sleep' (Num)
-		| Identifier 'synchronize' Identifier Num?;
+		| Identifier 'synchronize' Identifier Num? ';';
 
 call	: Identifier '(' prmt? ')'
 		| Identifier '.' statid;
@@ -88,12 +88,12 @@ boolvalop	: 'lessThan'
 		| 'lessThanOrEqual'
 		| 'notEqual';
 
-statmotorid	: 'Forward' '(' Num | expr ')'
-            | 'Backwards' '(' Num | expr ')';
+statmotorid	: 'Forward' '(' (Num | expr) ')'
+            | 'Backwards' '(' (Num | expr) ')';
 
 statsensorid: 'IsPressed()' | 'Distance()';
 
-statlistid	: 'Add' '(' call |  b ')' | 'Remove' '(' Num ')';
+statlistid	: 'Add' '(' (call |  b) ')' | 'Remove' '(' Num ')';
 
 
 boolop	: 'equal'

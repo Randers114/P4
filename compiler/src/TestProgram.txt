@@ -5,11 +5,25 @@ main
     //tesy
     Motor[A] M1;
 
+
+    number x = 5;
+    number z;
+    bool u = true;
+    bool y;
+
     Motor[B] M2;
 
-    M1 synchronize M2
+    List[bool] list1;
 
-    M1.Forward(z;
+    list1.Add(10);
+    list1.Add(x);
+
+    list1.Add(false);
+    list1.Add(true);
+
+    M1 synchronize M2 50;
+
+    M1.Backwards(x);
 
     if (aaa) then {
         number b = 25;

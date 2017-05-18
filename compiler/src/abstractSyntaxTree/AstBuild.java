@@ -85,7 +85,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
     @Override
     public Node visitDcl(FinalGrammarParser.DclContext ctx) {
         return new DclNode(){{
-            if (ctx.type() != null){
+            if (ctx.type() != null && !ctx.getText().contains("List")){
                 left = visitType(ctx.type());
                 middle = visitTerminal(ctx.Identifier(0));
                 if (ctx.b() != null){
@@ -98,8 +98,8 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
             }
             else
 			{
-				left = visitType(ctx.type());
-				middle = visitTerminal(ctx.Identifier(0));
+                middle = visitType(ctx.type());
+                right = visitTerminal(ctx.Identifier(0));
 			}
 
             CollectionUtils.addIgnoreNull(ChildrenList, left);
@@ -605,6 +605,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
 		return new SynchronizationNode(){{
 			left = visitTerminal(ctx.Identifier(0));
 			right = visitTerminal(ctx.Identifier(1));
+			relativeSpeed = ((NumberNode)visitTerminal(ctx.Num(0))).value;
 			LineNumber = ctx.start.getLine();
 	}};
 	}
