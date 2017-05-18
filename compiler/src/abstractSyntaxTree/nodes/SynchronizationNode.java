@@ -4,7 +4,7 @@ import AVisitor.Visitor;
 
 public class SynchronizationNode extends OpNode
 {
-	public double relativeSpeed;
+	public Double relativeSpeed;
 	@Override
 	public Object Accept(Visitor visitor) {
 		return visitor.Visit(this);

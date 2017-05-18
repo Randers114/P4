@@ -189,7 +189,8 @@ public class ATypeChecker extends Visitor {
 
     @Override
     public Void Visit(DclNode node) {
-        String type, type2 = "", rightNode;
+        String type = "", type2 = "", rightNode = "";
+        if (node.left != null)
         type = node.left.Accept(this).toString();
 
         if (node.right != null){
@@ -204,6 +205,8 @@ public class ATypeChecker extends Visitor {
             else if(rightNode.equals("Sensor")){
                 type2 = "Sensor";
             }
+            else if (node.middle != null)
+                node.middle.Accept(this);
             else {
                 type2 = "number";
             }
