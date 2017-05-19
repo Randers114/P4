@@ -4,6 +4,7 @@ import abstractSyntaxTree.nodes.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -60,7 +61,8 @@ public class BuildSymbolTable {
 			}
 			else if(((DclNode)node).middle instanceof TypesNode)
             {
-
+                if(((TypesNode)(((DclNode)node).middle)).type.equals("bool") ||((TypesNode)(((DclNode)node).middle)).type.equals("number") )
+                    symbolTable.InsertList(((IdentifierNode)(((DclNode)node).right)).name, new ArrayList<Node>(), node.LineNumber);
             }
 			else {
                 symbolTable.Insert(((DclNode) node).right, ((DclNode) node).left);

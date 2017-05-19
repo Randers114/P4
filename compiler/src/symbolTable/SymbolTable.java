@@ -4,13 +4,11 @@ import abstractSyntaxTree.nodes.IdentifierNode;
 import abstractSyntaxTree.nodes.InstanceNode;
 import abstractSyntaxTree.nodes.Node;
 import abstractSyntaxTree.nodes.TypesNode;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class SymbolTable {
     private List<Variable> Variables;
+    private HashMap<String, ArrayList<Node>> Lists = new HashMap<String, ArrayList<Node>>();
     static List<SymbolTable> symbolTables = new ArrayList<>();
     SymbolTable()
     {
@@ -53,6 +51,11 @@ public class SymbolTable {
                 return true;
             }
         }
+        for (String s : Lists.keySet())
+        {
+                if(s.equals(varName))
+                return true;
+        }
 
         return false;
     }
@@ -66,5 +69,13 @@ public class SymbolTable {
             }
         }
         return type;
+    }
+
+    void InsertList(String name, ArrayList<Node> list, int line)
+    {
+        if (!LookUp(name))
+            Lists.put(name, list);
+        else
+            System.out.println("List already exsists at this context @" + line);
     }
 }

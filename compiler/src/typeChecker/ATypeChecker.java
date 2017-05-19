@@ -183,6 +183,8 @@ public class ATypeChecker extends Visitor {
                 }
             }
         }
+        if(node.statId != null)
+            node.statId.Accept(this);
 
         return node.id.Accept(this).toString();
     }
@@ -206,7 +208,9 @@ public class ATypeChecker extends Visitor {
                 type2 = "Sensor";
             }
             else if (node.middle != null && node.isList)
+            {
                 node.middle.Accept(this);
+            }
             else {
                 type2 = "number";
             }
@@ -381,18 +385,31 @@ public class ATypeChecker extends Visitor {
     }
 
     @Override
-    public Void Visit(StatIdNode node) {
-        node.Accept(this);
-        return null;
+    public String Visit(StatIdNode node)
+    {
+        return node.instance.Accept(this).toString();
     }
 
     @Override
-    public Void Visit(StatListNode node) {
-        return null;
+    public String Visit(StatListNode node)
+    {
+        switch (node.instance)
+        {
+            case "Add":
+                //TODO
+                break;
+            case "Remove":
+                //TODO
+                break;
+            case "Get":
+                //TODO
+                break;
+        }
+        return node.instance; //TODO
     }
 
     @Override
-    public Void Visit(StatMotorNode node) {
+    public Void Visit(StatMotorNode node) { //TODO check if it works as intended
     	String type = node.speed.Accept(this).toString();
     	String type2 = null;
     	if(node.time != null)

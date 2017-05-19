@@ -1,29 +1,38 @@
 main
 {
+    List[number] list1;
+    List[bool] list2;
 
-    List[bool] list1;
+    list1.Add(10);
+    list1.Add(x);
+
+    list2.Add(false);
+    list2.Add(true);
+    list2.Add(u);
+
+    list1.Add(true);
+    list1.Add(u);
+
+    list2.Add(10);
+    list2.Add(x);
 
     bool aaa = 10 greaterThan 5 and 14 lessThan 20 or true ;
-    //tesy
     Motor[A] M1;
 
-    //Sleep(500)
-
+    Sleep(500)
 
     number x = 5;
     number z;
     bool u = true;
     bool y;
 
+
     Motor[B] M2;
 
 
-    /*
-    list1.Add(10);
-    list1.Add(10);
 
-    list1.Add(false);
-    list1.Add(true); */
+
+
 
     M1 synchronize M2 50;
 
