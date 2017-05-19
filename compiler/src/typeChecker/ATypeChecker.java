@@ -205,7 +205,7 @@ public class ATypeChecker extends Visitor {
             else if(rightNode.equals("Sensor")){
                 type2 = "Sensor";
             }
-            else if (node.middle != null)
+            else if (node.middle != null && node.isList)
                 node.middle.Accept(this);
             else {
                 type2 = "number";

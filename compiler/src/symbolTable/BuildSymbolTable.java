@@ -60,7 +60,7 @@ public class BuildSymbolTable {
 			}
 			else if(((DclNode)node).middle instanceof TypesNode)
             {
-             //   symbolTable.Insert(((IdentifierNode)node).name, );
+
             }
 			else {
                 symbolTable.Insert(((DclNode) node).right, ((DclNode) node).left);

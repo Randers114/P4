@@ -100,6 +100,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
 			{
                 middle = visitType(ctx.type());
                 right = visitTerminal(ctx.Identifier(0));
+                isList = true;
 			}
 
             CollectionUtils.addIgnoreNull(ChildrenList, left);
