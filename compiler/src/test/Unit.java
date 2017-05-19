@@ -6,7 +6,7 @@ import typeChecker.ATypeChecker;
 import static junit.framework.Assert.assertEquals;
 
 public class Unit {
-    ATypeChecker typeChecker = new ATypeChecker();
+    private ATypeChecker typeChecker = new ATypeChecker();
     @Test
     public void EvaluateTypeCheckerDividePlus(){
         PlusNode plusNode = new PlusNode(){{left = new NumberNode(){{value = 10;}}; right = new NumberNode(){{value = 66;}};}};
