@@ -93,7 +93,11 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
                 }
             } else if (ctx.instancedcl() != null){
                 left = visitInstancedcl(ctx.instancedcl());
-                middle = visitTerminal(ctx.Identifier(0));
+                if (ctx.Num() != null){
+                    middle = visitTerminal(ctx.Num());
+                } else {
+                    middle = visitTerminal(ctx.Identifier(0));
+                }
                 right = visitTerminal(ctx.Identifier(1));
             }
             else

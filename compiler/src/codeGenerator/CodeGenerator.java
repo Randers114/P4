@@ -179,7 +179,7 @@ public class CodeGenerator extends Visitor {
                 MotorOrSensordcl.add(", ");
                 MotorOrSensordcl.add("tmotorEV3_Large)\n");
             }
-            else if (s == "Sensor")
+            else if (s.equals("Sensor"))
             {
                 MotorOrSensordcl.add("S");
             }
