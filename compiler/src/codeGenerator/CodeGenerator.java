@@ -12,15 +12,18 @@ import java.util.List;
 
 public class CodeGenerator extends Visitor {
     private List<String> Targetcode = new ArrayList<>();
-    private List<String> CodeParameters = new ArrayList<>();
+    private List<String> CodePrototypes = new ArrayList<>();
     public List<SyncMotor> syncMotors = new ArrayList<>();
+    private List<String> MotorOrSensordcl = new ArrayList<>();
+
     private int tab = 0;
-    private boolean isParameter = false;
+    private boolean isPrototype = false;
+    private boolean isMotorOrSensor = false;
 
     public void openfile() {
         try {
 
-            File file = new File("D:\\Repositories\\P4\\compiler\\src\\Tnewfile.c");
+            File file = new File("/Users/lassekristensen/P4/compiler/src/codeGenerator/newfile.c");
             if (file.createNewFile())
             {
                 System.out.println("File is created!");
@@ -31,7 +34,7 @@ public class CodeGenerator extends Visitor {
         }
 
         try {
-            PrintWriter writer = new PrintWriter("D:\\Repositories\\P4\\compiler\\src\\newfile.c", "UTF-8");
+            PrintWriter writer = new PrintWriter("/Users/lassekristensen/P4/compiler/src/codeGenerator/newfile.c", "UTF-8");
             writer.flush();
             WriteToFile(writer);
 
@@ -44,9 +47,14 @@ public class CodeGenerator extends Visitor {
 
     private void WriteToFile(PrintWriter writer)
     {
-        for (String parameter: CodeParameters)
+        for (String motorOrSensor: MotorOrSensordcl)
         {
-            writer.print(parameter);
+            writer.print(motorOrSensor);
+        }
+
+        for (String prototype: CodePrototypes)
+        {
+            writer.print(prototype);
         }
 
         writer.println();
@@ -61,18 +69,10 @@ public class CodeGenerator extends Visitor {
 
     @Override
     public Void Visit(SynchronizationNode node) {
-        String motor1 = node.left.Accept(this).toString();
-        String motor2 = node.right.Accept(this).toString();
-        if(node.relativeSpeed != null)
-        {
-            double value = node.relativeSpeed;
-            SyncMotor s = new SyncMotor(motor1, motor2, value);
-            syncMotors.add(s);
-        }
-        else {
-            SyncMotor s = new SyncMotor(motor1, motor2);
-            syncMotors.add(s);
-        }
+        SyncMotor s = new SyncMotor(node.left, node.right, node.relativeSpeed);
+        syncMotors.add(s);
+        SyncMotor s2 = new SyncMotor(node.left, node.right);
+        syncMotors.add(s2);
         return null;
     }
 
@@ -163,16 +163,38 @@ public class CodeGenerator extends Visitor {
     @Override
     public Void Visit(DclNode node) {
         Indend();
+
         node.left.Accept(this);
-        node.middle.Accept(this);
-        if(node.right != null)
+        if(isMotorOrSensor)
         {
-            Targetcode.add(" = ");
-            node.right.Accept(this);
+            Targetcode.remove(Targetcode.size()-1);
+            String s = MotorOrSensordcl.get(MotorOrSensordcl.size()-1);
+            MotorOrSensordcl.add(", ");
+            if(s.equals("Motor"))
+            {
+                MotorOrSensordcl.add("motor");
+                node.middle.Accept(this);
+                MotorOrSensordcl.add(", ");
+                node.right.Accept(this);
+                MotorOrSensordcl.add(", ");
+                MotorOrSensordcl.add("tmotorEV3_Large)\n");
+            }
+            else if (s == "Sensor")
+            {
+                MotorOrSensordcl.add("S");
+            }
+            isMotorOrSensor = false;
+
         }
+        else {
+            node.middle.Accept(this);
+            if (node.right != null) {
+                Targetcode.add(" = ");
+                node.right.Accept(this);
+            }
 
-        Targetcode.add("; \n");
-
+            Targetcode.add("; \n");
+        }
         return null;
     }
 
@@ -228,7 +250,7 @@ public class CodeGenerator extends Visitor {
         node.id.Accept(this);
         if (node.fprmt != null)
         {
-            CodeParameters.add(", ");
+            CodePrototypes.add(", ");
             Targetcode.add(", ");
             node.fprmt.Accept(this);
         }
@@ -274,11 +296,19 @@ public class CodeGenerator extends Visitor {
 
     @Override
     public Void Visit(IdentifierNode node) {
-        Targetcode.add(node.name);
-        if(isParameter)
+        if(isMotorOrSensor)
         {
-            CodeParameters.add(node.name);
+            MotorOrSensordcl.add(node.name);
         }
+        else {
+            Targetcode.add(node.name);
+        }
+
+        if(isPrototype)
+        {
+            CodePrototypes.add(node.name);
+        }
+
 
         return null;
     }
@@ -310,7 +340,9 @@ public class CodeGenerator extends Visitor {
 
     @Override
     public Void Visit(InstanceNode node) {
-        Targetcode.add(node.instance + " ");
+        isMotorOrSensor = true;
+        MotorOrSensordcl.add("#Pragma config(");
+        MotorOrSensordcl.add(node.instance);
         return null;
     }
 
@@ -335,16 +367,16 @@ public class CodeGenerator extends Visitor {
     @Override
     public Void Visit(MethodNode node) {
         Targetcode.add("\n");
-        isParameter = true;
+        isPrototype = true;
         node.type.Accept(this);
         node.id.Accept(this);
         Targetcode.add("(");
-        CodeParameters.add("(");
+        CodePrototypes.add("(");
         if(node.fprmt != null) {
             node.fprmt.Accept(this);
         }
-        isParameter = false;
-        CodeParameters.add("); \n");
+        isPrototype = false;
+        CodePrototypes.add("); \n");
         Targetcode.add(")\n");
         Targetcode.add("{\n");
         node.block.Accept(this);
@@ -505,15 +537,15 @@ public class CodeGenerator extends Visitor {
             Targetcode.add("bool ");
         }
 
-        if(isParameter)
+        if(isPrototype)
         {
             if(s.contains("number"))
             {
-                CodeParameters.add("float ");
+                CodePrototypes.add("float ");
             }
             else
             {
-                CodeParameters.add("bool ");
+                CodePrototypes.add("bool ");
             }
         }
 
