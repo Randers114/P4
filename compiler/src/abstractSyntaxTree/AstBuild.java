@@ -397,9 +397,9 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
     @Override
     public Node visitStatid(FinalGrammarParser.StatidContext ctx) {
         return new StatIdNode(){{
-            /*if (ctx.statlistid() != null){
+            if (ctx.statlistid() != null){
                 instance = visitStatlistid(ctx.statlistid());
-            } else*/ if (ctx.statmotorid() != null) {
+            } else if (ctx.statmotorid() != null) {
                 instance = visitStatmotorid(ctx.statmotorid());
             } else if (ctx.statsensorid() != null) {
                 instance = visitStatsensorid(ctx.statsensorid());

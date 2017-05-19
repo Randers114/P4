@@ -7,6 +7,6 @@ public class StatIdNode extends Node {
 
     @Override
     public Object Accept(Visitor visitor) {
-        return visitor.Visit(this);
+            return visitor.Visit(this);
     }
 }
