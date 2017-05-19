@@ -14,10 +14,11 @@ public class CodeGenerator extends Visitor {
     private List<String> Targetcode = new ArrayList<>();
     private List<String> CodePrototypes = new ArrayList<>();
     public List<SyncMotor> syncMotors = new ArrayList<>();
-    private List<String> Motordcl = new ArrayList<>();
+    private List<String> MotorOrSensordcl = new ArrayList<>();
 
     private int tab = 0;
     private boolean isPrototype = false;
+    private boolean isMotorOrSensor = false;
 
     public void openfile() {
         try {
@@ -46,6 +47,11 @@ public class CodeGenerator extends Visitor {
 
     private void WriteToFile(PrintWriter writer)
     {
+        for (String motorOrSensor: MotorOrSensordcl)
+        {
+            writer.print(motorOrSensor);
+        }
+
         for (String prototype: CodePrototypes)
         {
             writer.print(prototype);
@@ -157,16 +163,38 @@ public class CodeGenerator extends Visitor {
     @Override
     public Void Visit(DclNode node) {
         Indend();
+
         node.left.Accept(this);
-        node.middle.Accept(this);
-        if(node.right != null)
+        if(isMotorOrSensor)
         {
-            Targetcode.add(" = ");
-            node.right.Accept(this);
+            Targetcode.remove(Targetcode.size()-1);
+            String s = MotorOrSensordcl.get(MotorOrSensordcl.size()-1);
+            MotorOrSensordcl.add(", ");
+            if(s.equals("Motor"))
+            {
+                MotorOrSensordcl.add("motor");
+                node.middle.Accept(this);
+                MotorOrSensordcl.add(", ");
+                node.right.Accept(this);
+                MotorOrSensordcl.add(", ");
+                MotorOrSensordcl.add("tmotorEV3_Large)\n");
+            }
+            else if (s == "Sensor")
+            {
+                MotorOrSensordcl.add("S");
+            }
+            isMotorOrSensor = false;
+
         }
+        else {
+            node.middle.Accept(this);
+            if (node.right != null) {
+                Targetcode.add(" = ");
+                node.right.Accept(this);
+            }
 
-        Targetcode.add("; \n");
-
+            Targetcode.add("; \n");
+        }
         return null;
     }
 
@@ -268,11 +296,19 @@ public class CodeGenerator extends Visitor {
 
     @Override
     public Void Visit(IdentifierNode node) {
-        Targetcode.add(node.name);
+        if(isMotorOrSensor)
+        {
+            MotorOrSensordcl.add(node.name);
+        }
+        else {
+            Targetcode.add(node.name);
+        }
+
         if(isPrototype)
         {
             CodePrototypes.add(node.name);
         }
+
 
         return null;
     }
@@ -304,8 +340,9 @@ public class CodeGenerator extends Visitor {
 
     @Override
     public Void Visit(InstanceNode node) {
-        Motordcl.add("#Pragma config(");
-        Motordcl.add(node.instance + " ");
+        isMotorOrSensor = true;
+        MotorOrSensordcl.add("#Pragma config(");
+        MotorOrSensordcl.add(node.instance);
         return null;
     }
 
