@@ -3,6 +3,8 @@ package AVisitor;
 import abstractSyntaxTree.nodes.*;
 
 public abstract class Visitor{
+    public abstract Object Visit(SynchronizationNode node);
+    public abstract Object Visit(SleepNode node);
     public abstract Object Visit(AndNode node);
     public abstract Object Visit(AssignNode node);
     public abstract Object Visit(BlockNode node);

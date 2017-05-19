@@ -53,7 +53,16 @@ public class BuildSymbolTable {
                 if (((DclNode) node).right != null){
                     TraverseChildren(((DclNode) node).right.ChildrenList);
                 }
-            } else {
+            }
+			else if(((DclNode) node).left instanceof  InstanceNode)
+			{
+				symbolTable.Insert(((DclNode)node).right, ((DclNode)node).left);
+			}
+			else if(((DclNode)node).middle instanceof TypesNode)
+            {
+
+            }
+			else {
                 symbolTable.Insert(((DclNode) node).right, ((DclNode) node).left);
             }
 

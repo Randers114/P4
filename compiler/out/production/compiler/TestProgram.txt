@@ -1,8 +1,38 @@
 main
 {
+    Motor[A] M1;
+    List[bool] list1;
 
     bool aaa = 10 greaterThan 5 and 14 lessThan 20 or true ;
-    new Motor[A] m;
+    //tesy
+
+
+    //Sleep(500)
+
+
+    number x = 5;
+    number z;
+    bool u = true;
+    bool y;
+
+    Motor[B] M2;
+
+
+    /*
+    list1.Add(10);
+    list1.Add(10);
+
+    list1.Add(false);
+    list1.Add(true); */
+
+    M1 synchronize M2 50;
+
+    M1.Backwards(5);
+    M1.Forward(10);
+
+    M1.ForwardSeconds(10,11);
+    M1.BackwardsSeconds(10, 10);
+
     if (aaa) then {
         number b = 25;
         number a = 30;
@@ -12,7 +42,7 @@ main
         number a = 10;
 
         while (a lessThan 10) do {
-            for(a to  10) do {
+        for(a to  10) do {
                 number b;
             }
             number b = 10;
@@ -22,7 +52,7 @@ main
 
 
     if (aaa) then {
-        number g = hey(25, 100);
+        number g = hey(25, 100) + 5;
     } else if (hh() or aaa and true) then {
         number a = 10;
         number b = 10;

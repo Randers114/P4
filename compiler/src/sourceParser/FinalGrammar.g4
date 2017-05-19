@@ -19,17 +19,17 @@ methods	: type 'Method' Identifier '(' fprmt? ')' '{' body* 'return' returnval '
 dcl		: type Identifier '=' b
 		| type Identifier
 		| instancedcl '[' Identifier ']' Identifier
-		| 'List' '[' ('number' | 'boolean') ']' Identifier;
+		| 'List' '[' type ']' Identifier;
 
 stmt	: Identifier '=' b ';'
 		| 'if' '(' b ')' 'then' '{' body* '}' elseif* elsel?
 		| 'while' '(' b ')' 'do' '{' body* '}'
 		| 'for' '(' (Num | Identifier) 'to' (Num | Identifier) ')' 'do' '{' body* '}'
-		| 'Sleep' (Num)
-		| Identifier 'synchronize' Identifier;
+		| 'Sleep' '('Num')'
+		| Identifier 'synchronize' Identifier Num? ';';
 
 call	: Identifier '(' prmt? ')'
-		| Identifier '.' statid '(' prmt? ')';
+		| Identifier '.' statid;
 
 type	: 'number'
         | 'bool';
@@ -68,7 +68,8 @@ i       : expr
         | 'not' b;
 
 instancedcl	: 'Motor'
-            | 'Sensor';
+            | 'TouchSensor'
+            | 'UltrasoundSensor';
 
 elsel	: 'else' '{' body* '}';
 
@@ -88,12 +89,14 @@ boolvalop	: 'lessThan'
 		| 'lessThanOrEqual'
 		| 'notEqual';
 
-statmotorid	: 'Forward' '(' Num | expr ')'
-            | 'Backwards' '(' Num | expr ')';
+statmotorid	: 'Forward' '(' (Num | expr) ')'
+            | 'Backwards' '(' (Num | expr)')'
+            | 'ForwardSeconds' '(' (Num | expr) ',' (Num | expr) ')'
+            | 'BackwardsSeconds' '(' (Num | expr) ',' (Num | expr) ')';
 
 statsensorid: 'IsPressed()' | 'Distance()';
 
-statlistid	: 'Add' '(' call |  b ')' | 'Remove' '(' Num ')';
+statlistid	: 'Add' '(' (call |  b) ')' | 'Remove' '(' Num ')';
 
 
 boolop	: 'equal'

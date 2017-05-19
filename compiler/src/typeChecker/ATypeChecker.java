@@ -2,17 +2,40 @@ package typeChecker;
 
 import AVisitor.Visitor;
 import abstractSyntaxTree.nodes.*;
+import com.sun.org.apache.xpath.internal.operations.Number;
 import symbolTable.SymbolTable;
 
+import java.awt.font.NumericShaper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-
-
 public class ATypeChecker extends Visitor {
     private Stack<SymbolTable> CurrentSymbolTable = new Stack<>();
     private ProgramNode Root;
+
+    @Override
+    public Object Visit(SynchronizationNode node)
+    {
+        if (node.right != null
+			&& node.left != null
+			&& SymbolTable.GetTypeByID(((IdentifierNode)node.left).name, CurrentSymbolTable.peek()).equals("Motor")
+            && SymbolTable.GetTypeByID(((IdentifierNode)node.right).name, CurrentSymbolTable.peek()).equals("Motor")
+            && node.relativeSpeed < 101 && node.relativeSpeed > -100)
+			return null;
+        else
+        	System.out.println("Synchronization node failed @" + node.LineNumber);
+
+        return null;
+    }
+
+    @Override
+    public Object Visit(SleepNode node)
+    {
+		node.child.Accept(this);
+    	return null;
+
+    }
 
     @Override
     public String Visit(AndNode node) {
@@ -166,7 +189,8 @@ public class ATypeChecker extends Visitor {
 
     @Override
     public Void Visit(DclNode node) {
-        String type, type2 = "", rightNode;
+        String type = "", type2 = "", rightNode = "";
+        if (node.left != null)
         type = node.left.Accept(this).toString();
 
         if (node.right != null){
@@ -174,7 +198,18 @@ public class ATypeChecker extends Visitor {
 
             if (rightNode.equals("true") || rightNode.equals("false") || rightNode.equals("bool")) {
                 type2 = "bool";
-            } else {
+            }
+            else if(rightNode.equals("Motor")) {
+                type2 = "Motor";
+            }
+            else if(rightNode.equals("UltrasoundSensor")){
+                type2 = "UltrasoundSensor";
+            } else if(rightNode.equals("TouchSensor")){
+                type2 = "TouchSensor";
+            }
+            else if (node.middle != null && node.isList)
+                node.middle.Accept(this);
+            else {
                 type2 = "number";
             }
 
@@ -285,6 +320,11 @@ public class ATypeChecker extends Visitor {
         return "";
     }
 
+   /* public Object Visit(StatSensorNode node)
+	{
+		node.instance.equals("")
+	}*/
+
     @Override
     public String Visit(NotBoolNode node) {
         if (CheckForBool(node).equals("bool")){
@@ -344,6 +384,7 @@ public class ATypeChecker extends Visitor {
 
     @Override
     public Void Visit(StatIdNode node) {
+        node.Accept(this);
         return null;
     }
 
@@ -354,6 +395,13 @@ public class ATypeChecker extends Visitor {
 
     @Override
     public Void Visit(StatMotorNode node) {
+    	String type = node.speed.Accept(this).toString();
+    	String type2 = null;
+    	if(node.time != null)
+    	    type2 = node.time.Accept(this).toString();
+        if( !(node.instance.equals("Forward") && type.equals("Number"))
+            || !((node.instance.equals("ForwardSeconds"))&& type.equals("Number") && type2.equals("Number")))
+        	System.out.println("Mistakes were made StatMotorNode @ " + node.LineNumber);
         return null;
     }
 

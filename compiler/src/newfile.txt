@@ -1,0 +1,59 @@
+#include <stdio.h> 
+
+double hey(double v, double m); 
+bool hh(); 
+
+main() 
+{
+bool aaa = 10.0 > 5.0 && 14.0 < 20.0 || true; 
+Motor A = M1; 
+double x = 5.0; 
+double z; 
+bool u = true; 
+bool y;
+
+Motor B = M2;
+
+M1()M1()M1()M1()
+
+if(aaa)
+{
+double b = 25.0; 
+double a = 30.0; 
+a = a + b * b + 25.0 + b; 
+}
+else
+{ 
+double a = 10.0; 
+While (a < 10.0)
+{
+for ( int i = a ; i <10.0 ; i++ )
+{ 
+double b; 
+}
+double b = 10.0; 
+}
+} 
+if(aaa)
+{
+double g = hey(25.0, 100.0) + 5.0; 
+}
+else if(hh() || aaa && true)
+{
+double a = 10.0; 
+double b = 10.0; 
+a = hey(a, b); 
+}
+} 
+
+double hey(double v, double m)
+{
+double a = v + m; 
+return v + m;
+}
+
+bool hh()
+{
+bool l = true; 
+return l;
+}

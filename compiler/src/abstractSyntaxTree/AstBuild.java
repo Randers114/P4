@@ -2,13 +2,10 @@ package abstractSyntaxTree;
 
 import abstractSyntaxTree.nodes.*;
 import org.antlr.v4.runtime.tree.TerminalNode;
-import org.jetbrains.annotations.NotNull;
 import sourceParser.*;
 import org.apache.commons.collections4.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import static javafx.scene.input.KeyCode.Z;
 
 public class AstBuild extends FinalGrammarBaseVisitor<Node> {
 
@@ -29,7 +26,6 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
         }};
     }
 
-    @NotNull
     private Node visitBlock(List<FinalGrammarParser.BodyContext> bodyContexts){
         return new BlockNode(){{ChildrenList = new ArrayList<>(visitBodyList(bodyContexts));}};
     }
@@ -89,7 +85,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
     @Override
     public Node visitDcl(FinalGrammarParser.DclContext ctx) {
         return new DclNode(){{
-            if (ctx.type() != null){
+            if (ctx.type() != null && !ctx.getText().contains("List")){
                 left = visitType(ctx.type());
                 middle = visitTerminal(ctx.Identifier(0));
                 if (ctx.b() != null){
@@ -100,6 +96,12 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
                 middle = visitTerminal(ctx.Identifier(0));
                 right = visitTerminal(ctx.Identifier(1));
             }
+            else
+			{
+                middle = visitType(ctx.type());
+                right = visitTerminal(ctx.Identifier(0));
+                isList = true;
+			}
 
             CollectionUtils.addIgnoreNull(ChildrenList, left);
             CollectionUtils.addIgnoreNull(ChildrenList, middle);
@@ -118,9 +120,14 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
                 child = visitWhile(ctx);
             } else if (ctx.getText().contains("for")){
                 child = visitFor(ctx);
-            } else if (ctx.Identifier() != null){
+            } else if(ctx.getText().contains("Sleep"))
+				child = visitSleep(ctx);
+			else if(ctx.getText().contains("synchronize"))
+				child = visitSynch(ctx);
+			else if (ctx.Identifier() != null){
                 child = visitAssign(ctx);
             }
+
 
             CollectionUtils.addIgnoreNull(ChildrenList, child);
             LineNumber = ctx.start.getLine();
@@ -243,7 +250,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
     @Override
     public Node visitPrmt(FinalGrammarParser.PrmtContext ctx) {
         return new ParameterNode(){{
-            Parameter = visitVal(ctx.val());
+            Parameter = visitB(ctx.b());
 
             if (ctx.prmt() != null){
                 prmt = visitPrmt(ctx.prmt());
@@ -321,7 +328,6 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
         }};
     }
 
-    @NotNull
     private Node visitUnary(FinalGrammarParser.ExprContext ctx){
         return new UnaryMinusNode(){{
             child = visitExpr(ctx.expr());
@@ -387,9 +393,9 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
     @Override
     public Node visitStatid(FinalGrammarParser.StatidContext ctx) {
         return new StatIdNode(){{
-            if (ctx.statlistid() != null){
+            /*if (ctx.statlistid() != null){
                 instance = visitStatlistid(ctx.statlistid());
-            } else if (ctx.statmotorid() != null) {
+            } else*/ if (ctx.statmotorid() != null) {
                 instance = visitStatmotorid(ctx.statmotorid());
             } else if (ctx.statsensorid() != null) {
                 instance = visitStatsensorid(ctx.statsensorid());
@@ -546,7 +552,42 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
     @Override
     public Node visitStatmotorid(FinalGrammarParser.StatmotoridContext ctx) {
         return new StatMotorNode(){{
-            instance = ctx.getText();
+            if(ctx.getText().contains("Forward"))
+                instance = "Forward";
+            else if(ctx.getText().contains("Backwards"))
+                instance = "Backwards";
+            else if (ctx.getText().contains("ForwardSeconds"))
+                instance = "ForwardSeconds";
+            else if (ctx.getText().contains("BackwardsSeconds"))
+                instance = "BackwardsSeconds";
+
+            if(ctx.expr().size() > 1)
+            {
+                speed = visitExpr(ctx.expr(0));
+                time = visitExpr(ctx.expr(1));
+            }
+            else if (ctx.Num().size() > 1)
+            {
+                speed = visitTerminal(ctx.Num(0));
+                speed = visitTerminal(ctx.Num(1));
+            }
+            else if(ctx.expr().size() == 1)
+                speed = visitExpr(ctx.expr(0));
+            else if (ctx.Num().size() == 1)
+                speed = visitTerminal(ctx.Num(0));
+            else if (ctx.getChild(3) == ctx.Num(0))
+            {
+                speed = visitTerminal(ctx.Num(0));
+                time = visitExpr(ctx.expr(0));
+            }
+
+            else
+            {
+                speed = visitExpr(ctx.expr(0));
+                time = visitTerminal(ctx.Num(0));
+            }
+
+
             LineNumber = ctx.start.getLine();}};
     }
 
@@ -579,4 +620,22 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
             }
         }
     }
+
+    public Node visitSleep(FinalGrammarParser.StmtContext ctx)
+	{
+		return new SleepNode(){{
+			child = visitTerminal(ctx.Num(0));
+			LineNumber = ctx.start.getLine();
+		}};
+	}
+
+	public Node visitSynch(FinalGrammarParser.StmtContext ctx)
+	{
+		return new SynchronizationNode(){{
+			left = visitTerminal(ctx.Identifier(0));
+			right = visitTerminal(ctx.Identifier(1));
+			relativeSpeed = ((NumberNode)visitTerminal(ctx.Num(0))).value;
+			LineNumber = ctx.start.getLine();
+	}};
+	}
 }
