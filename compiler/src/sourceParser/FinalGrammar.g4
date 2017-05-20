@@ -90,15 +90,17 @@ boolvalop	: 'lessThan'
 		| 'lessThanOrEqual'
 		| 'notEqual';
 
-motorInvoke	: 'Forward' '(' (Num | expr) ')'
-            | 'Backwards' '(' (Num | expr)')'
-            | 'ForwardSeconds' '(' (Num | expr) ',' (Num | expr) ')'
-            | 'BackwardsSeconds' '(' (Num | expr) ',' (Num | expr) ')'
+motorInvoke	: 'Forward' '(' expr ')'
+            | 'Backwards' '(' expr')'
+            | 'ForwardSeconds' '(' expr ',' expr ')'
+            | 'BackwardsSeconds' '(' expr ',' expr ')'
             | 'Stop' '(' ')';
 
 sensorInvoke: 'IsPressed' | 'Distance';
 
-listInvoke	: 'Add' '(' (call |  b) ')' | 'Remove' '(' Num ')' | 'Length' '(' ')';
+listInvoke	: 'Add' '(' b ')'
+            | 'Remove' '(' expr ')'
+            | 'Length' '(' ')';
 
 
 boolop	: 'equal'

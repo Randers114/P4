@@ -1,9 +1,10 @@
 package abstractSyntaxTree.nodes;
 
+
 import AVisitor.Visitor;
 
-public class StatMotorNode extends Node {
-    public String instance;
+public class MotorInvokeNode extends Node{
+    public String method;
     public Node speed;
     public Node time;
 

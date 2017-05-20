@@ -42,7 +42,7 @@ public class SymbolTable {
         }
     }
 
-    void Insert(Node id, Node type, Node symbol){
+    void Insert(String id, Node type, Node symbol){
         String symbolFromInstance = FindSymbol(symbol);
         if (!LookUpSymbol(symbolFromInstance)){
             symbolTables.get((symbolTables.size() - 1)).Variables.add(new Variable(((IdentifierNode) id).name, ((InstanceNode) type).instance, symbolFromInstance));
@@ -62,7 +62,7 @@ public class SymbolTable {
     private Boolean LookUpSymbol(String symbol){
         for (Variable var: symbolTables.get(symbolTables.size() - 1).Variables
                 ) {
-            if (var.Name.equals(symbol)){
+            if (var.Symbol.equals(symbol)){
                 return true;
             }
         }

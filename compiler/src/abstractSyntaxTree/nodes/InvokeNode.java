@@ -1,10 +1,9 @@
 package abstractSyntaxTree.nodes;
 
+
 import AVisitor.Visitor;
 
-public class StatListNode extends Node {
-    public String instance;
-
+public class InvokeNode extends Single{
     @Override
     public Object Accept(Visitor visitor) {
         return visitor.Visit(this);

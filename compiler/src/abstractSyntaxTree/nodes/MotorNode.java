@@ -4,7 +4,7 @@ package abstractSyntaxTree.nodes;
 import AVisitor.Visitor;
 
 public class MotorNode extends Node{
-    public String Symbol;
+    public String symbol;
     public Node id;
 
     @Override

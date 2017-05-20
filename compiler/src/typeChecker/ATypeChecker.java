@@ -2,10 +2,8 @@ package typeChecker;
 
 import AVisitor.Visitor;
 import abstractSyntaxTree.nodes.*;
-import com.sun.org.apache.xpath.internal.operations.Number;
 import symbolTable.SymbolTable;
 
-import java.awt.font.NumericShaper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
@@ -184,8 +182,8 @@ public class ATypeChecker extends Visitor {
             }
         }
 
-        if(node.statId != null) {
-            return node.statId.Accept(this).toString();
+        if(node.invoke != null) {
+            return node.invoke.Accept(this).toString();
         }
 
 

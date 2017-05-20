@@ -25,6 +25,11 @@ public class BuildSymbolTable {
                  ) {
                 symbolTable.Insert(((MethodNode) a).id, ((MethodNode) a).type);
             }
+
+            for (Node designDclNode: ((ProgramNode) node).designSpecificInvokes
+                 ) {
+
+            }
             TraverseChildren(node.ChildrenList);
             ((ProgramNode) node).symbolTable = SymbolTable.symbolTables.get(SymbolTable.symbolTables.size() - 1);
 
@@ -55,8 +60,9 @@ public class BuildSymbolTable {
                     TraverseChildren(((DclNode) node).right.ChildrenList);
                 }
             }
-			else if(((DclNode) node).left instanceof  InstanceNode)
+			else if(((DclNode) node).left instanceof  InvokeNode)
 			{
+
 				symbolTable.Insert(((DclNode)node).right, ((DclNode)node).left, ((DclNode) node).middle);
 			}
 			else if(((DclNode)node).middle instanceof TypesNode)
