@@ -23,7 +23,6 @@ public abstract class Visitor{
     public abstract Object Visit(GreaterThanOrEqualNode node);
     public abstract Object Visit(IdentifierNode node);
     public abstract Object Visit(IfNode node);
-    public abstract Object Visit(InstanceNode node);
     public abstract Object Visit(InvokeNode node);
     public abstract Object Visit(LessThanNode node);
     public abstract Object Visit(LessThanOrEqualNode node);

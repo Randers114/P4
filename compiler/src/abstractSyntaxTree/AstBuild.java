@@ -62,6 +62,22 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
                    ((MotorNode) child).symbol = ((IdentifierNode) visitTerminal(ctx.Identifier(0))).name;
                    ((MotorNode) child).id = visitTerminal(ctx.Identifier(1));
                }
+           } else if (child instanceof UltraSoundSensorNode){
+               if (ctx.Num() != null){
+                   ((UltraSoundSensorNode) child).symbol = Double.toString(((NumberNode) visitTerminal(ctx.Num())).value);
+                   ((UltraSoundSensorNode) child).id = visitTerminal(ctx.Identifier(0));
+               } else {
+                   ((UltraSoundSensorNode) child).symbol = ((IdentifierNode) visitTerminal(ctx.Identifier(0))).name;
+                   ((UltraSoundSensorNode) child).id = visitTerminal(ctx.Identifier(1));
+               }
+           } else if (child instanceof TouchSensorNode){
+               if (ctx.Num() != null){
+                   ((TouchSensorNode) child).symbol = Double.toString(((NumberNode) visitTerminal(ctx.Num())).value);
+                   ((TouchSensorNode) child).id = visitTerminal(ctx.Identifier(0));
+               } else {
+                   ((TouchSensorNode) child).symbol = ((IdentifierNode) visitTerminal(ctx.Identifier(0))).name;
+                   ((TouchSensorNode) child).id = visitTerminal(ctx.Identifier(1));
+               }
            }
 
            ChildrenList.add(child);

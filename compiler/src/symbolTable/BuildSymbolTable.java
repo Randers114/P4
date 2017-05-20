@@ -28,7 +28,13 @@ public class BuildSymbolTable {
 
             for (Node designDclNode: ((ProgramNode) node).designSpecificInvokes
                  ) {
-
+                if (((DesignSpecificDclNode) designDclNode).child instanceof MotorNode){
+                    symbolTable.Insert(((MotorNode) ((DesignSpecificDclNode) designDclNode).child).id, "Motor", ((MotorNode) ((DesignSpecificDclNode) designDclNode).child).symbol);
+                } else if (((DesignSpecificDclNode) designDclNode).child instanceof UltraSoundSensorNode){
+                    symbolTable.Insert(((UltraSoundSensorNode) ((DesignSpecificDclNode) designDclNode).child).id, "UltrasoundSensor", ((UltraSoundSensorNode) ((DesignSpecificDclNode) designDclNode).child).symbol);
+                } else if (((DesignSpecificDclNode) designDclNode).child instanceof TouchSensorNode){
+                    symbolTable.Insert(((TouchSensorNode) ((DesignSpecificDclNode) designDclNode).child).id, "TouchSensor", ((TouchSensorNode) ((DesignSpecificDclNode) designDclNode).child).symbol);
+                }
             }
             TraverseChildren(node.ChildrenList);
             ((ProgramNode) node).symbolTable = SymbolTable.symbolTables.get(SymbolTable.symbolTables.size() - 1);
@@ -60,11 +66,10 @@ public class BuildSymbolTable {
                     TraverseChildren(((DclNode) node).right.ChildrenList);
                 }
             }
-			else if(((DclNode) node).left instanceof  InvokeNode)
-			{
-
-				symbolTable.Insert(((DclNode)node).right, ((DclNode)node).left, ((DclNode) node).middle);
-			}
+			//else if(((DclNode) node).left instanceof  ListNode) //TODO
+			//{
+			//	symbolTable.Insert(((DclNode)node).right, ((DclNode)node).left, ((DclNode) node).middle);
+			//}
 			else if(((DclNode)node).middle instanceof TypesNode)
             {
                 if(((TypesNode)(((DclNode)node).middle)).type.equals("bool") ||((TypesNode)(((DclNode)node).middle)).type.equals("number") )

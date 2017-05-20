@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+
 public class CodeGenerator extends Visitor {
     private List<String> Targetcode = new ArrayList<>();
     private List<String> CodePrototypes = new ArrayList<>();
@@ -66,6 +67,45 @@ public class CodeGenerator extends Visitor {
 
     }
 
+    @Override
+    public Object Visit(DesignSpecificDclNode node) {
+        return null;
+    }
+
+    @Override
+    public Object Visit(InvokeNode node) {
+        return null;
+    }
+
+    @Override
+    public Object Visit(ListInvokeNode node) {
+        return null;
+    }
+
+    @Override
+    public Object Visit(MotorNode node) {
+        return null;
+    }
+
+    @Override
+    public Object Visit(MotorInvokeNode node) {
+        return null;
+    }
+
+    @Override
+    public Object Visit(SensorInvokeNode node) {
+        return null;
+    }
+
+    @Override
+    public Object Visit(TouchSensorNode node) {
+        return null;
+    }
+
+    @Override
+    public Object Visit(UltraSoundSensorNode node) {
+        return null;
+    }
 
     @Override
     public Void Visit(SynchronizationNode node) {
@@ -337,7 +377,8 @@ public class CodeGenerator extends Visitor {
 
         return null;
     }
-
+    //TODO
+    /*
     @Override
     public Void Visit(InstanceNode node) {
         isMotorOrSensor = true;
@@ -345,7 +386,7 @@ public class CodeGenerator extends Visitor {
         MotorOrSensordcl.add(node.instance);
         return null;
     }
-
+    */
     @Override
     public Void Visit(LessThanNode node) {
         node.left.Accept(this);
@@ -475,7 +516,8 @@ public class CodeGenerator extends Visitor {
 
         return null;
     }
-
+    //TODO
+    /*
     @Override
     public Void Visit(StatIdNode node) {
         node.instance.Accept(this );
@@ -501,7 +543,7 @@ public class CodeGenerator extends Visitor {
     public Object Visit(StatSensorNode node) {
         return null;
     }
-
+    */
     @Override
     public Void Visit(StmtNode node) {
         node.child.Accept(this);
@@ -589,7 +631,3 @@ public class CodeGenerator extends Visitor {
         }
     }
 }
-
-
-
-

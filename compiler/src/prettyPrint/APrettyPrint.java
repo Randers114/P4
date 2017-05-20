@@ -4,7 +4,48 @@ import AVisitor.Visitor;
 import abstractSyntaxTree.nodes.*;
 
 public class APrettyPrint extends Visitor {
+
     private int tab = 0;
+
+    @Override
+    public Object Visit(DesignSpecificDclNode node) {
+        return null;
+    }
+
+    @Override
+    public Object Visit(InvokeNode node) {
+        return null;
+    }
+
+    @Override
+    public Object Visit(ListInvokeNode node) {
+        return null;
+    }
+
+    @Override
+    public Object Visit(MotorNode node) {
+        return null;
+    }
+
+    @Override
+    public Object Visit(MotorInvokeNode node) {
+        return null;
+    }
+
+    @Override
+    public Object Visit(SensorInvokeNode node) {
+        return null;
+    }
+
+    @Override
+    public Object Visit(TouchSensorNode node) {
+        return null;
+    }
+
+    @Override
+    public Object Visit(UltraSoundSensorNode node) {
+        return null;
+    }
 
     @Override
     public Object Visit (SynchronizationNode node)
@@ -229,13 +270,13 @@ public class APrettyPrint extends Visitor {
         }
         return null;
     }
-
+    /*
     @Override
     public Void Visit(InstanceNode node) {
         System.out.print(node.instance + " ");
         return null;
     }
-
+    */ //TODO
     @Override
     public Void Visit(MethodNode node) {
         node.type.Accept(this);
@@ -320,7 +361,8 @@ public class APrettyPrint extends Visitor {
         node.returnvalue.Accept(this);
         return null;
     }
-
+    //TODO
+    /*
     @Override
     public Void Visit(StatIdNode node) {
         node.instance.Accept(this);
@@ -344,7 +386,7 @@ public class APrettyPrint extends Visitor {
         System.out.printf(node.instance);
         return null;
     }
-
+    */
     @Override
     public Void Visit(StmtNode node) {
         node.child.Accept(this);

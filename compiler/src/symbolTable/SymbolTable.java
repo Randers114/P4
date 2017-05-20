@@ -33,29 +33,20 @@ public class SymbolTable {
         if (!LookUp(((IdentifierNode) id).name)){
             if (type instanceof TypesNode){
                 symbolTables.get((symbolTables.size() - 1)).Variables.add(new Variable(((IdentifierNode) id).name,((TypesNode) type).type));
-            } else {
-                symbolTables.get((symbolTables.size() - 1)).Variables.add(new Variable(((IdentifierNode) id).name,((InstanceNode) type).instance));
-            }
+            }// else {
+            //    symbolTables.get((symbolTables.size() - 1)).Variables.add(new Variable(((IdentifierNode) id).name,((InstanceNode) type).instance));
+            //}
 
         } else {
             System.out.println("Variable " + ((IdentifierNode) id).name + " already exists in this context, error at line: " + id.LineNumber);
         }
     }
 
-    void Insert(String id, Node type, Node symbol){
-        String symbolFromInstance = FindSymbol(symbol);
-        if (!LookUpSymbol(symbolFromInstance)){
-            symbolTables.get((symbolTables.size() - 1)).Variables.add(new Variable(((IdentifierNode) id).name, ((InstanceNode) type).instance, symbolFromInstance));
+    void Insert(Node id, String type, String symbol){
+        if (!LookUpSymbol(symbol)){
+            symbolTables.get((symbolTables.size() - 1)).Variables.add(new Variable(((IdentifierNode) id).name, type, symbol));
         } else {
             System.out.println("Variable " + ((IdentifierNode) id).name + " already has that Motor in this context: " + id.LineNumber);
-        }
-    }
-
-    private String FindSymbol(Node s){
-        if (s instanceof IdentifierNode){
-            return ((IdentifierNode) s).name;
-        } else {
-            return Double.toString(((NumberNode) s).value);
         }
     }
 
