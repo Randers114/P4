@@ -1,9 +1,7 @@
 package symbolTable;
 
-import abstractSyntaxTree.nodes.IdentifierNode;
-import abstractSyntaxTree.nodes.InstanceNode;
-import abstractSyntaxTree.nodes.Node;
-import abstractSyntaxTree.nodes.TypesNode;
+import abstractSyntaxTree.nodes.*;
+
 import java.util.*;
 
 public class SymbolTable {
@@ -42,6 +40,33 @@ public class SymbolTable {
         } else {
             System.out.println("Variable " + ((IdentifierNode) id).name + " already exists in this context, error at line: " + id.LineNumber);
         }
+    }
+
+    void Insert(Node id, Node type, Node symbol){
+        String symbolFromInstance = FindSymbol(symbol);
+        if (!LookUpSymbol(symbolFromInstance)){
+            symbolTables.get((symbolTables.size() - 1)).Variables.add(new Variable(((IdentifierNode) id).name, ((InstanceNode) type).instance, symbolFromInstance));
+        } else {
+            System.out.println("Variable " + ((IdentifierNode) id).name + " already has that Motor in this context: " + id.LineNumber);
+        }
+    }
+
+    private String FindSymbol(Node s){
+        if (s instanceof IdentifierNode){
+            return ((IdentifierNode) s).name;
+        } else {
+            return Double.toString(((NumberNode) s).value);
+        }
+    }
+
+    private Boolean LookUpSymbol(String symbol){
+        for (Variable var: symbolTables.get(symbolTables.size() - 1).Variables
+                ) {
+            if (var.Name.equals(symbol)){
+                return true;
+            }
+        }
+        return false;
     }
     Boolean LookUp(String varName)
     {

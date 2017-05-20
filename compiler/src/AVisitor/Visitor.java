@@ -26,6 +26,7 @@ public abstract class Visitor{
     public abstract Object Visit(LessThanNode node);
     public abstract Object Visit(LessThanOrEqualNode node);
     public abstract Object Visit(MethodNode node);
+    public abstract Object Visit(MotorNode node);
     public abstract Object Visit(MinusNode node);
     public abstract Object Visit(NotBoolNode node);
     public abstract Object Visit(NotEqualNode node);

@@ -455,7 +455,7 @@ public class CodeGenerator extends Visitor {
     @Override
     public Void Visit(ProgramNode node) {
         Targetcode.add("task main() \n{\n");
-        node.leftMain.Accept(this);
+        node.mainBlock.Accept(this);
         Targetcode.add("} \n");
 
         for (Node item : node.methods)

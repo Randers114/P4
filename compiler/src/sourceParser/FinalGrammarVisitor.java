@@ -1,4 +1,4 @@
-// Generated from C:/Users/Simon/Documents/P4/compiler/src/sourceParser\FinalGrammar.g4 by ANTLR 4.7
+// Generated from F:/Source Tree/Programmer/P4/compiler/src/sourceParser\FinalGrammar.g4 by ANTLR 4.6
 package sourceParser;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
@@ -40,6 +40,12 @@ public interface FinalGrammarVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitStmt(FinalGrammarParser.StmtContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link FinalGrammarParser#designSpecificDcl}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDesignSpecificDcl(FinalGrammarParser.DesignSpecificDclContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link FinalGrammarParser#call}.
 	 * @param ctx the parse tree
@@ -137,11 +143,11 @@ public interface FinalGrammarVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitPrmt(FinalGrammarParser.PrmtContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link FinalGrammarParser#statid}.
+	 * Visit a parse tree produced by {@link FinalGrammarParser#invoke}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitStatid(FinalGrammarParser.StatidContext ctx);
+	T visitInvoke(FinalGrammarParser.InvokeContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link FinalGrammarParser#boolvalop}.
 	 * @param ctx the parse tree
@@ -149,23 +155,23 @@ public interface FinalGrammarVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitBoolvalop(FinalGrammarParser.BoolvalopContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link FinalGrammarParser#statmotorid}.
+	 * Visit a parse tree produced by {@link FinalGrammarParser#motorInvoke}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitStatmotorid(FinalGrammarParser.StatmotoridContext ctx);
+	T visitMotorInvoke(FinalGrammarParser.MotorInvokeContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link FinalGrammarParser#statsensorid}.
+	 * Visit a parse tree produced by {@link FinalGrammarParser#sensorInvoke}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitStatsensorid(FinalGrammarParser.StatsensoridContext ctx);
+	T visitSensorInvoke(FinalGrammarParser.SensorInvokeContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link FinalGrammarParser#statlistid}.
+	 * Visit a parse tree produced by {@link FinalGrammarParser#listInvoke}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitStatlistid(FinalGrammarParser.StatlistidContext ctx);
+	T visitListInvoke(FinalGrammarParser.ListInvokeContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link FinalGrammarParser#boolop}.
 	 * @param ctx the parse tree

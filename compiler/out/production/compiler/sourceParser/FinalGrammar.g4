@@ -1,12 +1,12 @@
 grammar FinalGrammar;
 
 
-COMMENT : '/*' .*? '*/' -> skip;
-LINE_COMMENT: '//' ~[\r\n]* -> skip;
-Num: [0-9]+ ('.' [0-9]+)?;
-Bool: 'true' | 'false';
-Identifier: ([a-zA-Z] | '_') [a-zA-Z0-9]*;
-WS: [ \t\r\n]+ -> skip;
+COMMENT :       '/*' .*? '*/' -> skip;
+LINE_COMMENT:   '//' ~[\r\n]* -> skip;
+Num:            [0-9]+ ('.' [0-9]+)?;
+Bool:           'true' | 'false';
+Identifier:     ([a-zA-Z] | '_') [a-zA-Z0-9]*;
+WS:             [ \t\r\n]+ -> skip;
 
 
 program : 'main' '{' body* '}' methods*;
@@ -18,7 +18,7 @@ methods	: type 'Method' Identifier '(' fprmt? ')' '{' body* 'return' returnval '
 
 dcl		: type Identifier '=' b
 		| type Identifier
-		| instancedcl '[' Identifier ']' Identifier
+		| instancedcl '[' (Identifier | Num) ']' Identifier
 		| 'List' '[' type ']' Identifier;
 
 stmt	: Identifier '=' b ';'
@@ -68,7 +68,8 @@ i       : expr
         | 'not' b;
 
 instancedcl	: 'Motor'
-            | 'Sensor';
+            | 'TouchSensor'
+            | 'UltrasoundSensor';
 
 elsel	: 'else' '{' body* '}';
 

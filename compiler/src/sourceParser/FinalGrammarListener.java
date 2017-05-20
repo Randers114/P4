@@ -1,4 +1,4 @@
-// Generated from C:/Users/Simon/Documents/P4/compiler/src/sourceParser\FinalGrammar.g4 by ANTLR 4.7
+// Generated from F:/Source Tree/Programmer/P4/compiler/src/sourceParser\FinalGrammar.g4 by ANTLR 4.6
 package sourceParser;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
@@ -57,6 +57,16 @@ public interface FinalGrammarListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitStmt(FinalGrammarParser.StmtContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link FinalGrammarParser#designSpecificDcl}.
+	 * @param ctx the parse tree
+	 */
+	void enterDesignSpecificDcl(FinalGrammarParser.DesignSpecificDclContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link FinalGrammarParser#designSpecificDcl}.
+	 * @param ctx the parse tree
+	 */
+	void exitDesignSpecificDcl(FinalGrammarParser.DesignSpecificDclContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link FinalGrammarParser#call}.
 	 * @param ctx the parse tree
@@ -218,15 +228,15 @@ public interface FinalGrammarListener extends ParseTreeListener {
 	 */
 	void exitPrmt(FinalGrammarParser.PrmtContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link FinalGrammarParser#statid}.
+	 * Enter a parse tree produced by {@link FinalGrammarParser#invoke}.
 	 * @param ctx the parse tree
 	 */
-	void enterStatid(FinalGrammarParser.StatidContext ctx);
+	void enterInvoke(FinalGrammarParser.InvokeContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link FinalGrammarParser#statid}.
+	 * Exit a parse tree produced by {@link FinalGrammarParser#invoke}.
 	 * @param ctx the parse tree
 	 */
-	void exitStatid(FinalGrammarParser.StatidContext ctx);
+	void exitInvoke(FinalGrammarParser.InvokeContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link FinalGrammarParser#boolvalop}.
 	 * @param ctx the parse tree
@@ -238,35 +248,35 @@ public interface FinalGrammarListener extends ParseTreeListener {
 	 */
 	void exitBoolvalop(FinalGrammarParser.BoolvalopContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link FinalGrammarParser#statmotorid}.
+	 * Enter a parse tree produced by {@link FinalGrammarParser#motorInvoke}.
 	 * @param ctx the parse tree
 	 */
-	void enterStatmotorid(FinalGrammarParser.StatmotoridContext ctx);
+	void enterMotorInvoke(FinalGrammarParser.MotorInvokeContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link FinalGrammarParser#statmotorid}.
+	 * Exit a parse tree produced by {@link FinalGrammarParser#motorInvoke}.
 	 * @param ctx the parse tree
 	 */
-	void exitStatmotorid(FinalGrammarParser.StatmotoridContext ctx);
+	void exitMotorInvoke(FinalGrammarParser.MotorInvokeContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link FinalGrammarParser#statsensorid}.
+	 * Enter a parse tree produced by {@link FinalGrammarParser#sensorInvoke}.
 	 * @param ctx the parse tree
 	 */
-	void enterStatsensorid(FinalGrammarParser.StatsensoridContext ctx);
+	void enterSensorInvoke(FinalGrammarParser.SensorInvokeContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link FinalGrammarParser#statsensorid}.
+	 * Exit a parse tree produced by {@link FinalGrammarParser#sensorInvoke}.
 	 * @param ctx the parse tree
 	 */
-	void exitStatsensorid(FinalGrammarParser.StatsensoridContext ctx);
+	void exitSensorInvoke(FinalGrammarParser.SensorInvokeContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link FinalGrammarParser#statlistid}.
+	 * Enter a parse tree produced by {@link FinalGrammarParser#listInvoke}.
 	 * @param ctx the parse tree
 	 */
-	void enterStatlistid(FinalGrammarParser.StatlistidContext ctx);
+	void enterListInvoke(FinalGrammarParser.ListInvokeContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link FinalGrammarParser#statlistid}.
+	 * Exit a parse tree produced by {@link FinalGrammarParser#listInvoke}.
 	 * @param ctx the parse tree
 	 */
-	void exitStatlistid(FinalGrammarParser.StatlistidContext ctx);
+	void exitListInvoke(FinalGrammarParser.ListInvokeContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link FinalGrammarParser#boolop}.
 	 * @param ctx the parse tree

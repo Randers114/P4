@@ -2,7 +2,6 @@ package prettyPrint;
 
 import AVisitor.Visitor;
 import abstractSyntaxTree.nodes.*;
-import com.sun.xml.internal.bind.v2.TODO;
 
 public class APrettyPrint extends Visitor {
     private int tab = 0;
@@ -303,7 +302,7 @@ public class APrettyPrint extends Visitor {
     @Override
     public Void Visit(ProgramNode node) {
         System.out.println("main {");
-        node.leftMain.Accept(this);
+        node.mainBlock.Accept(this);
 
         System.out.println("}");
 

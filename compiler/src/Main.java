@@ -17,12 +17,12 @@ public class Main {
         ProgramNode root;
         Scanner scanner = new Scanner(System.in);
         String[] inputArray;
-        inputArray = scanner.nextLine().split(" ");
-        String inputPath = inputArray[0];
+        //inputArray = scanner.nextLine().split(" "); //TODO
+        String inputPath = scanner.nextLine(); //inputArray[0];
         String command = "";
-        if (inputArray.length > 1){
-            command = inputArray[1];
-        }
+        //if (inputArray.length > 1){
+        //    command = inputArray[1];
+        //}
         org.antlr.v4.runtime.CharStream charStream = new ANTLRFileStream(inputPath);
         root = InitAST(RunParser(charStream));
         if (command.equals("-p")){

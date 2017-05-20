@@ -27,12 +27,10 @@ main
     bool y;
 
 
-    Motor[B] M2;
+    Motor[A] M2;
 
-
-
-
-
+    TouchSensor[1] S;
+    bool ehhehe = S.IsPressed();
 
     M1 synchronize M2 50;
 

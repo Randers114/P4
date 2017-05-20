@@ -9,7 +9,7 @@ Identifier:     ([a-zA-Z] | '_') [a-zA-Z0-9]*;
 WS:             [ \t\r\n]+ -> skip;
 
 
-program : 'main' '{' body* '}' methods*;
+program : designSpecificDcl* 'main' '{' body* '}' methods*;
 
 body	: dcl ';' | stmt | call ';';
 
@@ -18,7 +18,6 @@ methods	: type 'Method' Identifier '(' fprmt? ')' '{' body* 'return' returnval '
 
 dcl		: type Identifier '=' b
 		| type Identifier
-		| instancedcl '[' (Identifier | Num) ']' Identifier
 		| 'List' '[' type ']' Identifier;
 
 stmt	: Identifier '=' b ';'
@@ -28,8 +27,10 @@ stmt	: Identifier '=' b ';'
 		| 'Sleep' '('Num')'
 		| Identifier 'synchronize' Identifier Num? ';';
 
+designSpecificDcl : instancedcl '[' (Identifier | Num) ']' Identifier;
+
 call	: Identifier '(' prmt? ')'
-		| Identifier '.' statid;
+		| Identifier '.' invoke;
 
 type	: 'number'
         | 'bool';
@@ -78,9 +79,9 @@ elseif	: 'else' 'if' '(' b ')' 'then' '{' body* '}';
 prmt	: b
         | b ',' prmt;
 
-statid	: statmotorid
-        | statsensorid
-        | statlistid;
+invoke	: motorInvoke
+        | sensorInvoke
+        | listInvoke;
 
 boolvalop	: 'lessThan'
 		| 'greaterThan'
@@ -89,14 +90,15 @@ boolvalop	: 'lessThan'
 		| 'lessThanOrEqual'
 		| 'notEqual';
 
-statmotorid	: 'Forward' '(' (Num | expr) ')'
+motorInvoke	: 'Forward' '(' (Num | expr) ')'
             | 'Backwards' '(' (Num | expr)')'
             | 'ForwardSeconds' '(' (Num | expr) ',' (Num | expr) ')'
-            | 'BackwardsSeconds' '(' (Num | expr) ',' (Num | expr) ')';
+            | 'BackwardsSeconds' '(' (Num | expr) ',' (Num | expr) ')'
+            | 'Stop' '(' ')';
 
-statsensorid: 'IsPressed()' | 'Distance()';
+sensorInvoke: 'IsPressed' | 'Distance';
 
-statlistid	: 'Add' '(' (call |  b) ')' | 'Remove' '(' Num ')';
+listInvoke	: 'Add' '(' (call |  b) ')' | 'Remove' '(' Num ')' | 'Length' '(' ')';
 
 
 boolop	: 'equal'

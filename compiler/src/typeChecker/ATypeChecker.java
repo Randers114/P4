@@ -183,8 +183,11 @@ public class ATypeChecker extends Visitor {
                 }
             }
         }
-        if(node.statId != null)
-            node.statId.Accept(this);
+
+        if(node.statId != null) {
+            return node.statId.Accept(this).toString();
+        }
+
 
         return node.id.Accept(this).toString();
     }
@@ -203,6 +206,13 @@ public class ATypeChecker extends Visitor {
             }
             else if(rightNode.equals("Motor")) {
                 type2 = "Motor";
+                if (node.middle instanceof IdentifierNode) {
+                    if (!((IdentifierNode) node.middle).name.matches("[A-D]")) {
+                        System.out.println("Wrong motor instanciation symbol, line: " + node.LineNumber);
+                    }
+                } else {
+                    System.out.println("Wrong motor instanciation symbol, line: " + node.LineNumber);
+                }
             }
             else if(rightNode.equals("UltrasoundSensor")){
                 type2 = "UltrasoundSensor";
@@ -324,11 +334,6 @@ public class ATypeChecker extends Visitor {
         return "";
     }
 
-   /* public Object Visit(StatSensorNode node)
-	{
-		node.instance.equals("")
-	}*/
-
     @Override
     public String Visit(NotBoolNode node) {
         if (CheckForBool(node).equals("bool")){
@@ -398,32 +403,37 @@ public class ATypeChecker extends Visitor {
         switch (node.instance)
         {
             case "Add":
-                //TODO
-                break;
+                return "void";
             case "Remove":
-                //TODO
-                break;
+                return "void";
             case "Get":
-                //TODO
-                break;
+                return "void";
         }
-        return node.instance; //TODO
+        return "";
     }
 
     @Override
-    public Void Visit(StatMotorNode node) { //TODO check if it works as intended
+    public String Visit(StatMotorNode node) {
     	String type = node.speed.Accept(this).toString();
-    	String type2 = null;
-    	if(node.time != null)
-    	    type2 = node.time.Accept(this).toString();
-        if( !(node.instance.equals("Forward") && type.equals("Number"))
-            || !((node.instance.equals("ForwardSeconds"))&& type.equals("Number") && type2.equals("Number")))
-        	System.out.println("Mistakes were made StatMotorNode @ " + node.LineNumber);
-        return null;
+    	String type2 = "";
+    	if(node.time != null) {
+            type2 = node.time.Accept(this).toString();
+        }
+
+        if(!((node.instance.contains("Forward") || node.instance.contains("Backwards")) && type.equals("number") && node.time == null || (node.time != null && type2.equals("number")))) {
+            System.out.println("Mistakes were made StatMotorNode, line: " + node.LineNumber);
+        }
+        return "void";
     }
 
     @Override
-    public Void Visit(StatSensorNode node) {
+    public String Visit(StatSensorNode node) {
+        if (node.instance.equals("IsPressed()")){
+            return "bool";
+        } else if (node.instance.equals("Distance()")){
+            return "number";
+        }
+
         return null;
     }
 

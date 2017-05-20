@@ -57,12 +57,12 @@ public class BuildSymbolTable {
             }
 			else if(((DclNode) node).left instanceof  InstanceNode)
 			{
-				symbolTable.Insert(((DclNode)node).right, ((DclNode)node).left);
+				symbolTable.Insert(((DclNode)node).right, ((DclNode)node).left, ((DclNode) node).middle);
 			}
 			else if(((DclNode)node).middle instanceof TypesNode)
             {
                 if(((TypesNode)(((DclNode)node).middle)).type.equals("bool") ||((TypesNode)(((DclNode)node).middle)).type.equals("number") )
-                    symbolTable.InsertList(((IdentifierNode)(((DclNode)node).right)).name, new ArrayList<Node>(), node.LineNumber);
+                    symbolTable.InsertList(((IdentifierNode)(((DclNode)node).right)).name, new ArrayList<>(), node.LineNumber);
             }
 			else {
                 symbolTable.Insert(((DclNode) node).right, ((DclNode) node).left);

@@ -12,7 +12,13 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
     @Override
     public Node visitProgram(FinalGrammarParser.ProgramContext ctx) {
         return new ProgramNode(){{
-            leftMain = visitBlock(ctx.body());
+            if (ctx.designSpecificDcl() != null){
+                for (FinalGrammarParser.DesignSpecificDclContext d: ctx.designSpecificDcl()
+                     ) {
+                    designSpecificInvokes.add(visitDesignSpecificDcl(d));
+                }
+            }
+            mainBlock = visitBlock(ctx.body());
 
             for (FinalGrammarParser.MethodsContext m: ctx.methods()
                     ) {
@@ -20,7 +26,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
                     methods.add(visitMethods(m));
                 }
             }
-            CollectionUtils.addIgnoreNull(ChildrenList, leftMain);
+            CollectionUtils.addIgnoreNull(ChildrenList, mainBlock);
             ChildrenList.addAll(methods);
             LineNumber = ctx.start.getLine();
         }};
@@ -40,6 +46,26 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
         }
 
         return nodeList;
+    }
+
+    @Override
+    public Node visitDesignSpecificDcl(FinalGrammarParser.DesignSpecificDclContext ctx) {
+        return new DesignSpecificDclNode(){{
+           child = visitInstancedcl(ctx.instancedcl());
+           
+           if (child instanceof MotorNode){
+               if (ctx.Num() != null){
+                   ((MotorNode) child).Symbol = Double.toString(((NumberNode) visitTerminal(ctx.Num())).value);
+                   ((MotorNode) child).id = visitTerminal(ctx.Identifier(0));
+               } else {
+                   ((MotorNode) child).Symbol = ((IdentifierNode) visitTerminal(ctx.Identifier(0))).name;
+                   ((MotorNode) child).id = visitTerminal(ctx.Identifier(1));
+               }
+
+
+           }
+
+        }};
     }
 
     @Override
@@ -95,10 +121,11 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
                 left = visitInstancedcl(ctx.instancedcl());
                 if (ctx.Num() != null){
                     middle = visitTerminal(ctx.Num());
+                    right = visitTerminal(ctx.Identifier(0));
                 } else {
                     middle = visitTerminal(ctx.Identifier(0));
+                    right = visitTerminal(ctx.Identifier(1));
                 }
-                right = visitTerminal(ctx.Identifier(1));
             }
             else
 			{
@@ -277,10 +304,16 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
 
     @Override
     public Node visitInstancedcl(FinalGrammarParser.InstancedclContext ctx) {
-        return new InstanceNode(){{
-            instance = ctx.getText();
-            LineNumber = ctx.start.getLine();
-        }};
+        String type = ctx.getText();
+
+        if (type.contains("Motor")){
+            return new MotorNode();
+        } else if (type.contains("Ultrasound")){
+            return new UltraSoundSensorNode();
+        } else if (type.contains("Touch")){
+            return new TouchSensorNode();
+        }
+        return null;
     }
 
     @Override
