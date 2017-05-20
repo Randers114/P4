@@ -24,6 +24,7 @@ public class Main {
         //    command = inputArray[1];
         //}
         org.antlr.v4.runtime.CharStream charStream = new ANTLRFileStream(inputPath);
+
         root = InitAST(RunParser(charStream));
         if (command.equals("-p")){
             APrettyPrint aPrettyPrint = new APrettyPrint();

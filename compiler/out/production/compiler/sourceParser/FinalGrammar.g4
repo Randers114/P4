@@ -27,7 +27,7 @@ stmt	: Identifier '=' b ';'
 		| 'Sleep' '('Num')'
 		| Identifier 'synchronize' Identifier Num? ';';
 
-designSpecificDcl : instancedcl '[' (Identifier | Num) ']' Identifier;
+designSpecificDcl : instancedcl '[' (Identifier | Num) ']' Identifier ';';
 
 call	: Identifier '(' prmt? ')'
 		| Identifier '.' invoke;
