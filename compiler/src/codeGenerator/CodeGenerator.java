@@ -14,9 +14,8 @@ import java.util.List;
 public class CodeGenerator extends Visitor {
     private List<String> Targetcode = new ArrayList<>();
     private List<String> CodePrototypes = new ArrayList<>();
-    public List<SyncMotor> syncMotors = new ArrayList<>();
+    private List<SyncMotor> syncMotors = new ArrayList<>();
     private List<String> MotorOrSensordcl = new ArrayList<>();
-
     private int tab = 0;
     private boolean isPrototype = false;
     private boolean isMotorOrSensor = false;
@@ -69,11 +68,14 @@ public class CodeGenerator extends Visitor {
 
     @Override
     public Object Visit(DesignSpecificDclNode node) {
+        node.child.Accept(this);
+
         return null;
     }
 
     @Override
     public Object Visit(InvokeNode node) {
+        node.child.Accept(this);
         return null;
     }
 
@@ -84,11 +86,18 @@ public class CodeGenerator extends Visitor {
 
     @Override
     public Object Visit(MotorNode node) {
+        MotorOrSensordcl.add("#Pragma config(");
+        MotorOrSensordcl.add("Motor, ");
+        MotorOrSensordcl.add(node.id.Accept(this).toString());
+        MotorOrSensordcl.add("tmotorEV3_Large)\n");
+
         return null;
     }
 
     @Override
     public Object Visit(MotorInvokeNode node) {
+        Targetcode.add(node.method);
+        Targetcode.add(node.speed.Accept(this).toString());
         return null;
     }
 
@@ -99,11 +108,20 @@ public class CodeGenerator extends Visitor {
 
     @Override
     public Object Visit(TouchSensorNode node) {
+        MotorOrSensordcl.add("#Pragma config(");
+        MotorOrSensordcl.add("Sensor, ");
+        MotorOrSensordcl.add(node.id.Accept(this).toString());
+        MotorOrSensordcl.add("sensorEV3_Touch)\n");
+
         return null;
     }
 
     @Override
     public Object Visit(UltraSoundSensorNode node) {
+        MotorOrSensordcl.add("#Pragma config(");
+        MotorOrSensordcl.add("Sensor, ");
+        MotorOrSensordcl.add(node.id.Accept(this).toString());
+        MotorOrSensordcl.add("sensorEV3_Ultrasonic)\n");
         return null;
     }
 
@@ -183,17 +201,22 @@ public class CodeGenerator extends Visitor {
     public Void Visit(CallNode node) {
         Boolean allowSemicolon = false;
         String s = Targetcode.get(Targetcode.size()-1);
-        if(s == ";" || s == "{" || s == "}")
-        {
+        if(s.equals(";") || s.equals("{") || s.equals("}")) {
             allowSemicolon = true;
         }
         node.id.Accept(this);
-        Targetcode.add("(");
-        if (node.parameter != null) {
-            node.parameter.Accept(this);
+        if (node.invoke != null){
+            node.invoke.Accept(this);
+        } else {
+            Targetcode.add("(");
+            if (node.parameter != null) {
+                node.parameter.Accept(this);
+            }
+            Targetcode.add(")");
         }
-        Targetcode.add(")");
-        if(allowSemicolon == true) {
+
+
+        if(allowSemicolon) {
             Targetcode.add(";");
         }
 
@@ -495,6 +518,10 @@ public class CodeGenerator extends Visitor {
 
     @Override
     public Void Visit(ProgramNode node) {
+        for (Node motorSensor: node.designSpecificInvokes
+             ) {
+            motorSensor.Accept(this);
+        }
         Targetcode.add("task main() \n{\n");
         node.mainBlock.Accept(this);
         Targetcode.add("} \n");
