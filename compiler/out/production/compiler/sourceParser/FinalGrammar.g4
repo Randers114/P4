@@ -24,7 +24,7 @@ stmt	: Identifier '=' b ';'
 		| 'if' '(' b ')' 'then' '{' body* '}' elseif* elsel?
 		| 'while' '(' b ')' 'do' '{' body* '}'
 		| 'for' '(' (Num | Identifier) 'to' (Num | Identifier) ')' 'do' '{' body* '}'
-		| 'Sleep' '('Num')'
+		| 'Sleep' '('Num')' ';'
 		| Identifier 'synchronize' Identifier Num? ';';
 
 designSpecificDcl : instancedcl '[' (Identifier | Num) ']' Identifier ';';

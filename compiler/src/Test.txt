@@ -1,6 +1,89 @@
-main{
+Motor[A] M1;
+Motor[B] M2;
+Motor[C] M3;
+TouchSensor[1] S1;
+UltrasoundSensor[2] S2;
+UltrasoundSensor[3] S3;
+
+main
+{
+    List[number] list1;
+    List[bool] list2;
+
+    list1.Add(10);
+    list1.Add(x);
+
+    list2.Add(false);
+    list2.Add(true);
+    list2.Add(u);
+
+    list1.Add(true);
+    list1.Add(u);
+
+    list2.Add(10);
+    list2.Add(x);
+
     bool aaa = 10 greaterThan 5 and 14 lessThan 20 or true ;
 
+    Sleep(500)
 
+    number x = 5;
+    number z;
+    bool u = true;
+    bool y;
+
+    bool ehhehe = S1.IsPressed;
+
+    M1 synchronize M2;
+    M1 synchronize M2 100;
+
+
+    M1.Backwards(5 + 1 * (10 + 10));
+    M1.Forward(10);
+
+    M1.ForwardSeconds(10, 10);
+    M1.BackwardsSeconds(10, 10);
+
+    if (aaa) then {
+        number b = 25;
+        number a = 30;
+
+        a = a + b * b + ( 25 + b );
+    } else {
+        number a = 10;
+
+        while (a lessThan 10) do {
+        for(a to  10) do {
+                number b;
+            }
+            number b = 10;
+        }
+
+    }
+
+
+    if (aaa) then {
+        number g = hey(25, 100) + 5;
+    } else if (hh() or aaa and true) then {
+        number a = 10;
+        number b = 10;
+
+        a = hey(a, b);
+    }
+}
+
+number Method hey(number v, number m){
+
+    number a = v + m;
+
+
+    return v + m;
+}
+
+bool Method hh(){
+
+    bool l = true;
+
+    return l;
 
 }

@@ -378,6 +378,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
                 child.LineNumber = ctx.Identifier().getSymbol().getLine();
             } else if(ctx.b() != null){
                 child = visitB(ctx.b());
+                paren = true;
             } else if(ctx.expr() != null){
                 child = visitUnary(ctx.expr());
             }
