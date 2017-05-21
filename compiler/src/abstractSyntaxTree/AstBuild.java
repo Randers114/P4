@@ -663,7 +663,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
 		return new SynchronizationNode(){{
 			left = visitTerminal(ctx.Identifier(0));
 			right = visitTerminal(ctx.Identifier(1));
-			if (ctx.Num() != null) {
+			if (ctx.Num(0) != null) {
                 relativeSpeed = ((NumberNode) visitTerminal(ctx.Num(0))).value;
             }
 			LineNumber = ctx.start.getLine();

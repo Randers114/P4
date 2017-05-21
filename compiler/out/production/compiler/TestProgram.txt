@@ -34,14 +34,14 @@ main
 
     bool ehhehe = S1.IsPressed;
 
-    M1 synchronize S1;
-    M1 synchronize M2 50;
+    M1 synchronize M2;
+    M1 synchronize M2 100;
 
 
     M1.Backwards(5 + 1 * (10 + 10));
     M1.Forward(10);
 
-    M1.ForwardSeconds(10, 10);
+    M1.ForwardSeconds(true, 10);
     M1.BackwardsSeconds(10, 10);
 
     if (aaa) then {

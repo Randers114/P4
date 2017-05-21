@@ -70,10 +70,14 @@ public class ATypeChecker extends Visitor {
     public Object Visit(SynchronizationNode node)
     {
         if (!(node.right != null && node.left != null && SymbolTable.GetTypeByID(((IdentifierNode)node.left).name, CurrentSymbolTable.peek()).equals("Motor")
-            && SymbolTable.GetTypeByID(((IdentifierNode)node.right).name, CurrentSymbolTable.peek()).equals("Motor")
-            && node.relativeSpeed < 101 && node.relativeSpeed > -100)){
+            && SymbolTable.GetTypeByID(((IdentifierNode)node.right).name, CurrentSymbolTable.peek()).equals("Motor"))){
 
-            System.out.println("Synchronization node failed @" + node.LineNumber);
+            System.out.println("Synchronization node failed one identifier is not Motor at line: " + node.LineNumber);
+        }
+
+        if (node.relativeSpeed != null){
+            if (!(node.relativeSpeed < 101 && node.relativeSpeed > -100))
+            System.out.println("Synchronization node failed speed out of bounds at line: " + node.LineNumber);
         }
 
         return null;
