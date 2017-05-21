@@ -25,7 +25,7 @@ main
 
     bool aaa = 10 greaterThan 5 and 14 lessThan 20 or true ;
 
-    Sleep(500)
+    Sleep(500);
 
     number x = 5;
     number z;
@@ -41,7 +41,7 @@ main
     M1.Backwards(5 + 1 * (10 + 10));
     M1.Forward(10);
 
-    M1.ForwardSeconds(10, 10);
+    M1.ForwardSeconds(true, 10);
     M1.BackwardsSeconds(10, 10);
 
     if (aaa) then {

@@ -36,7 +36,7 @@ public class Main {
 
         typeChecker.Visit(root);
 
-        if (command.equals("-c") || true) {
+        if (command.equals("-c")) {
             CodeGenerator codeGenerator = new CodeGenerator();
             codeGenerator.Visit(root);
             codeGenerator.openfile();
