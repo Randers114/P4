@@ -15,8 +15,6 @@ public class CodeGenerator extends Visitor {
     private List<SyncMotor> syncMotors = new ArrayList<>();
     private List<String> MotorOrSensordcl = new ArrayList<>();
     private int tab = 0;
-    private int numberOfMotors = 1;
-    private int numberOfSensors = 1;
     private Map<String, String> matchMotorsAndSensors = new HashMap<>();
     private Node joker;
     private Node joker2;
@@ -99,26 +97,25 @@ public class CodeGenerator extends Visitor {
     @Override
     public Object Visit(MotorNode node) {
         MotorOrSensordcl.add("#Pragma config(Motor, motor");
-        switch (numberOfMotors){
-            case 1:
+        switch (node.symbol){
+            case "A":
                 MotorOrSensordcl.add("A, ");
                 matchMotorsAndSensors.put(node.id.Accept(this).toString(), "motorA");
                 break;
-            case 2:
+            case "B":
                 MotorOrSensordcl.add("B, ");
                 matchMotorsAndSensors.put(node.id.Accept(this).toString(), "motorB");
                 break;
-            case 3:
+            case "C":
                 MotorOrSensordcl.add("C, ");
                 matchMotorsAndSensors.put(node.id.Accept(this).toString(), "motorC");
                 break;
-            case 4:
+            case "D":
                 MotorOrSensordcl.add("D, ");
                 matchMotorsAndSensors.put(node.id.Accept(this).toString(), "motorD");
                 break;
         }
         MotorOrSensordcl.add(node.id.Accept(this).toString() + ", tmotorEV3_Large)\n");
-        numberOfMotors++;
         return null;
     }
 
@@ -136,6 +133,8 @@ public class CodeGenerator extends Visitor {
             case "BackwardsSeconds":
                 joker2 = node.time;
                 return "BS";
+            case "Stop()":
+                return "S";
 
         }
         return null;
@@ -157,21 +156,17 @@ public class CodeGenerator extends Visitor {
 
     @Override
     public Object Visit(TouchSensorNode node) {
-        MotorOrSensordcl.add("#Pragma config(Sensor, S" + Integer.toString(numberOfSensors) + ", " + node.id.Accept(this).toString() + "sensorEV3_Touch)\n");
+        MotorOrSensordcl.add("#Pragma config(Sensor, S" + node.symbol + ", " + node.id.Accept(this).toString() + "sensorEV3_Touch)\n");
 
-        matchMotorsAndSensors.put(node.id.Accept(this).toString(), "S" + Integer.toString(numberOfSensors));
-
-        numberOfSensors++;
+        matchMotorsAndSensors.put(node.id.Accept(this).toString(), "S" + node.symbol);
         return null;
     }
 
     @Override
     public Object Visit(UltraSoundSensorNode node) {
-        MotorOrSensordcl.add("#Pragma config(Sensor, S" + Integer.toString(numberOfSensors) + ", " + node.id.Accept(this).toString() + "sensorEV3_Ultrasonic)\n");
+        MotorOrSensordcl.add("#Pragma config(Sensor, S" + node.symbol + ", " + node.id.Accept(this).toString() + "sensorEV3_Ultrasonic)\n");
 
-        matchMotorsAndSensors.put(node.id.Accept(this).toString(), "S" + Integer.toString(numberOfSensors));
-
-        numberOfSensors++;
+        matchMotorsAndSensors.put(node.id.Accept(this).toString(), "S" + node.symbol);
         return null;
     }
 
@@ -307,8 +302,8 @@ public class CodeGenerator extends Visitor {
             case "FS":
                 Targetcode.add("motor[" + matchMotorsAndSensors.get(node.id.Accept(this).toString()) + "] = ");
                 joker.Accept(this);
-                Targetcode.add(", ");
-                joker2.Accept(this);
+                Targetcode.add("; \n");
+
                 if (CheckForSync((IdentifierNode) node.id)){
                     Targetcode.add(";\n");
                     Indend();
@@ -320,9 +315,12 @@ public class CodeGenerator extends Visitor {
                     } else {
                         joker.Accept(this);
                     }
-                    Targetcode.add(", ");
-                    joker2.Accept(this);
+                    Targetcode.add(";\n ");
+
                 }
+                Targetcode.add("Sleep(");
+                joker2.Accept(this);
+                Targetcode.add(");\n");
                 break;
             case "B":
                 Targetcode.add("motor[" + matchMotorsAndSensors.get(node.id.Accept(this).toString()) + "] = - ");

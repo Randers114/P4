@@ -34,6 +34,8 @@ main
 
     bool ehhehe = S1.IsPressed;
 
+    M3.ForwardSeconds(10, 10);
+
     M1 synchronize M2 50;
 
     M1.Forward(100);
@@ -46,7 +48,6 @@ main
     M1.Backwards(5 + 1 * (10 + 10));
     M2.Forward(10);
 
-    M3.ForwardSeconds(10, 10);
     M1.BackwardsSeconds(10, 10);
 
     if (aaa) then {

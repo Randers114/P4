@@ -20,11 +20,11 @@ task main()
 	motor[motorA] = 100.0;
 	motor[motorB] = 0.5 * (100.0);
 	motor[motorA] = - 5.0 + 1.0 * (10.0 + 10.0);
-	motor[motorB] = 0.5 * (5.0 + 1.0 * (10.0 + 10.0));
+	motor[motorB] = 1.0 * (5.0 + 1.0 * (10.0 + 10.0));
 	motor[motorB] = 10.0;
 	motor[motorC] = 10.0, 10.0;
 	motor[motorA] = - 10.0, 10.0;
-	motor[motorB] = 0.5 * (10.0), 10.0;
+	motor[motorB] = 1.0 * (10.0), 10.0;
 	if(aaa)
 	{
 		float b = 25.0;
