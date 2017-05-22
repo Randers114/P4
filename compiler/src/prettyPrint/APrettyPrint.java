@@ -9,55 +9,69 @@ public class APrettyPrint extends Visitor {
 
     @Override
     public Object Visit(DesignSpecificDclNode node) {
+        node.child.Accept(this);
         return null;
     }
 
     @Override
     public Object Visit(InvokeNode node) {
-        return null;
+        return node.child.Accept(this);
     }
 
     @Override
     public Object Visit(ListInvokeNode node) {
+
         return null;
     }
 
     @Override
     public Object Visit(MotorNode node) {
+        System.out.print("Motor[" + node.symbol + "]");
+        node.id.Accept(this);
         return null;
     }
 
     @Override
     public Object Visit(MotorInvokeNode node) {
+        System.out.print(node.method);
         return null;
     }
 
     @Override
     public Object Visit(SensorInvokeNode node) {
+        System.out.print(node.method);
         return null;
     }
 
     @Override
     public Object Visit(TouchSensorNode node) {
+        System.out.print("TouchSensor[" + node.symbol + "]");
+        node.id.Accept(this);
         return null;
     }
 
     @Override
     public Object Visit(UltraSoundSensorNode node) {
+        System.out.print("UltrasoundSensor[" + node.symbol + "]");
+        node.id.Accept(this);
         return null;
     }
 
     @Override
     public Object Visit (SynchronizationNode node)
     {
-        //TODO
+         node.right.Accept(this);
+         System.out.print(" Synchronize ");
+         node.left.Accept(this);
          return null;
     }
 
     @Override
     public Object Visit (SleepNode node)
     {
-        //TODO
+        System.out.print(" Sleep (");
+        node.child.Accept(this);
+        System.out.print(");");
         return null;
     }
 
@@ -342,6 +356,10 @@ public class APrettyPrint extends Visitor {
 
     @Override
     public Void Visit(ProgramNode node) {
+        for (Node motorSensor: node.designSpecificInvokes
+                ) {
+            motorSensor.Accept(this);
+        }
         System.out.println("main {");
         node.mainBlock.Accept(this);
 
@@ -361,32 +379,7 @@ public class APrettyPrint extends Visitor {
         node.returnvalue.Accept(this);
         return null;
     }
-    //TODO
-    /*
-    @Override
-    public Void Visit(StatIdNode node) {
-        node.instance.Accept(this);
-        return null;
-    }
 
-    @Override
-    public Void Visit(StatListNode node) {
-        System.out.printf(node.instance);
-        return null;
-    }
-
-    @Override
-    public Void Visit(StatMotorNode node) {
-        System.out.printf(node.instance);
-        return null;
-    }
-
-    @Override
-    public Void Visit(StatSensorNode node) {
-        System.out.printf(node.instance);
-        return null;
-    }
-    */
     @Override
     public Void Visit(StmtNode node) {
         node.child.Accept(this);
