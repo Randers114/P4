@@ -1,4 +1,4 @@
-// Generated from C:/Users/Nikolaj/Documents/P4/compiler/src/sourceParser\FinalGrammar.g4 by ANTLR 4.7
+// Generated from F:/Source Tree/Programmer/P4/compiler/src/sourceParser\FinalGrammar.g4 by ANTLR 4.7
 package sourceParser;
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -71,6 +71,18 @@ public class FinalGrammarBaseListener implements FinalGrammarListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitStmt(FinalGrammarParser.StmtContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterDesignSpecificDcl(FinalGrammarParser.DesignSpecificDclContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitDesignSpecificDcl(FinalGrammarParser.DesignSpecificDclContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -268,13 +280,13 @@ public class FinalGrammarBaseListener implements FinalGrammarListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterStatid(FinalGrammarParser.StatidContext ctx) { }
+	@Override public void enterInvoke(FinalGrammarParser.InvokeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitStatid(FinalGrammarParser.StatidContext ctx) { }
+	@Override public void exitInvoke(FinalGrammarParser.InvokeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -292,37 +304,37 @@ public class FinalGrammarBaseListener implements FinalGrammarListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterStatmotorid(FinalGrammarParser.StatmotoridContext ctx) { }
+	@Override public void enterMotorInvoke(FinalGrammarParser.MotorInvokeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitStatmotorid(FinalGrammarParser.StatmotoridContext ctx) { }
+	@Override public void exitMotorInvoke(FinalGrammarParser.MotorInvokeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterStatsensorid(FinalGrammarParser.StatsensoridContext ctx) { }
+	@Override public void enterSensorInvoke(FinalGrammarParser.SensorInvokeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitStatsensorid(FinalGrammarParser.StatsensoridContext ctx) { }
+	@Override public void exitSensorInvoke(FinalGrammarParser.SensorInvokeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterStatlistid(FinalGrammarParser.StatlistidContext ctx) { }
+	@Override public void enterListInvoke(FinalGrammarParser.ListInvokeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitStatlistid(FinalGrammarParser.StatlistidContext ctx) { }
+	@Override public void exitListInvoke(FinalGrammarParser.ListInvokeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

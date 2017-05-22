@@ -12,7 +12,13 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
     @Override
     public Node visitProgram(FinalGrammarParser.ProgramContext ctx) {
         return new ProgramNode(){{
-            leftMain = visitBlock(ctx.body());
+            if (ctx.designSpecificDcl() != null){
+                for (FinalGrammarParser.DesignSpecificDclContext d: ctx.designSpecificDcl()
+                     ) {
+                    designSpecificInvokes.add(visitDesignSpecificDcl(d));
+                }
+            }
+            mainBlock = visitBlock(ctx.body());
 
             for (FinalGrammarParser.MethodsContext m: ctx.methods()
                     ) {
@@ -20,8 +26,9 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
                     methods.add(visitMethods(m));
                 }
             }
-            CollectionUtils.addIgnoreNull(ChildrenList, leftMain);
+            CollectionUtils.addIgnoreNull(ChildrenList, mainBlock);
             ChildrenList.addAll(methods);
+            ChildrenList.addAll(designSpecificInvokes);
             LineNumber = ctx.start.getLine();
         }};
     }
@@ -40,6 +47,57 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
         }
 
         return nodeList;
+    }
+
+    @Override
+    public Node visitDesignSpecificDcl(FinalGrammarParser.DesignSpecificDclContext ctx) {
+        return new DesignSpecificDclNode(){{
+           child = visitInstancedcl(ctx.instancedcl());
+
+           if (child instanceof MotorNode){
+               if (ctx.Num() != null){
+                   ((MotorNode) child).symbol = Double.toString(((NumberNode) visitTerminal(ctx.Num())).value);
+                   ((MotorNode) child).id = visitTerminal(ctx.Identifier(0));
+               } else {
+                   ((MotorNode) child).symbol = ((IdentifierNode) visitTerminal(ctx.Identifier(0))).name;
+                   ((MotorNode) child).id = visitTerminal(ctx.Identifier(1));
+               }
+               ((MotorNode) child).id.LineNumber = ctx.start.getLine();
+           } else if (child instanceof UltraSoundSensorNode){
+               if (ctx.Num() != null){
+                   ((UltraSoundSensorNode) child).symbol = Double.toString(((NumberNode) visitTerminal(ctx.Num())).value);
+                   ((UltraSoundSensorNode) child).id = visitTerminal(ctx.Identifier(0));
+               } else {
+                   ((UltraSoundSensorNode) child).symbol = ((IdentifierNode) visitTerminal(ctx.Identifier(0))).name;
+                   ((UltraSoundSensorNode) child).id = visitTerminal(ctx.Identifier(1));
+               }
+               ((UltraSoundSensorNode) child).id.LineNumber = ctx.start.getLine();
+           } else if (child instanceof TouchSensorNode){
+               if (ctx.Num() != null){
+                   ((TouchSensorNode) child).symbol = Double.toString(((NumberNode) visitTerminal(ctx.Num())).value);
+                   ((TouchSensorNode) child).id = visitTerminal(ctx.Identifier(0));
+               } else {
+                   ((TouchSensorNode) child).symbol = ((IdentifierNode) visitTerminal(ctx.Identifier(0))).name;
+                   ((TouchSensorNode) child).id = visitTerminal(ctx.Identifier(1));
+               }
+               ((TouchSensorNode) child).id.LineNumber = ctx.start.getLine();
+           }
+           ChildrenList.add(child);
+        }};
+    }
+
+    @Override
+    public Node visitInvoke(FinalGrammarParser.InvokeContext ctx) {
+        return new InvokeNode(){{
+            if (ctx.motorInvoke() != null){
+                child = visitMotorInvoke(ctx.motorInvoke());
+            } else if (ctx.sensorInvoke() != null){
+                child = visitSensorInvoke(ctx.sensorInvoke());
+            } else {
+                child = visitListInvoke(ctx.listInvoke());
+            }
+        }};
+
     }
 
     @Override
@@ -87,19 +145,13 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
         return new DclNode(){{
             if (ctx.type() != null && !ctx.getText().contains("List")){
                 left = visitType(ctx.type());
-                middle = visitTerminal(ctx.Identifier(0));
+                middle = visitTerminal(ctx.Identifier());
                 if (ctx.b() != null){
                     right = visitB(ctx.b());
                 }
-            } else if (ctx.instancedcl() != null){
-                left = visitInstancedcl(ctx.instancedcl());
-                middle = visitTerminal(ctx.Identifier(0));
-                right = visitTerminal(ctx.Identifier(1));
-            }
-            else
-			{
+            } else {
                 middle = visitType(ctx.type());
-                right = visitTerminal(ctx.Identifier(0));
+                right = visitTerminal(ctx.Identifier());
                 isList = true;
 			}
 
@@ -188,6 +240,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
 
             ChildrenList.add(bool);
             ChildrenList.add(block);
+
             if(elseif != null){
                 ChildrenList.addAll(elseif);
             }
@@ -216,15 +269,15 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
         return new CallNode(){{
             id = visitTerminal(ctx.Identifier());
             id.LineNumber = ctx.Identifier().getSymbol().getLine();
-            if(ctx.statid() != null){
-                statId = visitStatid(ctx.statid());
+            if(ctx.invoke() != null){
+                invoke = visitInvoke(ctx.invoke());
             }
             if (ctx.prmt() != null){
                 parameter = visitPrmt(ctx.prmt());
             }
 
             ChildrenList.add(id);
-            CollectionUtils.addIgnoreNull(ChildrenList, statId);
+            CollectionUtils.addIgnoreNull(ChildrenList, invoke);
             CollectionUtils.addIgnoreNull(ChildrenList, parameter);
             LineNumber = ctx.start.getLine();
         }};
@@ -273,10 +326,16 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
 
     @Override
     public Node visitInstancedcl(FinalGrammarParser.InstancedclContext ctx) {
-        return new InstanceNode(){{
-            instance = ctx.getText();
-            LineNumber = ctx.start.getLine();
-        }};
+        String type = ctx.getText();
+
+        if (type.contains("Motor")){
+            return new MotorNode();
+        } else if (type.contains("Ultrasound")){
+            return new UltraSoundSensorNode();
+        } else if (type.contains("Touch")){
+            return new TouchSensorNode();
+        }
+        return null;
     }
 
     @Override
@@ -319,6 +378,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
                 child.LineNumber = ctx.Identifier().getSymbol().getLine();
             } else if(ctx.b() != null){
                 child = visitB(ctx.b());
+                paren = true;
             } else if(ctx.expr() != null){
                 child = visitUnary(ctx.expr());
             }
@@ -388,21 +448,6 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
             }};
         }
         return null;
-    }
-
-    @Override
-    public Node visitStatid(FinalGrammarParser.StatidContext ctx) {
-        return new StatIdNode(){{
-            if (ctx.statlistid() != null){
-                instance = visitStatlistid(ctx.statlistid());
-            } else if (ctx.statmotorid() != null) {
-                instance = visitStatmotorid(ctx.statmotorid());
-            } else if (ctx.statsensorid() != null) {
-                instance = visitStatsensorid(ctx.statsensorid());
-            }
-            ChildrenList.add(instance);
-            LineNumber = ctx.start.getLine();
-        }};
     }
 
     @Override
@@ -550,59 +595,44 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
     }
 
     @Override
-    public Node visitStatmotorid(FinalGrammarParser.StatmotoridContext ctx) {
-        return new StatMotorNode(){{
-            if(ctx.getText().contains("Forward"))
-                instance = "Forward";
-            else if(ctx.getText().contains("Backwards"))
-                instance = "Backwards";
-            else if (ctx.getText().contains("ForwardSeconds"))
-                instance = "ForwardSeconds";
-            else if (ctx.getText().contains("BackwardsSeconds"))
-                instance = "BackwardsSeconds";
-
-            if(ctx.expr().size() > 1)
-            {
+    public Node visitMotorInvoke(FinalGrammarParser.MotorInvokeContext ctx) {
+        return new MotorInvokeNode(){{
+            if (ctx.expr().size() > 1){
+                if (ctx.getText().contains("ForwardSeconds")) {
+                    method = "ForwardSeconds";
+                } else if (ctx.getText().contains("BackwardsSeconds")) {
+                    method = "BackwardsSeconds";
+                }
                 speed = visitExpr(ctx.expr(0));
                 time = visitExpr(ctx.expr(1));
-            }
-            else if (ctx.Num().size() > 1)
-            {
-                speed = visitTerminal(ctx.Num(0));
-                speed = visitTerminal(ctx.Num(1));
-            }
-            else if(ctx.expr().size() == 1)
+            } else if (ctx.expr() != null){
+                if(ctx.getText().contains("Forward")) {
+                    method = "Forward";
+                }
+                else if(ctx.getText().contains("Backwards")) {
+                    method = "Backwards";
+                }
                 speed = visitExpr(ctx.expr(0));
-            else if (ctx.Num().size() == 1)
-                speed = visitTerminal(ctx.Num(0));
-            else if (ctx.getChild(3) == ctx.Num(0))
-            {
-                speed = visitTerminal(ctx.Num(0));
-                time = visitExpr(ctx.expr(0));
+            } else {
+                method = "Stop";
             }
-
-            else
-            {
-                speed = visitExpr(ctx.expr(0));
-                time = visitTerminal(ctx.Num(0));
-            }
-
-
-            LineNumber = ctx.start.getLine();}};
+            LineNumber = ctx.start.getLine();
+        }};
     }
 
     @Override
-    public Node visitStatsensorid(FinalGrammarParser.StatsensoridContext ctx) {
-        return new StatSensorNode(){{
-            instance = ctx.getText();
-            LineNumber = ctx.start.getLine();}};
+    public Node visitSensorInvoke(FinalGrammarParser.SensorInvokeContext ctx) {
+        return new SensorInvokeNode(){{
+            method = ctx.getText();
+            LineNumber = ctx.start.getLine();
+        }};
     }
 
     @Override
-    public Node visitStatlistid(FinalGrammarParser.StatlistidContext ctx) {
-        return new StatListNode(){{
-            instance = ctx.getText();
-            LineNumber = ctx.start.getLine();}};
+    public Node visitListInvoke(FinalGrammarParser.ListInvokeContext ctx) {
+        return new ListInvokeNode(){{
+
+        }};
     }
 
     @Override
@@ -621,7 +651,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
         }
     }
 
-    public Node visitSleep(FinalGrammarParser.StmtContext ctx)
+    private Node visitSleep(FinalGrammarParser.StmtContext ctx)
 	{
 		return new SleepNode(){{
 			child = visitTerminal(ctx.Num(0));
@@ -629,13 +659,24 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
 		}};
 	}
 
-	public Node visitSynch(FinalGrammarParser.StmtContext ctx)
+	private Node visitSynch(FinalGrammarParser.StmtContext ctx)
 	{
-		return new SynchronizationNode(){{
-			left = visitTerminal(ctx.Identifier(0));
-			right = visitTerminal(ctx.Identifier(1));
-			relativeSpeed = ((NumberNode)visitTerminal(ctx.Num(0))).value;
-			LineNumber = ctx.start.getLine();
-	}};
+	    if (ctx.getText().contains("d")){
+            return new DesynchronizeNode(){{
+                left = visitTerminal(ctx.Identifier(0));
+                right = visitTerminal(ctx.Identifier(1));
+                LineNumber = ctx.start.getLine();
+            }};
+        } else {
+            return new SynchronizationNode(){{
+                left = visitTerminal(ctx.Identifier(0));
+                right = visitTerminal(ctx.Identifier(1));
+                if (ctx.Num(0) != null) {
+                    relativeSpeed = ((NumberNode) visitTerminal(ctx.Num(0))).value;
+                }
+                LineNumber = ctx.start.getLine();
+            }};
+        }
+
 	}
 }

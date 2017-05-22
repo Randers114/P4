@@ -2,10 +2,8 @@ package typeChecker;
 
 import AVisitor.Visitor;
 import abstractSyntaxTree.nodes.*;
-import com.sun.org.apache.xpath.internal.operations.Number;
 import symbolTable.SymbolTable;
 
-import java.awt.font.NumericShaper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
@@ -15,16 +13,72 @@ public class ATypeChecker extends Visitor {
     private ProgramNode Root;
 
     @Override
+    public Object Visit(DesignSpecificDclNode node) {
+        return null;
+    }
+
+    @Override
+    public String Visit(InvokeNode node) {
+        return node.child.Accept(this).toString();
+    }
+
+    @Override
+    public String Visit(ListInvokeNode node) {
+        return "";
+    }
+
+    @Override
+    public Object Visit(MotorNode node) {
+        return null;
+    }
+
+    @Override
+    public String Visit(MotorInvokeNode node) {
+        String type = node.speed.Accept(this).toString();
+        String type2 = "";
+        if(node.time != null) {
+            type2 = node.time.Accept(this).toString();
+        }
+
+        if(!((node.method.equals("Forward") || node.method.equals("Backwards")) && type.equals("number") && node.time == null || (node.time != null && type2.equals("number")))) {
+            System.out.println("Mistakes were made StatMotorNode, line: " + node.LineNumber);
+        }
+        return "void";
+    }
+
+    @Override
+    public String Visit(SensorInvokeNode node) {
+        if (node.method.equals("IsPressed")){
+            return "bool";
+        } else if (node.method.equals("Distance")){
+            return "number";
+        }
+        return null;
+    }
+
+    @Override
+    public Object Visit(TouchSensorNode node) {
+        return null;
+    }
+
+    @Override
+    public Object Visit(UltraSoundSensorNode node) {
+        return null;
+    }
+
+    @Override
     public Object Visit(SynchronizationNode node)
     {
-        if (node.right != null
-			&& node.left != null
-			&& SymbolTable.GetTypeByID(((IdentifierNode)node.left).name, CurrentSymbolTable.peek()).equals("Motor")
-            && SymbolTable.GetTypeByID(((IdentifierNode)node.right).name, CurrentSymbolTable.peek()).equals("Motor")
-            && node.relativeSpeed < 101 && node.relativeSpeed > -100)
-			return null;
-        else
-        	System.out.println("Synchronization node failed @" + node.LineNumber);
+        if (!(node.right != null && node.left != null && SymbolTable.GetTypeByID(((IdentifierNode)node.left).name, CurrentSymbolTable.peek()).equals("Motor")
+            && SymbolTable.GetTypeByID(((IdentifierNode)node.right).name, CurrentSymbolTable.peek()).equals("Motor"))){
+
+            System.out.println("Synchronization node failed one identifier is not Motor at line: " + node.LineNumber);
+        }
+
+        if (node.relativeSpeed != null){
+            if (!(node.relativeSpeed < 101 && node.relativeSpeed > -100))
+            System.out.println("Synchronization node failed speed out of bounds at line: " + node.LineNumber);
+        }
 
         return null;
     }
@@ -64,7 +118,7 @@ public class ATypeChecker extends Visitor {
         if (CheckForNumber(node).equals("number")){
             return "bool";
         } else {
-            System.out.println("greaterthan expression fail, line: " + node.LineNumber);
+            System.out.println("greaterThan expression fail, line: " + node.LineNumber);
         }
 
         return "";
@@ -75,7 +129,7 @@ public class ATypeChecker extends Visitor {
         if (CheckForNumber(node).equals("number")){
             return "bool";
         } else {
-            System.out.println("greaterthane expression fail, line: " + node.LineNumber);
+            System.out.println("greaterThanEqual expression fail, line: " + node.LineNumber);
         }
 
         return "";
@@ -86,7 +140,7 @@ public class ATypeChecker extends Visitor {
         if (CheckForNumber(node).equals("number")){
             return "bool";
         } else {
-            System.out.println("lessthan expression fail, line: " + node.LineNumber);
+            System.out.println("lessThan expression fail, line: " + node.LineNumber);
         }
 
         return "";
@@ -97,7 +151,7 @@ public class ATypeChecker extends Visitor {
         if (CheckForNumber(node).equals("number")){
             return "bool";
         } else {
-            System.out.println("lessthane expression fail, line: " + node.LineNumber);
+            System.out.println("lessThanEqual expression fail, line: " + node.LineNumber);
         }
 
         return "";
@@ -183,8 +237,11 @@ public class ATypeChecker extends Visitor {
                 }
             }
         }
-        if(node.statId != null)
-            node.statId.Accept(this);
+
+        if(node.invoke != null) {
+            return node.invoke.Accept(this).toString();
+        }
+
 
         return node.id.Accept(this).toString();
     }
@@ -203,9 +260,18 @@ public class ATypeChecker extends Visitor {
             }
             else if(rightNode.equals("Motor")) {
                 type2 = "Motor";
+                if (node.middle instanceof IdentifierNode) {
+                    if (!((IdentifierNode) node.middle).name.matches("[A-D]")) {
+                        System.out.println("Wrong motor instanciation symbol, line: " + node.LineNumber);
+                    }
+                } else {
+                    System.out.println("Wrong motor instanciation symbol, line: " + node.LineNumber);
+                }
             }
-            else if(rightNode.equals("Sensor")){
-                type2 = "Sensor";
+            else if(rightNode.equals("UltrasoundSensor")){
+                type2 = "UltrasoundSensor";
+            } else if(rightNode.equals("TouchSensor")){
+                type2 = "TouchSensor";
             }
             else if (node.middle != null && node.isList)
             {
@@ -218,6 +284,16 @@ public class ATypeChecker extends Visitor {
             if (!type.equals(type2)){
                 System.out.println("Mistakes have been made dclNode, line: " + node.LineNumber);
             }
+        }
+        return null;
+    }
+
+    @Override
+    public Object Visit(DesynchronizeNode node) {
+        if (!(node.right != null && node.left != null && SymbolTable.GetTypeByID(((IdentifierNode)node.left).name, CurrentSymbolTable.peek()).equals("Motor")
+                && SymbolTable.GetTypeByID(((IdentifierNode)node.right).name, CurrentSymbolTable.peek()).equals("Motor"))){
+
+            System.out.println("Desynchronization node failed one identifier is not Motor at line: " + node.LineNumber);
         }
         return null;
     }
@@ -284,11 +360,6 @@ public class ATypeChecker extends Visitor {
     }
 
     @Override
-    public String Visit(InstanceNode node) {
-        return node.instance;
-    }
-
-    @Override
     public Void Visit(MethodNode node) {
         String type, type2;
         type = node.type.Accept(this).toString();
@@ -321,11 +392,6 @@ public class ATypeChecker extends Visitor {
         }
         return "";
     }
-
-   /* public Object Visit(StatSensorNode node)
-	{
-		node.instance.equals("")
-	}*/
 
     @Override
     public String Visit(NotBoolNode node) {
@@ -382,47 +448,6 @@ public class ATypeChecker extends Visitor {
         }
 
         return type;
-    }
-
-    @Override
-    public String Visit(StatIdNode node)
-    {
-        return node.instance.Accept(this).toString();
-    }
-
-    @Override
-    public String Visit(StatListNode node)
-    {
-        switch (node.instance)
-        {
-            case "Add":
-                //TODO
-                break;
-            case "Remove":
-                //TODO
-                break;
-            case "Get":
-                //TODO
-                break;
-        }
-        return node.instance; //TODO
-    }
-
-    @Override
-    public Void Visit(StatMotorNode node) { //TODO check if it works as intended
-    	String type = node.speed.Accept(this).toString();
-    	String type2 = null;
-    	if(node.time != null)
-    	    type2 = node.time.Accept(this).toString();
-        if( !(node.instance.equals("Forward") && type.equals("Number"))
-            || !((node.instance.equals("ForwardSeconds"))&& type.equals("Number") && type2.equals("Number")))
-        	System.out.println("Mistakes were made StatMotorNode @ " + node.LineNumber);
-        return null;
-    }
-
-    @Override
-    public Void Visit(StatSensorNode node) {
-        return null;
     }
 
     @Override

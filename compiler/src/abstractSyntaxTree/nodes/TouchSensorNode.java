@@ -2,11 +2,12 @@ package abstractSyntaxTree.nodes;
 
 import AVisitor.Visitor;
 
-public class StatIdNode extends Node {
-    public Node instance;
+public class TouchSensorNode extends Node{
+    public String symbol;
+    public Node id;
 
     @Override
     public Object Accept(Visitor visitor) {
-            return visitor.Visit(this);
+        return visitor.Visit(this);
     }
 }

@@ -1,15 +1,15 @@
 grammar FinalGrammar;
 
 
-COMMENT : '/*' .*? '*/' -> skip;
-LINE_COMMENT: '//' ~[\r\n]* -> skip;
-Num: [0-9]+ ('.' [0-9]+)?;
-Bool: 'true' | 'false';
-Identifier: ([a-zA-Z] | '_') [a-zA-Z0-9]*;
-WS: [ \t\r\n]+ -> skip;
+COMMENT :       '/*' .*? '*/' -> skip;
+LINE_COMMENT:   '//' ~[\r\n]* -> skip;
+Num:            [0-9]+ ('.' [0-9]+)?;
+Bool:           'true' | 'false';
+Identifier:     ([a-zA-Z] | '_') [a-zA-Z0-9]*;
+WS:             [ \t\r\n]+ -> skip;
 
 
-program : 'main' '{' body* '}' methods*;
+program : designSpecificDcl* 'main' '{' body* '}' methods*;
 
 body	: dcl ';' | stmt | call ';';
 
@@ -18,18 +18,20 @@ methods	: type 'Method' Identifier '(' fprmt? ')' '{' body* 'return' returnval '
 
 dcl		: type Identifier '=' b
 		| type Identifier
-		| instancedcl '[' Identifier ']' Identifier
 		| 'List' '[' type ']' Identifier;
 
 stmt	: Identifier '=' b ';'
 		| 'if' '(' b ')' 'then' '{' body* '}' elseif* elsel?
 		| 'while' '(' b ')' 'do' '{' body* '}'
 		| 'for' '(' (Num | Identifier) 'to' (Num | Identifier) ')' 'do' '{' body* '}'
-		| 'Sleep' '('Num')'
-		| Identifier 'synchronize' Identifier Num? ';';
+		| 'Sleep' '('Num')' ';'
+		| Identifier 'synchronize' Identifier Num? ';'
+		| Identifier 'desynchronize' Identifier ';';
+
+designSpecificDcl : instancedcl '[' (Identifier | Num) ']' Identifier ';';
 
 call	: Identifier '(' prmt? ')'
-		| Identifier '.' statid;
+		| Identifier '.' invoke;
 
 type	: 'number'
         | 'bool';
@@ -68,7 +70,8 @@ i       : expr
         | 'not' b;
 
 instancedcl	: 'Motor'
-            | 'Sensor';
+            | 'TouchSensor'
+            | 'UltrasoundSensor';
 
 elsel	: 'else' '{' body* '}';
 
@@ -77,9 +80,9 @@ elseif	: 'else' 'if' '(' b ')' 'then' '{' body* '}';
 prmt	: b
         | b ',' prmt;
 
-statid	: statmotorid
-        | statsensorid
-        | statlistid;
+invoke	: motorInvoke
+        | sensorInvoke
+        | listInvoke;
 
 boolvalop	: 'lessThan'
 		| 'greaterThan'
@@ -88,14 +91,17 @@ boolvalop	: 'lessThan'
 		| 'lessThanOrEqual'
 		| 'notEqual';
 
-statmotorid	: 'Forward' '(' (Num | expr) ')'
-            | 'Backwards' '(' (Num | expr)')'
-            | 'ForwardSeconds' '(' (Num | expr) ',' (Num | expr) ')'
-            | 'BackwardsSeconds' '(' (Num | expr) ',' (Num | expr) ')';
+motorInvoke	: 'Forward' '(' expr ')'
+            | 'Backwards' '(' expr')'
+            | 'ForwardSeconds' '(' expr ',' expr ')'
+            | 'BackwardsSeconds' '(' expr ',' expr ')'
+            | 'Stop' '(' ')';
 
-statsensorid: 'IsPressed()' | 'Distance()';
+sensorInvoke: 'IsPressed' | 'Distance';
 
-statlistid	: 'Add' '(' (call |  b) ')' | 'Remove' '(' Num ')';
+listInvoke	: 'Add' '(' b ')'
+            | 'Remove' '(' expr ')'
+            | 'Length' '(' ')';
 
 
 boolop	: 'equal'

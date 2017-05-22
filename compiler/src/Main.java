@@ -17,13 +17,14 @@ public class Main {
         ProgramNode root;
         Scanner scanner = new Scanner(System.in);
         String[] inputArray;
-        inputArray = scanner.nextLine().split(" ");
-        String inputPath = inputArray[0];
+        //inputArray = scanner.nextLine().split(" "); //TODO
+        String inputPath = scanner.nextLine(); //inputArray[0];
         String command = "";
-        if (inputArray.length > 1){
-            command = inputArray[1];
-        }
+        //if (inputArray.length > 1){
+        //    command = inputArray[1];
+        //}
         org.antlr.v4.runtime.CharStream charStream = new ANTLRFileStream(inputPath);
+
         root = InitAST(RunParser(charStream));
         if (command.equals("-p")){
             APrettyPrint aPrettyPrint = new APrettyPrint();
@@ -47,7 +48,6 @@ public class Main {
     private static FinalGrammarParser InitParser(org.antlr.v4.runtime.CharStream charStream){
         FinalGrammarLexer lexer = new FinalGrammarLexer(charStream);
         TokenStream tokenStream = new org.antlr.v4.runtime.CommonTokenStream(lexer);
-
         return new FinalGrammarParser(tokenStream);
     }
 
@@ -61,6 +61,7 @@ public class Main {
         FinalGrammarParser.ProgramContext programContext = new FinalGrammarParser.ProgramContext(null, -1);
 
         try {
+            System.out.println(InitParser(charStream).getNumberOfSyntaxErrors());
             programContext = InitParser(charStream).program();
         } catch (Exception e) {
             e.printStackTrace();

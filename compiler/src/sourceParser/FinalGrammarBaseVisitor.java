@@ -1,4 +1,4 @@
-// Generated from C:/Users/Simon/Documents/P4/compiler/src/sourceParser\FinalGrammar.g4 by ANTLR 4.7
+// Generated from F:/Source Tree/Programmer/P4/compiler/src/sourceParser\FinalGrammar.g4 by ANTLR 4.7
 package sourceParser;
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 
@@ -46,6 +46,13 @@ public class FinalGrammarBaseVisitor<T> extends AbstractParseTreeVisitor<T> impl
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitStmt(FinalGrammarParser.StmtContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitDesignSpecificDcl(FinalGrammarParser.DesignSpecificDclContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -164,7 +171,7 @@ public class FinalGrammarBaseVisitor<T> extends AbstractParseTreeVisitor<T> impl
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitStatid(FinalGrammarParser.StatidContext ctx) { return visitChildren(ctx); }
+	@Override public T visitInvoke(FinalGrammarParser.InvokeContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -178,21 +185,21 @@ public class FinalGrammarBaseVisitor<T> extends AbstractParseTreeVisitor<T> impl
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitStatmotorid(FinalGrammarParser.StatmotoridContext ctx) { return visitChildren(ctx); }
+	@Override public T visitMotorInvoke(FinalGrammarParser.MotorInvokeContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitStatsensorid(FinalGrammarParser.StatsensoridContext ctx) { return visitChildren(ctx); }
+	@Override public T visitSensorInvoke(FinalGrammarParser.SensorInvokeContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitStatlistid(FinalGrammarParser.StatlistidContext ctx) { return visitChildren(ctx); }
+	@Override public T visitListInvoke(FinalGrammarParser.ListInvokeContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *

@@ -1,11 +1,11 @@
 package abstractSyntaxTree.nodes;
 
+
 import AVisitor.Visitor;
 
-public class StatMotorNode extends Node {
-    public String instance;
-    public Node speed;
-    public Node time;
+public class MotorNode extends Node{
+    public String symbol;
+    public Node id;
 
     @Override
     public Object Accept(Visitor visitor) {

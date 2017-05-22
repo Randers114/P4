@@ -1,45 +1,53 @@
+Motor[A] M1;
+Motor[B] M2;
+Motor[C] M3;
+TouchSensor[1] S1;
+UltrasoundSensor[2] S2;
+UltrasoundSensor[3] S3;
+
 main
 {
-    List[number] list1;
-    List[bool] list2;
+    //List[number] list1;
+    //List[bool] list2;
 
-    list1.Add(10);
-    list1.Add(x);
+    //list1.Add(10);
+    //list1.Add(x);
 
-    list2.Add(false);
-    list2.Add(true);
-    list2.Add(u);
+    //list2.Add(false);
+    //list2.Add(true);
+    //list2.Add(u);
 
-    list1.Add(true);
-    list1.Add(u);
+    //list1.Add(true);
+    //list1.Add(u);
 
-    list2.Add(10);
-    list2.Add(x);
+    //list2.Add(10);
+    //list2.Add(x);
 
     bool aaa = 10 greaterThan 5 and 14 lessThan 20 or true ;
-    Motor[A] M1;
 
-    Sleep(500)
+    Sleep(500);
 
     number x = 5;
     number z;
     bool u = true;
     bool y;
 
+    bool ehhehe = S1.IsPressed;
 
-    Motor[B] M2;
-
-
-
-
-
+    M3.ForwardSeconds(10, 10);
 
     M1 synchronize M2 50;
 
-    M1.Backwards(5);
-    M1.Forward(10);
+    M1.Forward(100);
 
-    M1.ForwardSeconds(10,11);
+    M1 desynchronize M2;
+
+    M1 synchronize M2 100;
+
+
+    M1.Backwards(5 + 1 * (10 + 10));
+    M2.Forward(10);
+
     M1.BackwardsSeconds(10, 10);
 
     if (aaa) then {
