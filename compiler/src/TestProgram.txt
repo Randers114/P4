@@ -32,23 +32,23 @@ main
     bool u = true;
     bool y;
 
-    bool ehhehe = S1.IsPressed;
+    bool ehhehe = S1.isPressed;
 
-    M3.ForwardSeconds(10, 10);
+    //M3.ForwardSeconds(10, 10);
 
-    M1 synchronize M2 50;
+    //M1 synchronize M2 50;
 
-    M1.Forward(100);
+    //M1.Forward(100);
 
-    M1 desynchronize M2;
+    //M1 desynchronize M2;
 
     M1 synchronize M2 100;
 
 
-    M1.Backwards(5 + 1 * (10 + 10));
+    M1.Backward(5 + 1 * (10 + 10));
     M2.Forward(10);
 
-    M1.BackwardsSeconds(10, 10);
+    M1.BackwardSeconds(10, 10);
 
     if (aaa) then {
         number b = 25;

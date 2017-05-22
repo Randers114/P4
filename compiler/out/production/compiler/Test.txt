@@ -1,89 +1,101 @@
-Motor[A] M1;
-Motor[B] M2;
-Motor[C] M3;
-TouchSensor[1] S1;
-UltrasoundSensor[2] S2;
-UltrasoundSensor[3] S3;
+// Again we define two motors 
+Motor[A] motorLeft;
+Motor[B] motorRight;
+
+// Then we create our sensors.
+TouchSensor[1] tSensorTop;
+TouchSensor[2] tSensorFront;
+UltrasoundSensor[3] uSensorLeft;
+UltrasoundSensor[4] uSensorRight;
 
 main
 {
-    List[number] list1;
-    List[bool] list2;
+    // We synchronize the motors, so they run simultaneously.
+    motorLeft synchronize motorRight;
 
-    list1.Add(10);
-    list1.Add(x);
+    // We define numbers for speeds of the motor.
+    number speed = 75;
+    number backSpeed = 20;
+    number turningSpeed = 35;
 
-    list2.Add(false);
-    list2.Add(true);
-    list2.Add(u);
+    // We then define a bool that is used to run the program.
+    bool isRunning = false;
 
-    list1.Add(true);
-    list1.Add(u);
-
-    list2.Add(10);
-    list2.Add(x);
-
-    bool aaa = 10 greaterThan 5 and 14 lessThan 20 or true ;
-
-    Sleep(500);
-
-    number x = 5;
-    number z;
-    bool u = true;
-    bool y;
-
-    bool ehhehe = S1.IsPressed;
-
-    M1 synchronize M2;
-    M1 synchronize M2 100;
-
-
-    M1.Backwards(5 + 1 * (10 + 10));
-    M1.Forward(10);
-
-    M1.ForwardSeconds(true, 10);
-    M1.BackwardsSeconds(10, 10);
-
-    if (aaa) then {
-        number b = 25;
-        number a = 30;
-
-        a = a + b * b + ( 25 + b );
-    } else {
-        number a = 10;
-
-        while (a lessThan 10) do {
-        for(a to  10) do {
-                number b;
-            }
-            number b = 10;
+    // We use the bool as a condition in a while-loop to wait for the tSensorTop to be pressed.
+    while(not(isRunning)) do
+    {
+        // We check for the tSensorTop to be pressed, then we set the isRunning to true.
+        if(tSensorTop.isPressed) then
+        {
+            isRunning = true;
         }
 
+        // We introduce a 100 ms sleep to keep the robot from overworking.
+        Sleep(100);
     }
 
+    // We now start the motors in a while-loop.
+    while(isRunning) do
+    {
+        motorLeft.Forward(speed);
 
-    if (aaa) then {
-        number g = hey(25, 100) + 5;
-    } else if (hh() or aaa and true) then {
-        number a = 10;
-        number b = 10;
+        // We check if the tSensorFront is pressed and then stop the motors.
+        if(tSensorFront.isPressed) then
+        {
+            motorLeft.Stop();
 
-        a = hey(a, b);
+            // We then back up the robot for two seconds, to make room for turning.
+            motorLeft.BackwardSeconds(backSpeed, 2);
+
+            // Then we check which side is the best direction and turn in that respective direction.
+            if(uSensorLeft.distance greaterThan uSensorRight.distance) then
+            {
+                TurnLeft(turningSpeed);
+            }
+            else if(uSensorLeft.distance lessThan uSensorRight.distance) then
+            {
+                TurnRight(turningSpeed);
+            }
+            else
+            {
+                TurnLeft(turningSpeed);
+            }
+
+            // We then introduce a 2 second window where the robot can be turned of.
+            // We do this with a for-loop since we to check tSensorTop in this window.
+            // But we cant just use a 2 second sleep since we can risk skipping the press that way.
+            for(1 to 20) do
+            {
+                if(tSensorTop.isPressed) then
+                {
+                    isRunning = false;
+                }
+
+                // We again use the sleep, but this time it is also used as a timer.
+                Sleep(100);
+            }
+        }
     }
 }
 
-number Method hey(number v, number m){
+// We define a methods for tuning left.
+void Method TurnLeft(number speed)
+{
+    // We now have to desynchronize and then synchronize the motors again so that we can use them to turn.
+    motorLeft desynchronize motorRight;
+    motorLeft synchronize motorRight 100;
 
-    number a = v + m;
-
-
-    return v + m;
+    // Here we make the robot turn. We use a hardcoded value for turning here since it depends.
+    // On the relative speed of the motors when we use the ForwardSeconds method.
+    motorLeft.BackwardSeconds(speed, 3); // We assume that it takes the robot 3 seconds to turn at this speed.
 }
 
-bool Method hh(){
+// And one for turning right.
+void Method TurnRight(number speed)
+{
+    // Just as the other method desynchronize and then synchronize the motors again so that we can use them to turn.
+    motorLeft desynchronize motorRight;
+    motorLeft synchronize motorRight 100;
 
-    bool l = true;
-
-    return l;
-
+    motorLeft.ForwardSeconds(speed, 3);
 }

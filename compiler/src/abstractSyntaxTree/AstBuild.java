@@ -65,7 +65,8 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
                ((MotorNode) child).id.LineNumber = ctx.start.getLine();
            } else if (child instanceof UltraSoundSensorNode){
                if (ctx.Num() != null){
-                   ((UltraSoundSensorNode) child).symbol = Double.toString(((NumberNode) visitTerminal(ctx.Num())).value);
+                   Double d = ((NumberNode) visitTerminal(ctx.Num())).value;
+                   ((UltraSoundSensorNode) child).symbol = Integer.toString(d.intValue());
                    ((UltraSoundSensorNode) child).id = visitTerminal(ctx.Identifier(0));
                } else {
                    ((UltraSoundSensorNode) child).symbol = ((IdentifierNode) visitTerminal(ctx.Identifier(0))).name;
@@ -74,7 +75,8 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
                ((UltraSoundSensorNode) child).id.LineNumber = ctx.start.getLine();
            } else if (child instanceof TouchSensorNode){
                if (ctx.Num() != null){
-                   ((TouchSensorNode) child).symbol = Double.toString(((NumberNode) visitTerminal(ctx.Num())).value);
+                   Double d = ((NumberNode) visitTerminal(ctx.Num())).value;
+                   ((TouchSensorNode) child).symbol = Integer.toString(d.intValue());
                    ((TouchSensorNode) child).id = visitTerminal(ctx.Identifier(0));
                } else {
                    ((TouchSensorNode) child).symbol = ((IdentifierNode) visitTerminal(ctx.Identifier(0))).name;
@@ -119,7 +121,12 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
     @Override
     public Node visitMethods(FinalGrammarParser.MethodsContext ctx) {
         return new MethodNode(){{
-            type = visitType(ctx.type());
+            if (!ctx.getText().contains("void")){
+                type = visitType(ctx.type());
+            } else {
+                type = new TypesNode(){{type = "void";}};
+            }
+
             id = visitTerminal(ctx.Identifier());
             if (ctx.fprmt() != null) {
                 fprmt = visitFprmt(ctx.fprmt());
@@ -166,13 +173,13 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
     @Override
     public Node visitStmt(FinalGrammarParser.StmtContext ctx) {
         return new StmtNode(){{
-            if (ctx.getText().contains("if")){
+            if (ctx.start.getText().contains("if")){
                 child = visitIf(ctx);
-            } else if (ctx.getText().contains("while")){
+            } else if (ctx.start.getText().contains("while")){
                 child = visitWhile(ctx);
-            } else if (ctx.getText().contains("for")){
+            } else if (ctx.start.getText().contains("for")){
                 child = visitFor(ctx);
-            } else if(ctx.getText().contains("Sleep"))
+            } else if(ctx.start.getText().contains("Sleep"))
 				child = visitSleep(ctx);
 			else if(ctx.getText().contains("synchronize"))
 				child = visitSynch(ctx);
@@ -597,11 +604,13 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
     @Override
     public Node visitMotorInvoke(FinalGrammarParser.MotorInvokeContext ctx) {
         return new MotorInvokeNode(){{
-            if (ctx.expr().size() > 1){
+            if (ctx.getText().contains("Stop")) {
+                method = "Stop()";
+            } else if (ctx.expr().size() > 1){
                 if (ctx.getText().contains("ForwardSeconds")) {
                     method = "ForwardSeconds";
-                } else if (ctx.getText().contains("BackwardsSeconds")) {
-                    method = "BackwardsSeconds";
+                } else if (ctx.getText().contains("BackwardSeconds")) {
+                    method = "BackwardSeconds";
                 }
                 speed = visitExpr(ctx.expr(0));
                 time = visitExpr(ctx.expr(1));
@@ -609,12 +618,10 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
                 if(ctx.getText().contains("Forward")) {
                     method = "Forward";
                 }
-                else if(ctx.getText().contains("Backwards")) {
-                    method = "Backwards";
+                else if(ctx.getText().contains("Backward")) {
+                    method = "Backward";
                 }
                 speed = visitExpr(ctx.expr(0));
-            } else {
-                method = "Stop";
             }
             LineNumber = ctx.start.getLine();
         }};

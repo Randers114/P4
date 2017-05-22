@@ -1,70 +1,81 @@
-#Pragma config(Motor, motorA, M1, tmotorEV3_Large)
-#Pragma config(Motor, motorB, M2, tmotorEV3_Large)
-#Pragma config(Motor, motorC, M3, tmotorEV3_Large)
-#Pragma config(Sensor, S1, S1sensorEV3_Touch)
-#Pragma config(Sensor, S2, S2sensorEV3_Ultrasonic)
-#Pragma config(Sensor, S3, S3sensorEV3_Ultrasonic)
+#Pragma config(Motor, motorA, motorLeft, tmotorEV3_Large)
+#Pragma config(Motor, motorB, motorRight, tmotorEV3_Large)
+#Pragma config(Sensor, S1, tSensorTop, sensorEV3_Touch)
+#Pragma config(Sensor, S2, tSensorFront, sensorEV3_Touch)
+#Pragma config(Sensor, S3, uSensorLeft, sensorEV3_Ultrasonic)
+#Pragma config(Sensor, S4, uSensorRight, sensorEV3_Ultrasonic)
 
-float hey(float v, float m); 
-bool hh(); 
+void TurnLeft(float speed); 
+void TurnRight(float speed); 
 
 task main() 
 {
-	bool aaa = 10.0 > 5.0 && 14.0 < 20.0 || true;
-	Sleep(500.0);
-	float x = 5.0;
-	float z;
-	bool u = true;
-	bool y;
-	bool ehhehe = 	getTouchValue(S1);
-	motor[motorA] = 100.0;
-	motor[motorB] = 0.5 * (100.0);
-	motor[motorA] = - 5.0 + 1.0 * (10.0 + 10.0);
-	motor[motorB] = 1.0 * (5.0 + 1.0 * (10.0 + 10.0));
-	motor[motorB] = 10.0;
-	motor[motorC] = 10.0, 10.0;
-	motor[motorA] = - 10.0, 10.0;
-	motor[motorB] = 1.0 * (10.0), 10.0;
-	if(aaa)
+	float speed = 75.0;
+	float backSpeed = 20.0;
+	float turningSpeed = 35.0;
+	bool isRunning = false;
+	while (! (isRunning))
 	{
-		float b = 25.0;
-		float a = 30.0;
-		a = a + b * b + (25.0 + b); 
-	}
-	else
-	{
-		float a = 10.0;
-		while (a < 10.0)
+		if(		getTouchValue(S1))
 		{
-			for ( int i =  ; i <10.0 ; i++ )
-			{ 
-				float b;
-			}
-			float b = 10.0;
+			isRunning = true; 
 		}
-	} 
-	if(aaa)
-	{
-		float g = hey(25.0, 100.0) + 5.0;
+		Sleep(100.0);
 	}
-	else if(hh() || aaa && true)
+	while (isRunning)
 	{
-		float a = 10.0;
-		float b = 10.0;
-		a = hey(a, b); 
+		motor[motorA] = speed;
+		motor[motorB] = speed;
+		if(		getTouchValue(S2))
+		{
+			stopMotor(motorA);
+			stopMotor(motorB);
+;
+			motor[motorA] = - (backSpeed);
+			motor[motorB] = - (backSpeed);
+ 			sleep(2.0 * 1000);
+ stopMotor(motorA);
+ stopMotor(motorB);
+			if(			getUSDistance(S3) > 			getUSDistance(S4))
+			{
+TurnLeft(turningSpeed);
+			}
+			else if(			getUSDistance(S3) < 			getUSDistance(S4))
+			{
+TurnRight(turningSpeed);
+			}
+			else
+			{
+TurnLeft(turningSpeed);
+			} 
+			for ( int i = 1.0 ; i <20.0 ; i++ )
+			{ 
+				if(				getTouchValue(S1))
+				{
+					isRunning = false; 
+				}
+				Sleep(100.0);
+			}
+		}
 	}
 } 
 
-float hey(float v, float m)
+void TurnLeft(float speed)
 {
-	float a = v + m;
-
-	return v + m;
+	motor[motorA] = - (speed);
+	motor[motorB] = - (1.0 * (speed));
+ 	sleep(3.0 * 1000);
+ stopMotor(motorA);
+ stopMotor(motorB);
+;
 }
 
-bool hh()
+void TurnRight(float speed)
 {
-	bool l = true;
-
-	return l;
+	motor[motorA] = speed;
+	motor[motorB] = 1.0 * (speed);
+ 	sleep(3.0 * 1000);
+ stopMotor(motorA);
+ stopMotor(motorB);
+;
 }

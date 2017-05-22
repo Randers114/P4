@@ -92,12 +92,12 @@ boolvalop	: 'lessThan'
 		| 'notEqual';
 
 motorInvoke	: 'Forward' '(' expr ')'
-            | 'Backwards' '(' expr')'
+            | 'Backward' '(' expr')'
             | 'ForwardSeconds' '(' expr ',' expr ')'
-            | 'BackwardsSeconds' '(' expr ',' expr ')'
+            | 'BackwardSeconds' '(' expr ',' expr ')'
             | 'Stop' '(' ')';
 
-sensorInvoke: 'IsPressed' | 'Distance';
+sensorInvoke: 'isPressed' | 'distance';
 
 listInvoke	: 'Add' '(' b ')'
             | 'Remove' '(' expr ')'

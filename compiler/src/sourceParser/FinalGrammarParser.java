@@ -1,4 +1,4 @@
-// Generated from F:/Source Tree/Programmer/P4/compiler/src/sourceParser\FinalGrammar.g4 by ANTLR 4.7
+// Generated from C:/Users/Simon/Documents/P4/compiler/src/sourceParser\FinalGrammar.g4 by ANTLR 4.7
 package sourceParser;
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
@@ -47,8 +47,8 @@ public class FinalGrammarParser extends Parser {
 		"'.'", "'number'", "'bool'", "','", "'-'", "'+'", "'*'", "'/'", "'and'", 
 		"'or'", "'not'", "'Motor'", "'TouchSensor'", "'UltrasoundSensor'", "'else'", 
 		"'lessThan'", "'greaterThan'", "'equal'", "'greaterThanOrEqual'", "'lessThanOrEqual'", 
-		"'notEqual'", "'Forward'", "'Backwards'", "'ForwardSeconds'", "'BackwardsSeconds'", 
-		"'Stop'", "'IsPressed'", "'Distance'", "'Add'", "'Remove'", "'Length'"
+		"'notEqual'", "'Forward'", "'Backward'", "'ForwardSeconds'", "'BackwardSeconds'", 
+		"'Stop'", "'isPressed'", "'distance'", "'Add'", "'Remove'", "'Length'"
 	};
 	private static final String[] _SYMBOLIC_NAMES = {
 		null, null, null, null, null, null, null, null, null, null, null, null, 

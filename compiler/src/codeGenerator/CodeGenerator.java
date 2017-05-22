@@ -16,14 +16,14 @@ public class CodeGenerator extends Visitor {
     private List<String> MotorOrSensordcl = new ArrayList<>();
     private int tab = 0;
     private Map<String, String> matchMotorsAndSensors = new HashMap<>();
-    private Node joker;
-    private Node joker2;
+    private Node speed;
+    private Node time;
 
 
     public void openfile() {
         try {
 
-            File file = new File("F:\\Source Tree\\Programmer\\P4\\compiler\\src\\codeGenerator");
+            File file = new File("C:\\Users\\Simon\\Documents\\P4\\compiler\\src\\codeGenerator");
             if (file.createNewFile())
             {
                 System.out.println("File is created!");
@@ -34,7 +34,7 @@ public class CodeGenerator extends Visitor {
         }
 
         try {
-            PrintWriter writer = new PrintWriter("F:\\Source Tree\\Programmer\\P4\\compiler\\src\\codeGenerator/newfile.c", "UTF-8");
+            PrintWriter writer = new PrintWriter("C:\\Users\\Simon\\Documents\\P4\\compiler\\src\\codeGenerator/newfile.c", "UTF-8");
             writer.flush();
             WriteToFile(writer);
 
@@ -96,7 +96,7 @@ public class CodeGenerator extends Visitor {
 
     @Override
     public Object Visit(MotorNode node) {
-        MotorOrSensordcl.add("#Pragma config(Motor, motor");
+        MotorOrSensordcl.add("#pragma config(Motor, motor");
         switch (node.symbol){
             case "A":
                 MotorOrSensordcl.add("A, ");
@@ -121,17 +121,17 @@ public class CodeGenerator extends Visitor {
 
     @Override
     public String Visit(MotorInvokeNode node) {
-        joker = node.speed;
+        speed = node.speed;
         switch (node.method){
             case "Forward":
                 return "F";
             case "ForwardSeconds":
-                joker2 = node.time;
+                time = node.time;
                 return "FS";
-            case "Backwards":
+            case "Backward":
                 return "B";
-            case "BackwardsSeconds":
-                joker2 = node.time;
+            case "BackwardSeconds":
+                time = node.time;
                 return "BS";
             case "Stop()":
                 return "S";
@@ -143,10 +143,10 @@ public class CodeGenerator extends Visitor {
     @Override
     public Object Visit(SensorInvokeNode node) {
         switch (node.method){
-            case "IsPressed":
+            case "isPressed":
                 Targetcode.add("getTouchValue(");
                 break;
-            case "Distance":
+            case "distance":
                 Targetcode.add("getUSDistance(");
                 break;
         }
@@ -156,7 +156,7 @@ public class CodeGenerator extends Visitor {
 
     @Override
     public Object Visit(TouchSensorNode node) {
-        MotorOrSensordcl.add("#Pragma config(Sensor, S" + node.symbol + ", " + node.id.Accept(this).toString() + "sensorEV3_Touch)\n");
+        MotorOrSensordcl.add("#pragma config(Sensor, S" + node.symbol + ", " + node.id.Accept(this).toString() + ", sensorEV3_Touch)\n");
 
         matchMotorsAndSensors.put(node.id.Accept(this).toString(), "S" + node.symbol);
         return null;
@@ -164,7 +164,7 @@ public class CodeGenerator extends Visitor {
 
     @Override
     public Object Visit(UltraSoundSensorNode node) {
-        MotorOrSensordcl.add("#Pragma config(Sensor, S" + node.symbol + ", " + node.id.Accept(this).toString() + "sensorEV3_Ultrasonic)\n");
+        MotorOrSensordcl.add("#pragma config(Sensor, S" + node.symbol + ", " + node.id.Accept(this).toString() + ", sensorEV3_Ultrasonic)\n");
 
         matchMotorsAndSensors.put(node.id.Accept(this).toString(), "S" + node.symbol);
         return null;
@@ -183,7 +183,7 @@ public class CodeGenerator extends Visitor {
     @Override
     public Object Visit(SleepNode node) {
         Indend();
-        Targetcode.add("Sleep(");
+        Targetcode.add("sleep(");
         node.child.Accept(this);
         Targetcode.add(");\n");
         return null;
@@ -252,7 +252,7 @@ public class CodeGenerator extends Visitor {
     public Void Visit(CallNode node) {
         boolean allowSemicolon = false;
         String s = Targetcode.get(Targetcode.size()-1);
-        if(s.equals(";") || s.equals("{") || s.equals("}")) {
+        if(s.equals(";\n") || s.equals("{\n") || s.equals("}\n")) {
             allowSemicolon = true;
         }
 
@@ -260,7 +260,7 @@ public class CodeGenerator extends Visitor {
             Indend();
             if (node.invoke.Accept(this) != null){
                 ChooseInstance(node);
-                Targetcode.add(";\n");
+                allowSemicolon = true;
             } else {
                 Targetcode.add(matchMotorsAndSensors.get(node.id.Accept(this).toString()) + ")");
             }
@@ -275,88 +275,116 @@ public class CodeGenerator extends Visitor {
 
 
         if(allowSemicolon) {
-            Targetcode.add(";");
+            Targetcode.add(";\n");
         }
 
         return null;
     }
 
     private void ChooseInstance(CallNode node){
+
+        boolean isSynced = false;
         switch (node.invoke.Accept(this).toString()) {
             case "F":
                 Targetcode.add("motor[" + matchMotorsAndSensors.get(node.id.Accept(this).toString()) + "] = ");
-                joker.Accept(this);
+                speed.Accept(this);
                 if (CheckForSync((IdentifierNode) node.id)){
                     Targetcode.add(";\n");
                     Indend();
                     Targetcode.add("motor[" + matchMotorsAndSensors.get(FindSyncedMotor((IdentifierNode) node.id).motor2.name) + "] = ");
                     if (FindSyncedMotor((IdentifierNode) node.id).value != null){
                         Targetcode.add(Double.toString((FindSyncedMotor((IdentifierNode) node.id).value / 100)) + " * (");
-                        joker.Accept(this);
+                        speed.Accept(this);
                         Targetcode.add(")");
                     } else {
-                        joker.Accept(this);
+                        speed.Accept(this);
                     }
                 }
                 break;
             case "FS":
                 Targetcode.add("motor[" + matchMotorsAndSensors.get(node.id.Accept(this).toString()) + "] = ");
-                joker.Accept(this);
-                Targetcode.add("; \n");
+                speed.Accept(this);
 
                 if (CheckForSync((IdentifierNode) node.id)){
+                    isSynced = true;
                     Targetcode.add(";\n");
                     Indend();
                     Targetcode.add("motor[" + matchMotorsAndSensors.get(FindSyncedMotor((IdentifierNode) node.id).motor2.name) + "] = ");
                     if (FindSyncedMotor((IdentifierNode) node.id).value != null){
                         Targetcode.add(Double.toString(FindSyncedMotor((IdentifierNode) node.id).value / 100) + " * (");
-                        joker.Accept(this);
+                        speed.Accept(this);
                         Targetcode.add(")");
                     } else {
-                        joker.Accept(this);
+                        speed.Accept(this);
                     }
                     Targetcode.add(";\n ");
 
                 }
-                Targetcode.add("Sleep(");
-                joker2.Accept(this);
-                Targetcode.add(");\n");
+                Indend();
+                Targetcode.add("sleep(");
+                time.Accept(this);
+                Targetcode.add(" * 1000)");
+
+                Targetcode.add(";\n stopMotor(" + matchMotorsAndSensors.get(node.id.Accept(this).toString()) + ")");
+                if (isSynced){
+                    Targetcode.add(";\n stopMotor(" + matchMotorsAndSensors.get(FindSyncedMotor((IdentifierNode) node.id).motor2.name) + ")");
+                }
+
                 break;
             case "B":
-                Targetcode.add("motor[" + matchMotorsAndSensors.get(node.id.Accept(this).toString()) + "] = - ");
-                joker.Accept(this);
+                Targetcode.add("motor[" + matchMotorsAndSensors.get(node.id.Accept(this).toString()) + "] = - (");
+                speed.Accept(this);
+                Targetcode.add(")");
                 if (CheckForSync((IdentifierNode) node.id)){
                     Targetcode.add(";\n");
                     Indend();
-                    Targetcode.add("motor[" + matchMotorsAndSensors.get(FindSyncedMotor((IdentifierNode) node.id).motor2.name) + "] = ");
+                    Targetcode.add("motor[" + matchMotorsAndSensors.get(FindSyncedMotor((IdentifierNode) node.id).motor2.name) + "] = - (");
                     if (FindSyncedMotor((IdentifierNode) node.id).value != null){
                         Targetcode.add(Double.toString(FindSyncedMotor((IdentifierNode) node.id).value / 100) + " * (");
-                        joker.Accept(this);
+                        speed.Accept(this);
                         Targetcode.add(")");
                     } else {
-                        joker.Accept(this);
+                        speed.Accept(this);
                     }
+                    Targetcode.add(")");
                 }
                 break;
             case "BS":
-                Targetcode.add("motor[" + matchMotorsAndSensors.get(node.id.Accept(this).toString()) + "] = - ");
-                joker.Accept(this);
-                Targetcode.add(", ");
-                joker2.Accept(this);
+                Targetcode.add("motor[" + matchMotorsAndSensors.get(node.id.Accept(this).toString()) + "] = - (");
+                speed.Accept(this);
+                Targetcode.add(")");
+                if (CheckForSync((IdentifierNode) node.id)){
+                    isSynced = true;
+                    Targetcode.add(";\n");
+                    Indend();
+                    Targetcode.add("motor[" + matchMotorsAndSensors.get(FindSyncedMotor((IdentifierNode) node.id).motor2.name) + "] = - (");
+                    if (FindSyncedMotor((IdentifierNode) node.id).value != null){
+                        Targetcode.add(Double.toString(FindSyncedMotor((IdentifierNode) node.id).value / 100) + " * (");
+                        speed.Accept(this);
+                        Targetcode.add(")");
+                    } else {
+                        speed.Accept(this);
+                    }
+                    Targetcode.add(")");
+                    Targetcode.add(";\n ");
+                }
+                Indend();
+                Targetcode.add("sleep(");
+                time.Accept(this);
+                Targetcode.add(" * 1000)");
+                Targetcode.add(";\n stopMotor(" + matchMotorsAndSensors.get(node.id.Accept(this).toString()) + ")");
+                if (isSynced){
+                    Targetcode.add(";\n stopMotor(" + matchMotorsAndSensors.get(FindSyncedMotor((IdentifierNode) node.id).motor2.name) + ")");
+                }
+                break;
+            case "S":
+                Targetcode.add("stopMotor(" + matchMotorsAndSensors.get(node.id.Accept(this).toString()) + ")");
                 if (CheckForSync((IdentifierNode) node.id)){
                     Targetcode.add(";\n");
                     Indend();
-                    Targetcode.add("motor[" + matchMotorsAndSensors.get(FindSyncedMotor((IdentifierNode) node.id).motor2.name) + "] = ");
-                    if (FindSyncedMotor((IdentifierNode) node.id).value != null){
-                        Targetcode.add(Double.toString(FindSyncedMotor((IdentifierNode) node.id).value / 100) + " * (");
-                        joker.Accept(this);
-                        Targetcode.add(")");
-                    } else {
-                        joker.Accept(this);
-                    }
-                    Targetcode.add(", ");
-                    joker2.Accept(this);
+                    Targetcode.add("stopMotor(" + matchMotorsAndSensors.get(FindSyncedMotor((IdentifierNode) node.id).motor2.name) + ")");
                 }
+                Targetcode.add(";\n");
                 break;
         }
     }
@@ -528,7 +556,12 @@ public class CodeGenerator extends Visitor {
     @Override
     public Void Visit(IfNode node) {
         Indend();
-        Targetcode.add("if(" + node.bool.Accept(this) + ")\n");
+        Targetcode.add("if(");
+        if (node.bool.Accept(this) != null){
+            Targetcode.add(node.bool.Accept(this).toString());
+        }
+
+        Targetcode.add( ")\n");
         Indend();
         Targetcode.add("{\n");
         node.block.Accept(this);
@@ -594,7 +627,10 @@ public class CodeGenerator extends Visitor {
         Targetcode.add(")\n" + "{\n");
         node.block.Accept(this);
         tab++;
-        node.returnval.Accept(this);
+        if (node.returnval != null){
+            node.returnval.Accept(this);
+        }
+
         Targetcode.add(";\n");
         tab--;
         Targetcode.add("}\n");
@@ -617,10 +653,11 @@ public class CodeGenerator extends Visitor {
     }
 
     @Override
-    public Void Visit(NotBoolNode node) {
-        Targetcode.add(" ! ");
-        node.child.Accept(this);
-
+    public Object Visit(NotBoolNode node) {
+        Targetcode.add("! ");
+        if (node.child.Accept(this) != null){
+            Targetcode.add(node.child.Accept(this).toString());
+        }
         return null;
     }
 
@@ -752,9 +789,11 @@ public class CodeGenerator extends Visitor {
         {
             return "float ";
         }
-        else
+        else if (node.type.contains("bool"))
         {
             return "bool ";
+        } else {
+            return "void ";
         }
     }
 
@@ -774,20 +813,26 @@ public class CodeGenerator extends Visitor {
         if (node.paren){
             Targetcode.add("(");
         }
-        Object returns = node.child.Accept(this);
+        if (node.child.Accept(this) != null) {
+            Targetcode.add(node.child.Accept(this).toString());
+        }
+        //Object returns = node.child.Accept(this);
 
         if (node.paren){
             Targetcode.add(")");
         }
 
-        return returns;
+        return null;
     }
 
     @Override
     public Void Visit(WhileNode node) {
         Indend();
         Targetcode.add("while (");
-        node.bool.Accept(this);
+        if (node.bool.Accept(this) != null){
+            Targetcode.add(node.bool.Accept(this).toString());
+        }
+
         Targetcode.add(")\n");
         Indend();
         Targetcode.add("{\n");

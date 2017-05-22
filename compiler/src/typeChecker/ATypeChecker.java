@@ -34,23 +34,27 @@ public class ATypeChecker extends Visitor {
 
     @Override
     public String Visit(MotorInvokeNode node) {
-        String type = node.speed.Accept(this).toString();
+
+        String type = "";
         String type2 = "";
+        if (node.speed != null){
+            type = node.speed.Accept(this).toString();
+        }
         if(node.time != null) {
             type2 = node.time.Accept(this).toString();
         }
 
-        if(!((node.method.equals("Forward") || node.method.equals("Backwards")) && type.equals("number") && node.time == null || (node.time != null && type2.equals("number")))) {
-            System.out.println("Mistakes were made StatMotorNode, line: " + node.LineNumber);
+        if(!(((node.method.equals("Forward") || node.method.equals("Backward")) && type.equals("number") && node.time == null || (node.time != null && type2.equals("number"))) || node.method.equals("Stop()"))) {
+            System.out.println("Mistakes were made motorinvoke, line: " + node.LineNumber);
         }
         return "void";
     }
 
     @Override
     public String Visit(SensorInvokeNode node) {
-        if (node.method.equals("IsPressed")){
+        if (node.method.equals("isPressed")){
             return "bool";
-        } else if (node.method.equals("Distance")){
+        } else if (node.method.equals("distance")){
             return "number";
         }
         return null;
@@ -176,8 +180,8 @@ public class ATypeChecker extends Visitor {
     @Override
     public Void Visit(AssignNode node){
         String type, type2;
-        type = (String) node.left.Accept(this);
-        type2 = (String) node.right.Accept(this);
+        type = node.left.Accept(this).toString();
+        type2 = node.right.Accept(this).toString();
 
         if (type2.equals("true") || type2.equals("false") || type2.equals("bool")) {
             type2 = "bool";
@@ -213,8 +217,8 @@ public class ATypeChecker extends Visitor {
     }
 
     @Override
-    public Boolean Visit(BoolNode node) {
-        return node.aBoolean;
+    public String Visit(BoolNode node) {
+        return "bool";
     }
 
     @Override

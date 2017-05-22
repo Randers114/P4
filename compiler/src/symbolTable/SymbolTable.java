@@ -46,7 +46,7 @@ public class SymbolTable {
 
     void Insert(Node id, String type, String symbol){
         if (!LookUpSymbol(symbol)){
-            if (type.equals("Motor") && symbol.matches("[A-D]") || (type.equals("TouchSensor") || type.equals("UltrasoundSensor")) && symbol.matches("[0-4](\\.[0-9])")){
+            if (type.equals("Motor") && symbol.matches("[A-D]") || (type.equals("TouchSensor") || type.equals("UltrasoundSensor")) && symbol.matches("[0-4]")){
                 symbolTables.get((symbolTables.size() - 1)).Variables.add(new Variable(((IdentifierNode) id).name, type, symbol));
             } else {
                 System.out.println("Variable " + ((IdentifierNode) id).name + " failed, the socket " + symbol + " does not exist error at line: " + id.LineNumber);
