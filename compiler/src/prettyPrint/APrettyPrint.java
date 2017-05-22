@@ -14,8 +14,9 @@ public class APrettyPrint extends Visitor {
     }
 
     @Override
-    public Object Visit(InvokeNode node) {
-        return node.child.Accept(this);
+    public Void Visit(InvokeNode node) {
+        node.child.Accept(this);
+        return null;
     }
 
     @Override
@@ -28,12 +29,42 @@ public class APrettyPrint extends Visitor {
     public Object Visit(MotorNode node) {
         System.out.print("Motor[" + node.symbol + "]");
         node.id.Accept(this);
+        System.out.print("\n");
         return null;
     }
 
     @Override
-    public Object Visit(MotorInvokeNode node) {
-        System.out.print(node.method);
+    public Void Visit(MotorInvokeNode node) {
+        switch (node.method) {
+            case "Forward":
+                System.out.print(node.method + "(");
+                node.speed.Accept(this);
+                System.out.print(");\n");
+                break;
+            case "ForwardSeconds":
+                System.out.print(node.method + "(");
+                node.speed.Accept(this);
+                System.out.print(",");
+                node.time.Accept(this);
+                System.out.print(");\n");
+                break;
+            case "Backward":
+                System.out.print(node.method + "(-");
+                node.speed.Accept(this);
+                System.out.print (");\n");
+                break;
+            case "BackwardSeconds":
+                System.out.print(node.method);
+                System.out.print("(-");
+                node.speed.Accept(this);
+                System.out.print(",");
+                node.time.Accept(this);
+                System.out.print(");\n");
+                break;
+            default:
+                break;
+
+        }
         return null;
     }
 
@@ -47,6 +78,7 @@ public class APrettyPrint extends Visitor {
     public Object Visit(TouchSensorNode node) {
         System.out.print("TouchSensor[" + node.symbol + "]");
         node.id.Accept(this);
+        System.out.print("\n");
         return null;
     }
 
@@ -54,6 +86,7 @@ public class APrettyPrint extends Visitor {
     public Object Visit(UltraSoundSensorNode node) {
         System.out.print("UltrasoundSensor[" + node.symbol + "]");
         node.id.Accept(this);
+        System.out.print("\n");
         return null;
     }
 
@@ -63,15 +96,16 @@ public class APrettyPrint extends Visitor {
          node.right.Accept(this);
          System.out.print(" Synchronize ");
          node.left.Accept(this);
+         System.out.print(";\n");
          return null;
     }
 
     @Override
     public Object Visit (SleepNode node)
     {
-        System.out.print(" Sleep (");
+        System.out.print("Sleep (");
         node.child.Accept(this);
-        System.out.print(");");
+        System.out.print(");\n");
         return null;
     }
 
@@ -174,14 +208,24 @@ public class APrettyPrint extends Visitor {
 
     @Override
     public Void Visit(CallNode node) {
-        node.id.Accept(this);
-        System.out.print("(");
-        if (node.parameter != null){
-            node.parameter.Accept(this);
-        }
-        System.out.print(")");
-        return null;
+
+            if(node.invoke != null)
+            {
+                node.id.Accept(this);
+                System.out.print(".");
+                node.invoke.Accept(this);
+            }
+            else {
+                node.id.Accept(this);
+                System.out.print("(");
+                if (node.parameter != null)
+                    node.parameter.Accept(this);
+                System.out.print(")");
+            }
+
+            return null;
     }
+
 
     @Override
     public Void Visit(DclNode node) {
