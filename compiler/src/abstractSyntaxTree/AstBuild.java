@@ -661,13 +661,22 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
 
 	private Node visitSynch(FinalGrammarParser.StmtContext ctx)
 	{
-		return new SynchronizationNode(){{
-			left = visitTerminal(ctx.Identifier(0));
-			right = visitTerminal(ctx.Identifier(1));
-			if (ctx.Num(0) != null) {
-                relativeSpeed = ((NumberNode) visitTerminal(ctx.Num(0))).value;
-            }
-			LineNumber = ctx.start.getLine();
-	}};
+	    if (ctx.getText().contains("d")){
+            return new DesynchronizeNode(){{
+                left = visitTerminal(ctx.Identifier(0));
+                right = visitTerminal(ctx.Identifier(1));
+                LineNumber = ctx.start.getLine();
+            }};
+        } else {
+            return new SynchronizationNode(){{
+                left = visitTerminal(ctx.Identifier(0));
+                right = visitTerminal(ctx.Identifier(1));
+                if (ctx.Num(0) != null) {
+                    relativeSpeed = ((NumberNode) visitTerminal(ctx.Num(0))).value;
+                }
+                LineNumber = ctx.start.getLine();
+            }};
+        }
+
 	}
 }

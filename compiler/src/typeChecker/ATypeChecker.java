@@ -289,6 +289,16 @@ public class ATypeChecker extends Visitor {
     }
 
     @Override
+    public Object Visit(DesynchronizeNode node) {
+        if (!(node.right != null && node.left != null && SymbolTable.GetTypeByID(((IdentifierNode)node.left).name, CurrentSymbolTable.peek()).equals("Motor")
+                && SymbolTable.GetTypeByID(((IdentifierNode)node.right).name, CurrentSymbolTable.peek()).equals("Motor"))){
+
+            System.out.println("Desynchronization node failed one identifier is not Motor at line: " + node.LineNumber);
+        }
+        return null;
+    }
+
+    @Override
     public String Visit(DivideNode node) {
         if (CheckForNumber(node).equals("number")){
             return "number";

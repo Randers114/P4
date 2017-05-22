@@ -25,7 +25,8 @@ stmt	: Identifier '=' b ';'
 		| 'while' '(' b ')' 'do' '{' body* '}'
 		| 'for' '(' (Num | Identifier) 'to' (Num | Identifier) ')' 'do' '{' body* '}'
 		| 'Sleep' '('Num')' ';'
-		| Identifier ('synchronize' | 'desynchronize') Identifier expr? ';';
+		| Identifier 'synchronize' Identifier Num? ';'
+		| Identifier 'desynchronize' Identifier ';';
 
 designSpecificDcl : instancedcl '[' (Identifier | Num) ']' Identifier ';';
 

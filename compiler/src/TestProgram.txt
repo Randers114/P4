@@ -34,7 +34,12 @@ main
 
     bool ehhehe = S1.IsPressed;
 
-    M1 synchronize M2;
+    M1 synchronize M2 50;
+
+    M1.Forward(100);
+
+    M1 desynchronize M2;
+
     M1 synchronize M2 100;
 
 

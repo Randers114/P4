@@ -13,6 +13,7 @@ public abstract class Visitor{
     public abstract Object Visit(CallNode node);
     public abstract Object Visit(DclNode node);
     public abstract Object Visit(DesignSpecificDclNode node);
+    public abstract Object Visit(DesynchronizeNode node);
     public abstract Object Visit(DivideNode node);
     public abstract Object Visit(ElseIfNode node);
     public abstract Object Visit(ElseNode node);

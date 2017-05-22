@@ -8,6 +8,11 @@ public class APrettyPrint extends Visitor {
     private int tab = 0;
 
     @Override
+    public Object Visit(DesynchronizeNode node) {
+        return null;
+    }
+
+    @Override
     public Object Visit(DesignSpecificDclNode node) {
         return null;
     }
