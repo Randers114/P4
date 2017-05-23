@@ -2,7 +2,7 @@ package codeGenerator;
 
 import AVisitor.Visitor;
 import abstractSyntaxTree.nodes.*;
-
+import codeGenerator.CodeGeneratorHelper;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -10,14 +10,15 @@ import java.util.*;
 
 
 public class CodeGenerator extends Visitor {
-    private List<String> Targetcode = new ArrayList<>();
+    static List<String> Targetcode = new ArrayList<>();
     private List<String> CodePrototypes = new ArrayList<>();
-    private List<SyncMotor> syncMotors = new ArrayList<>();
+    static List<SyncMotor> syncMotors = new ArrayList<>();
     private List<String> MotorOrSensordcl = new ArrayList<>();
-    private int tab = 0;
-    private Map<String, String> matchMotorsAndSensors = new HashMap<>();
-    private Node speed;
-    private Node time;
+    static int tab = 0;
+    static Map<String, String> matchMotorsAndSensors = new HashMap<>();
+    static Node speed;
+    static Node time;
+    private CodeGeneratorHelper codeGeneratorHelper = new CodeGeneratorHelper(this);
 
 
     public void openfile() {
@@ -182,7 +183,7 @@ public class CodeGenerator extends Visitor {
 
     @Override
     public Object Visit(SleepNode node) {
-        Indend();
+        codeGeneratorHelper.Indend();
         Targetcode.add("sleep(");
         node.child.Accept(this);
         Targetcode.add(");\n");
@@ -200,7 +201,7 @@ public class CodeGenerator extends Visitor {
 
     @Override
     public Void Visit(AssignNode node) {
-        Indend();
+        codeGeneratorHelper.Indend();
         Targetcode.add(node.left.Accept(this).toString());
         Targetcode.add(" = ");
 
@@ -259,15 +260,15 @@ public class CodeGenerator extends Visitor {
         if (node.invoke != null){
 
             if (node.invoke.Accept(this) != null){
-                Indend();
-                ChooseInstance(node);
+                codeGeneratorHelper.Indend();
+                codeGeneratorHelper.ChooseInstance(node);
                 allowSemicolon = true;
             } else {
                 Targetcode.add(matchMotorsAndSensors.get(node.id.Accept(this).toString()) + ")");
             }
 
         } else {
-            Indend();
+            codeGeneratorHelper.Indend();
             Targetcode.add(node.id.Accept(this).toString() + "(");
             if (node.parameter != null) {
                 node.parameter.Accept(this);
@@ -283,144 +284,10 @@ public class CodeGenerator extends Visitor {
         return null;
     }
 
-    private void ChooseInstance(CallNode node){
-
-        boolean isSynced = false;
-        switch (node.invoke.Accept(this).toString()) {
-            case "F":
-                Targetcode.add("motor[" + matchMotorsAndSensors.get(node.id.Accept(this).toString()) + "] = ");
-                speed.Accept(this);
-                if (CheckForSync((IdentifierNode) node.id)){
-                    Targetcode.add(";\n");
-                    Indend();
-                    Targetcode.add("motor[" + matchMotorsAndSensors.get(FindSyncedMotor((IdentifierNode) node.id).motor2.name) + "] = ");
-                    if (FindSyncedMotor((IdentifierNode) node.id).value != null){
-                        Targetcode.add(Double.toString((FindSyncedMotor((IdentifierNode) node.id).value / 100)) + " * (");
-                        speed.Accept(this);
-                        Targetcode.add(")");
-                    } else {
-                        speed.Accept(this);
-                    }
-                }
-                break;
-            case "FS":
-                Targetcode.add("motor[" + matchMotorsAndSensors.get(node.id.Accept(this).toString()) + "] = ");
-                speed.Accept(this);
-
-                if (CheckForSync((IdentifierNode) node.id)){
-                    isSynced = true;
-                    Targetcode.add(";\n");
-                    Indend();
-                    Targetcode.add("motor[" + matchMotorsAndSensors.get(FindSyncedMotor((IdentifierNode) node.id).motor2.name) + "] = ");
-                    if (FindSyncedMotor((IdentifierNode) node.id).value != null){
-                        Targetcode.add(Double.toString(FindSyncedMotor((IdentifierNode) node.id).value / 100) + " * (");
-                        speed.Accept(this);
-                        Targetcode.add(")");
-                    } else {
-                        speed.Accept(this);
-                    }
-                    Targetcode.add(";\n ");
-
-                }
-                Indend();
-                Targetcode.add("sleep(");
-                time.Accept(this);
-                Targetcode.add(" * 1000)");
-                Targetcode.add(";\n");
-                Indend();
-                Targetcode.add("stopMotor(" + matchMotorsAndSensors.get(node.id.Accept(this).toString()) + ")");
-                if (isSynced){
-                    Targetcode.add(";\n");
-                    Indend();
-                    Targetcode.add("stopMotor(" + matchMotorsAndSensors.get(FindSyncedMotor((IdentifierNode) node.id).motor2.name) + ")");
-                }
-
-                break;
-            case "B":
-                Targetcode.add("motor[" + matchMotorsAndSensors.get(node.id.Accept(this).toString()) + "] = - (");
-                speed.Accept(this);
-                Targetcode.add(")");
-                if (CheckForSync((IdentifierNode) node.id)){
-                    Targetcode.add(";\n");
-                    Indend();
-                    Targetcode.add("motor[" + matchMotorsAndSensors.get(FindSyncedMotor((IdentifierNode) node.id).motor2.name) + "] = - (");
-                    if (FindSyncedMotor((IdentifierNode) node.id).value != null){
-                        Targetcode.add(Double.toString(FindSyncedMotor((IdentifierNode) node.id).value / 100) + " * (");
-                        speed.Accept(this);
-                        Targetcode.add(")");
-                    } else {
-                        speed.Accept(this);
-                    }
-                    Targetcode.add(")");
-                }
-                break;
-            case "BS":
-                Targetcode.add("motor[" + matchMotorsAndSensors.get(node.id.Accept(this).toString()) + "] = - (");
-                speed.Accept(this);
-                Targetcode.add(")");
-                if (CheckForSync((IdentifierNode) node.id)){
-                    isSynced = true;
-                    Targetcode.add(";\n");
-                    Indend();
-                    Targetcode.add("motor[" + matchMotorsAndSensors.get(FindSyncedMotor((IdentifierNode) node.id).motor2.name) + "] = - (");
-                    if (FindSyncedMotor((IdentifierNode) node.id).value != null){
-                        Targetcode.add(Double.toString(FindSyncedMotor((IdentifierNode) node.id).value / 100) + " * (");
-                        speed.Accept(this);
-                        Targetcode.add(")");
-                    } else {
-                        speed.Accept(this);
-                    }
-                    Targetcode.add(")");
-                    Targetcode.add(";\n ");
-                }
-                Indend();
-                Targetcode.add("sleep(");
-                time.Accept(this);
-                Targetcode.add(" * 1000)");
-                Targetcode.add(";\n");
-                Indend();
-                Targetcode.add("stopMotor(" + matchMotorsAndSensors.get(node.id.Accept(this).toString()) + ")");
-                if (isSynced){
-                    Targetcode.add(";\n");
-                    Indend();
-                    Targetcode.add("stopMotor(" + matchMotorsAndSensors.get(FindSyncedMotor((IdentifierNode) node.id).motor2.name) + ")");
-                }
-                break;
-            case "S":
-                Targetcode.add("stopMotor(" + matchMotorsAndSensors.get(node.id.Accept(this).toString()) + ")");
-                if (CheckForSync((IdentifierNode) node.id)){
-                    Targetcode.add(";\n");
-                    Indend();
-                    Targetcode.add("stopMotor(" + matchMotorsAndSensors.get(FindSyncedMotor((IdentifierNode) node.id).motor2.name) + ")");
-                }
-                Targetcode.add(";\n");
-                break;
-        }
-    }
-
-    private Boolean CheckForSync(IdentifierNode node){
-        for (SyncMotor sync: syncMotors
-             ) {
-            if (node.name.equals(sync.motor1.name)){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private SyncMotor FindSyncedMotor(IdentifierNode node){
-        for (SyncMotor sync: syncMotors
-             ) {
-            if (node.name.equals(sync.motor1.name)){
-                return sync;
-            }
-        }
-        return null;
-    }
 
     @Override
     public Void Visit(DclNode node) {
-        Indend();
+        codeGeneratorHelper.Indend();
 
         Targetcode.add(node.left.Accept(this).toString() + node.middle.Accept(this).toString());
 
@@ -452,14 +319,14 @@ public class CodeGenerator extends Visitor {
 
     @Override
     public Void Visit(ElseIfNode node) {
-        Indend();
+        codeGeneratorHelper.Indend();
         Targetcode.add("else if(");
         node.bool.Accept(this);
         Targetcode.add(")\n");
-        Indend();
+        codeGeneratorHelper.Indend();
         Targetcode.add("{\n");
         node.block.Accept(this);
-        Indend();
+        codeGeneratorHelper.Indend();
         Targetcode.add("}\n");
 
         return null;
@@ -467,12 +334,12 @@ public class CodeGenerator extends Visitor {
 
     @Override
     public Void Visit(ElseNode node) {
-        Indend();
+        codeGeneratorHelper.Indend();
         Targetcode.add("else\n");
-        Indend();
+        codeGeneratorHelper.Indend();
         Targetcode.add("{\n");
         node.block.Accept(this);
-        Indend();
+        codeGeneratorHelper.Indend();
         Targetcode.add("} \n");
 
         return null;
@@ -511,17 +378,17 @@ public class CodeGenerator extends Visitor {
 
     @Override
     public Void Visit(ForNode node) {
-        Indend();
+        codeGeneratorHelper.Indend();
         Targetcode.add("for ( int i = ");
         node.startNumber.Accept(this);
         Targetcode.add(" ; i <");
         node.endNumber.Accept(this);
         Targetcode.add(" ; i++");
         Targetcode.add(" )\n");
-        Indend();
+        codeGeneratorHelper.Indend();
         Targetcode.add("{ \n");
         node.block.Accept(this);
-        Indend();
+        codeGeneratorHelper.Indend();
         Targetcode.add("}\n");
 
         return null;
@@ -564,17 +431,17 @@ public class CodeGenerator extends Visitor {
 
     @Override
     public Void Visit(IfNode node) {
-        Indend();
+        codeGeneratorHelper.Indend();
         Targetcode.add("if(");
         if (node.bool.Accept(this) != null){
             Targetcode.add(node.bool.Accept(this).toString());
         }
 
         Targetcode.add( ")\n");
-        Indend();
+        codeGeneratorHelper.Indend();
         Targetcode.add("{\n");
         node.block.Accept(this);
-        Indend();
+        codeGeneratorHelper.Indend();
         Targetcode.add("}\n");
 
         if (node.elseif != null) {
@@ -757,7 +624,7 @@ public class CodeGenerator extends Visitor {
     @Override
     public Void Visit(ReturnValNode node) {
         Targetcode.add("\n");
-        Indend();
+        codeGeneratorHelper.Indend();
         Targetcode.add("return ");
         if (node.returnvalue.Accept(this) != null){
             Targetcode.add(node.returnvalue.Accept(this).toString());
@@ -836,26 +703,19 @@ public class CodeGenerator extends Visitor {
 
     @Override
     public Void Visit(WhileNode node) {
-        Indend();
+        codeGeneratorHelper.Indend();
         Targetcode.add("while (");
         if (node.bool.Accept(this) != null){
             Targetcode.add(node.bool.Accept(this).toString());
         }
 
         Targetcode.add(")\n");
-        Indend();
+        codeGeneratorHelper.Indend();
         Targetcode.add("{\n");
         node.block.Accept(this);
-        Indend();
+        codeGeneratorHelper.Indend();
         Targetcode.add("}\n");
 
         return null;
-    }
-
-
-    private void Indend(){
-        for (int i = 0; i < tab; ++i){
-            Targetcode.add("\t");
-        }
     }
 }
