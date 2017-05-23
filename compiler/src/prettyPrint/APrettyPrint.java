@@ -354,7 +354,9 @@ public class APrettyPrint extends Visitor {
         node.block.Accept(this);
         tab++;
         Indend();
-        node.returnval.Accept(this);
+        if (node.returnval != null) {
+            node.returnval.Accept(this);
+        }
         System.out.println(";");
         tab--;
         System.out.println("}");

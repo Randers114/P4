@@ -17,30 +17,34 @@ public class Main {
         ProgramNode root;
         Scanner scanner = new Scanner(System.in);
         String[] inputArray;
-        //inputArray = scanner.nextLine().split(" "); //TODO
-        String inputPath = scanner.nextLine(); //inputArray[0];
+        inputArray = scanner.nextLine().split(".txt ");
+        String inputPath = inputArray[0] + ".txt";
         String command = "";
-        //if (inputArray.length > 1){
-        //    command = inputArray[1];
-        //}
+        if (inputArray.length > 1){
+            command = inputArray[1];
+        }
         org.antlr.v4.runtime.CharStream charStream = new ANTLRFileStream(inputPath);
+        try {
+            root = InitAST(RunParser(charStream));
+            if (command.equals("-p")){
+                APrettyPrint aPrettyPrint = new APrettyPrint();
+                aPrettyPrint.Visit(root);
+            }
+            BuildSymbolTable buildSymbolTable = new BuildSymbolTable(root);
 
-        root = InitAST(RunParser(charStream));
-        if (command.equals("-p")){
-            APrettyPrint aPrettyPrint = new APrettyPrint();
-            aPrettyPrint.Visit(root);
+            ATypeChecker typeChecker = new ATypeChecker();
+
+            typeChecker.Visit(root);
+
+            if (command.equals("-c") || true) {
+                CodeGenerator codeGenerator = new CodeGenerator();
+                codeGenerator.Visit(root);
+                codeGenerator.openfile();
+            }
+        } catch (Exception e){
+            e.printStackTrace();
         }
-        BuildSymbolTable buildSymbolTable = new BuildSymbolTable(root);
 
-        ATypeChecker typeChecker = new ATypeChecker();
-
-        typeChecker.Visit(root);
-
-        if (command.equals("-c") || true) {
-            CodeGenerator codeGenerator = new CodeGenerator();
-            codeGenerator.Visit(root);
-            codeGenerator.openfile();
-        }
 
 
     }
@@ -59,13 +63,7 @@ public class Main {
 
     private static FinalGrammarParser.ProgramContext RunParser(org.antlr.v4.runtime.CharStream charStream){
         FinalGrammarParser.ProgramContext programContext = new FinalGrammarParser.ProgramContext(null, -1);
-
-        try {
-            System.out.println(InitParser(charStream).getNumberOfSyntaxErrors());
-            programContext = InitParser(charStream).program();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        programContext = InitParser(charStream).program();
 
         return programContext;
     }

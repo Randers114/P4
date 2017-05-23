@@ -25,15 +25,17 @@ task main()
 	while (isRunning)
 	{
 		motor[motorA] = speed;
-		motor[motorB] = speed		if(getTouchValue(S2))
+		motor[motorB] = speed;
+		if(getTouchValue(S2))
 		{
 			stopMotor(motorA);
 			stopMotor(motorB);
+;
 			motor[motorA] = - (backSpeed);
-			motor[motorB] = - (backSpeed);
- 			sleep(2.0 * 1000);
+			motor[motorB] = - (backSpeed)			sleep(2.0 * 1000);
 			stopMotor(motorA);
-			stopMotor(motorB)			if(getUSDistance(S3) > getUSDistance(S4))
+			stopMotor(motorB);
+			if(getUSDistance(S3) > getUSDistance(S4))
 			{
 				TurnLeft(turningSpeed);
 			}
@@ -60,10 +62,10 @@ task main()
 void TurnLeft(float speed)
 {
 	motor[motorA] = - (speed);
-	motor[motorB] = - (1.0 * (speed));
- 	sleep(3.0 * 1000);
+	motor[motorB] = - (1.0 * (speed))	sleep(3.0 * 1000);
 	stopMotor(motorA);
 	stopMotor(motorB);
+;
 }
 
 void TurnRight(float speed)
@@ -73,4 +75,5 @@ void TurnRight(float speed)
  	sleep(3.0 * 1000);
 	stopMotor(motorA);
 	stopMotor(motorB);
+;
 }

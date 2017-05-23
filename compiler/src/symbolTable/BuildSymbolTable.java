@@ -85,11 +85,7 @@ public class BuildSymbolTable {
                 System.out.println("Variable: " + ((IdentifierNode) node).name + " does not exist in this context. Error at line: " + node.LineNumber);
             }
         } else if (node instanceof SynchronizationNode){
-            if (((SynchronizationNode) node).relativeSpeed != null){
-                symbolTable.Synchronize((IdentifierNode) ((SynchronizationNode) node).left, (IdentifierNode) ((SynchronizationNode) node).right, ((SynchronizationNode) node).relativeSpeed, (SynchronizationNode) node);
-            } else {
-                symbolTable.Synchronize((IdentifierNode) ((SynchronizationNode) node).left, (IdentifierNode) ((SynchronizationNode) node).right, (SynchronizationNode) node);
-            }
+            symbolTable.Synchronize((IdentifierNode) ((SynchronizationNode) node).left, (IdentifierNode) ((SynchronizationNode) node).right, (SynchronizationNode) node);
         } else if (node instanceof DesynchronizeNode){
             symbolTable.Desynchronize((IdentifierNode) ((DesynchronizeNode) node).left, (IdentifierNode) ((DesynchronizeNode) node).right, (DesynchronizeNode) node);
 

@@ -75,19 +75,11 @@ public class SymbolTable {
         }
     }
 
-    void Synchronize(IdentifierNode left, IdentifierNode right, double relativeSpeed, SynchronizationNode line){
-        if (!LookUpSyncedMotor(left, right)){
-            syncMotors.add(new SyncMotor(left, right, relativeSpeed));
-        } else {
-            System.out.println("Motors already synced, error at line: " + line.LineNumber);
-        }
-    }
-
     void Desynchronize(IdentifierNode left, IdentifierNode right , DesynchronizeNode line){
         boolean error = true;
         for (SyncMotor sync: syncMotors
              ) {
-            if (left.name.equals(((IdentifierNode)sync.motor1).name) && right.name.equals(((IdentifierNode)sync.motor2).name)){
+            if (left.name.equals((sync.motor1).name) && right.name.equals((sync.motor2).name)){
                 syncMotors.remove(sync);
                 error = false;
                 break;

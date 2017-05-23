@@ -550,6 +550,9 @@ public class FinalGrammarParser extends Parser {
 		public TerminalNode Num(int i) {
 			return getToken(FinalGrammarParser.Num, i);
 		}
+		public ExprContext expr() {
+			return getRuleContext(ExprContext.class,0);
+		}
 		public StmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -763,10 +766,10 @@ public class FinalGrammarParser extends Parser {
 				setState(205);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
-				if (_la==Num) {
+				if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__5) | (1L << T__26) | (1L << Num) | (1L << Identifier))) != 0)) {
 					{
 					setState(204);
-					match(Num);
+					expr();
 					}
 				}
 
@@ -2456,8 +2459,8 @@ public class FinalGrammarParser extends Parser {
 		"\2\2\u00c2\u00c3\3\2\2\2\u00c3\u00c5\3\2\2\2\u00c4\u00c2\3\2\2\2\u00c5"+
 		"\u00d7\7\5\2\2\u00c6\u00c7\7\26\2\2\u00c7\u00c8\7\b\2\2\u00c8\u00c9\7"+
 		":\2\2\u00c9\u00ca\7\t\2\2\u00ca\u00d7\7\6\2\2\u00cb\u00cc\7<\2\2\u00cc"+
-		"\u00cd\7\27\2\2\u00cd\u00cf\7<\2\2\u00ce\u00d0\7:\2\2\u00cf\u00ce\3\2"+
-		"\2\2\u00cf\u00d0\3\2\2\2\u00d0\u00d1\3\2\2\2\u00d1\u00d7\7\6\2\2\u00d2"+
+		"\u00cd\7\27\2\2\u00cd\u00cf\7<\2\2\u00ce\u00d0\5\30\r\2\u00cf\u00ce\3"+
+		"\2\2\2\u00cf\u00d0\3\2\2\2\u00d0\u00d1\3\2\2\2\u00d1\u00d7\7\6\2\2\u00d2"+
 		"\u00d3\7<\2\2\u00d3\u00d4\7\30\2\2\u00d4\u00d5\7<\2\2\u00d5\u00d7\7\6"+
 		"\2\2\u00d6\u008e\3\2\2\2\u00d6\u0093\3\2\2\2\u00d6\u00a9\3\2\2\2\u00d6"+
 		"\u00b7\3\2\2\2\u00d6\u00c6\3\2\2\2\u00d6\u00cb\3\2\2\2\u00d6\u00d2\3\2"+
