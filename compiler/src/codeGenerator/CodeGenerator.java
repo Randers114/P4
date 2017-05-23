@@ -2,7 +2,6 @@ package codeGenerator;
 
 import AVisitor.Visitor;
 import abstractSyntaxTree.nodes.*;
-import codeGenerator.CodeGeneratorHelper;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -10,12 +9,8 @@ import java.util.*;
 
 
 public class CodeGenerator extends Visitor {
-    static List<String> Targetcode = new ArrayList<>();
-    private List<String> CodePrototypes = new ArrayList<>();
     static List<SyncMotor> syncMotors = new ArrayList<>();
-    private List<String> MotorOrSensordcl = new ArrayList<>();
     static int tab = 0;
-    static Map<String, String> matchMotorsAndSensors = new HashMap<>();
     static Node speed;
     static Node time;
     private CodeGeneratorHelper codeGeneratorHelper = new CodeGeneratorHelper(this);
@@ -24,7 +19,7 @@ public class CodeGenerator extends Visitor {
     public void openfile() {
         try {
 
-            File file = new File("C:\\Users\\Simon\\Documents\\P4\\compiler\\src\\codeGenerator");
+            File file = new File("C:\\Users\\Nille\\OneDrive\\Dokumenter\\P4\\compiler\\src\\codeGenerator");
             if (file.createNewFile())
             {
                 System.out.println("File is created!");
@@ -35,36 +30,15 @@ public class CodeGenerator extends Visitor {
         }
 
         try {
-            PrintWriter writer = new PrintWriter("C:\\Users\\Simon\\Documents\\P4\\compiler\\src\\codeGenerator/newfile.c", "UTF-8");
+            PrintWriter writer = new PrintWriter("C:\\Users\\Nille\\OneDrive\\Dokumenter\\P4\\compiler\\src\\codeGenerator/newfile.c", "UTF-8");
             writer.flush();
-            WriteToFile(writer);
+            codeGeneratorHelper.WriteToFile(writer);
 
             writer.close();
         }
         catch (IOException exception) {
             System.out.println(exception);
         }
-    }
-
-    private void WriteToFile(PrintWriter writer)
-    {
-        for (String motorOrSensor: MotorOrSensordcl)
-        {
-            writer.print(motorOrSensor);
-        }
-        writer.print("\n");
-        for (String prototype: CodePrototypes)
-        {
-            writer.print(prototype);
-        }
-
-        writer.println();
-
-        for (String content: Targetcode)
-        {
-            writer.print(content);
-        }
-
     }
 
     @Override
@@ -97,26 +71,7 @@ public class CodeGenerator extends Visitor {
 
     @Override
     public Object Visit(MotorNode node) {
-        MotorOrSensordcl.add("#pragma config(Motor, motor");
-        switch (node.symbol){
-            case "A":
-                MotorOrSensordcl.add("A, ");
-                matchMotorsAndSensors.put(node.id.Accept(this).toString(), "motorA");
-                break;
-            case "B":
-                MotorOrSensordcl.add("B, ");
-                matchMotorsAndSensors.put(node.id.Accept(this).toString(), "motorB");
-                break;
-            case "C":
-                MotorOrSensordcl.add("C, ");
-                matchMotorsAndSensors.put(node.id.Accept(this).toString(), "motorC");
-                break;
-            case "D":
-                MotorOrSensordcl.add("D, ");
-                matchMotorsAndSensors.put(node.id.Accept(this).toString(), "motorD");
-                break;
-        }
-        MotorOrSensordcl.add(node.id.Accept(this).toString() + ", tmotorEV3_Large)\n");
+        codeGeneratorHelper.GenerateMotorDclCode(node);
         return null;
     }
 
@@ -143,31 +98,19 @@ public class CodeGenerator extends Visitor {
 
     @Override
     public Object Visit(SensorInvokeNode node) {
-        switch (node.method){
-            case "isPressed":
-                Targetcode.add("getTouchValue(");
-                break;
-            case "distance":
-                Targetcode.add("getUSDistance(");
-                break;
-        }
-
+        codeGeneratorHelper.GenerateSensorInvokeCode(node);
         return null;
     }
 
     @Override
     public Object Visit(TouchSensorNode node) {
-        MotorOrSensordcl.add("#pragma config(Sensor, S" + node.symbol + ", " + node.id.Accept(this).toString() + ", sensorEV3_Touch)\n");
-
-        matchMotorsAndSensors.put(node.id.Accept(this).toString(), "S" + node.symbol);
+        codeGeneratorHelper.GenerateTouchSensorCode(node);
         return null;
     }
 
     @Override
     public Object Visit(UltraSoundSensorNode node) {
-        MotorOrSensordcl.add("#pragma config(Sensor, S" + node.symbol + ", " + node.id.Accept(this).toString() + ", sensorEV3_Ultrasonic)\n");
-
-        matchMotorsAndSensors.put(node.id.Accept(this).toString(), "S" + node.symbol);
+        codeGeneratorHelper.GenerateUltraSoundCode(node);
         return null;
     }
 
@@ -183,35 +126,19 @@ public class CodeGenerator extends Visitor {
 
     @Override
     public Object Visit(SleepNode node) {
-        codeGeneratorHelper.Indend();
-        Targetcode.add("sleep(");
-        node.child.Accept(this);
-        Targetcode.add(");\n");
+        codeGeneratorHelper.GenerateSleepCode(node);
         return null;
     }
 
     @Override
     public Void Visit(AndNode node) {
-        node.left.Accept(this);
-        Targetcode.add(" && ");
-        node.right.Accept(this);
-
+        codeGeneratorHelper.GenerateAndCode(node);
         return null;
     }
 
     @Override
     public Void Visit(AssignNode node) {
-        codeGeneratorHelper.Indend();
-        Targetcode.add(node.left.Accept(this).toString());
-        Targetcode.add(" = ");
-
-        if (node.right.Accept(this) != null){
-            Targetcode.add(node.right.Accept(this).toString());
-        }
-
-
-        Targetcode.add("; \n");
-
+        codeGeneratorHelper.GenerateAssignCode(node);
         return null;
     }
 
@@ -236,191 +163,67 @@ public class CodeGenerator extends Visitor {
 
     @Override
     public Void Visit(BoolNode node) {
-        boolean b = node.aBoolean;
-        if(b)
-        {
-            Targetcode.add("true");
-        }
-        else
-        {
-            Targetcode.add("false");
-        }
-
+        codeGeneratorHelper.GenerateBoolCode(node);
         return null;
     }
 
     @Override
     public Void Visit(CallNode node) {
-        boolean allowSemicolon = false;
-        String s = Targetcode.get(Targetcode.size()-1);
-        if(s.equals(";\n") || s.equals("{\n") || s.equals("}\n")) {
-            allowSemicolon = true;
-        }
-
-        if (node.invoke != null){
-
-            if (node.invoke.Accept(this) != null){
-                codeGeneratorHelper.Indend();
-                codeGeneratorHelper.ChooseInstance(node);
-                allowSemicolon = true;
-            } else {
-                Targetcode.add(matchMotorsAndSensors.get(node.id.Accept(this).toString()) + ")");
-            }
-
-        } else {
-            codeGeneratorHelper.Indend();
-            Targetcode.add(node.id.Accept(this).toString() + "(");
-            if (node.parameter != null) {
-                node.parameter.Accept(this);
-            }
-            Targetcode.add(")");
-        }
-
-
-        if(allowSemicolon) {
-            Targetcode.add(";\n");
-        }
-
+        codeGeneratorHelper.GenerateCallCode(node);
         return null;
     }
 
-
     @Override
     public Void Visit(DclNode node) {
-        codeGeneratorHelper.Indend();
-
-        Targetcode.add(node.left.Accept(this).toString() + node.middle.Accept(this).toString());
-
-        if (node.right != null) {
-            Targetcode.add(" = ");
-            if (node.right.Accept(this) != null){
-                Targetcode.add(node.right.Accept(this).toString());
-            }
-        }
-
-        Targetcode.add(";\n");
-
+        codeGeneratorHelper.GenerateDclCode(node);
         return null;
     }
 
     @Override
     public Void Visit(DivideNode node) {
-        if (node.left.Accept(this) != null){
-            Targetcode.add(node.left.Accept(this).toString());
-        }
-        Targetcode.add(" / ");
-
-        if (node.right.Accept(this) != null){
-            Targetcode.add(node.right.Accept(this).toString());
-        }
-
+        codeGeneratorHelper.GenerateDivideCode(node);
         return null;
     }
 
     @Override
     public Void Visit(ElseIfNode node) {
-        codeGeneratorHelper.Indend();
-        Targetcode.add("else if(");
-        node.bool.Accept(this);
-        Targetcode.add(")\n");
-        codeGeneratorHelper.Indend();
-        Targetcode.add("{\n");
-        node.block.Accept(this);
-        codeGeneratorHelper.Indend();
-        Targetcode.add("}\n");
-
+        codeGeneratorHelper.GenerateElseIfCode(node);
         return null;
     }
 
     @Override
     public Void Visit(ElseNode node) {
-        codeGeneratorHelper.Indend();
-        Targetcode.add("else\n");
-        codeGeneratorHelper.Indend();
-        Targetcode.add("{\n");
-        node.block.Accept(this);
-        codeGeneratorHelper.Indend();
-        Targetcode.add("} \n");
-
+        codeGeneratorHelper.GenerateElseCode(node);
         return null;
     }
 
     @Override
     public Void Visit(EqualNode node) {
-        if (node.left.Accept(this) != null){
-            Targetcode.add(node.left.Accept(this).toString());
-        }
-
-        Targetcode.add(" == ");
-
-        if (node.right.Accept(this) != null){
-            Targetcode.add(node.right.Accept(this).toString());
-        }
-
+        codeGeneratorHelper.GenerateEqualsCode(node);
         return null;
     }
 
     @Override
     public Void Visit(FormalParameterNode node) {
-
-        Targetcode.add(node.type.Accept(this).toString() + node.id.Accept(this).toString());
-        CodePrototypes.add(node.type.Accept(this).toString() + node.id.Accept(this).toString());
-
-        if (node.fprmt != null)
-        {
-            CodePrototypes.add(", ");
-            Targetcode.add(", ");
-            node.fprmt.Accept(this);
-        }
-
+        codeGeneratorHelper.GenerateFormalPrmtCode(node);
         return null;
     }
 
     @Override
     public Void Visit(ForNode node) {
-        codeGeneratorHelper.Indend();
-        Targetcode.add("for ( int i = ");
-        node.startNumber.Accept(this);
-        Targetcode.add(" ; i <");
-        node.endNumber.Accept(this);
-        Targetcode.add(" ; i++");
-        Targetcode.add(" )\n");
-        codeGeneratorHelper.Indend();
-        Targetcode.add("{ \n");
-        node.block.Accept(this);
-        codeGeneratorHelper.Indend();
-        Targetcode.add("}\n");
-
+        codeGeneratorHelper.GenerateForloopCode(node);
         return null;
     }
 
     @Override
     public Void Visit(GreaterThanNode node) {
-        if (node.left.Accept(this) != null){
-            Targetcode.add(node.left.Accept(this).toString());
-        }
-
-        Targetcode.add(" > ");
-
-        if (node.right.Accept(this) != null){
-            Targetcode.add(node.right.Accept(this).toString());
-        }
-
+        codeGeneratorHelper.GenerateGreaterThanCode(node);
         return null;
     }
 
     @Override
     public Void Visit(GreaterThanOrEqualNode node) {
-        if (node.left.Accept(this) != null){
-            Targetcode.add(node.left.Accept(this).toString());
-        }
-
-        Targetcode.add(" >= ");
-
-        if (node.right.Accept(this) != null){
-            Targetcode.add(node.right.Accept(this).toString());
-        }
-
+        codeGeneratorHelper.GenerateGreaterThanOrEqualCode(node);
         return null;
     }
 
@@ -431,212 +234,85 @@ public class CodeGenerator extends Visitor {
 
     @Override
     public Void Visit(IfNode node) {
-        codeGeneratorHelper.Indend();
-        Targetcode.add("if(");
-        if (node.bool.Accept(this) != null){
-            Targetcode.add(node.bool.Accept(this).toString());
-        }
-
-        Targetcode.add( ")\n");
-        codeGeneratorHelper.Indend();
-        Targetcode.add("{\n");
-        node.block.Accept(this);
-        codeGeneratorHelper.Indend();
-        Targetcode.add("}\n");
-
-        if (node.elseif != null) {
-            for (Node a : node.elseif
-                    ) {
-                a.Accept(this);
-            }
-        }
-        if(node.el != null){
-            node.el.Accept(this);
-        }
-
+        codeGeneratorHelper.GenerateIfCode(node);
         return null;
     }
 
     @Override
     public Void Visit(LessThanNode node) {
-        if (node.left.Accept(this) != null){
-            Targetcode.add(node.left.Accept(this).toString());
-        }
-
-        Targetcode.add(" < ");
-
-        if (node.right.Accept(this) != null){
-            Targetcode.add(node.right.Accept(this).toString());
-        }
-
+        codeGeneratorHelper.GenerateLessThanCode(node);
         return null;
     }
 
     @Override
     public Void Visit(LessThanOrEqualNode node) {
-        if (node.left.Accept(this) != null){
-            Targetcode.add(node.left.Accept(this).toString());
-        }
-
-        Targetcode.add(" <= ");
-
-        if (node.right.Accept(this) != null){
-            Targetcode.add(node.right.Accept(this).toString());
-        }
-
+        codeGeneratorHelper.GenerateLessThanOrEqualCode(node);
         return null;
     }
 
     @Override
     public Void Visit(MethodNode node) {
-        Targetcode.add("\n");
-
-        Targetcode.add(node.type.Accept(this).toString() + node.id.Accept(this).toString() + "(");
-        CodePrototypes.add(node.type.Accept(this).toString() + node.id.Accept(this).toString() + "(");
-
-        if(node.fprmt != null) {
-            node.fprmt.Accept(this);
-        }
-
-        CodePrototypes.add("); \n");
-
-        Targetcode.add(")\n" + "{\n");
-        node.block.Accept(this);
-        tab++;
-        if (node.returnval != null){
-            node.returnval.Accept(this);
-        }
-
-        Targetcode.add(";\n");
-        tab--;
-        Targetcode.add("}\n");
-
+        codeGeneratorHelper.GenerateMethodCode(node);
         return null;
     }
 
     @Override
     public Void Visit(MinusNode node) {
-        if (node.left.Accept(this) != null){
-            Targetcode.add(node.left.Accept(this).toString());
-        }
-        Targetcode.add(" - ");
-
-        if (node.right.Accept(this) != null){
-            Targetcode.add(node.right.Accept(this).toString());
-        }
-
+        codeGeneratorHelper.GenerateMinusCode(node);
         return null;
     }
 
     @Override
     public Object Visit(NotBoolNode node) {
-        Targetcode.add("! ");
-        if (node.child.Accept(this) != null){
-            Targetcode.add(node.child.Accept(this).toString());
-        }
+        codeGeneratorHelper.GenerateNotBoolCode(node);
         return null;
     }
 
     @Override
     public Void Visit(NotEqualNode node) {
-        if (node.left.Accept(this) != null){
-            Targetcode.add(node.left.Accept(this).toString());
-        }
-
-        Targetcode.add(" != ");
-
-        if (node.right.Accept(this) != null){
-            Targetcode.add(node.right.Accept(this).toString());
-        }
-
+        codeGeneratorHelper.GenerateNotEqualCode(node);
         return null;
     }
 
     @Override
     public Void Visit(NumberNode node) {
-        Targetcode.add(Double.toString(node.value));
-
+        codeGeneratorHelper.GenerateNumberCode(node);
         return null;
     }
 
     @Override
     public Void Visit(OrNode node) {
-        if (node.left.Accept(this) != null){
-            Targetcode.add(node.left.Accept(this).toString());
-        }
-
-        Targetcode.add(" || ");
-
-        if (node.right.Accept(this) != null){
-            Targetcode.add(node.right.Accept(this).toString());
-        }
-
+        codeGeneratorHelper.GenerateOrCode(node);
         return null;
     }
 
     @Override
     public Void Visit(ParameterNode node) {
-
-        if (node.Parameter.Accept(this) != null){
-            Targetcode.add(node.Parameter.Accept(this).toString());
-        }
-
-        if (node.prmt != null){
-            Targetcode.add(", ");
-            node.prmt.Accept(this);
-        }
-
+        codeGeneratorHelper.GenerateParameterCode(node);
         return null;
     }
 
     @Override
     public Void Visit(PlusNode node) {
-        if (node.left.Accept(this) != null){
-            Targetcode.add(node.left.Accept(this).toString());
-        }
-        Targetcode.add(" + ");
-
-        if (node.right.Accept(this) != null){
-            Targetcode.add(node.right.Accept(this).toString());
-        }
-
+        codeGeneratorHelper.GeneratePlusCode(node);
         return null;
     }
 
     @Override
     public Void Visit(ProgramNode node) {
-        for (Node motorSensor: node.designSpecificInvokes
-             ) {
-            motorSensor.Accept(this);
-        }
-        Targetcode.add("task main() \n{\n");
-        node.mainBlock.Accept(this);
-        Targetcode.add("} \n");
-
-        for (Node item : node.methods)
-        {
-            item.Accept(this);
-        }
-
+        codeGeneratorHelper.GenerateProgramMainCode(node);
         return null;
     }
 
     @Override
     public Void Visit(ReturnValNode node) {
-        Targetcode.add("\n");
-        codeGeneratorHelper.Indend();
-        Targetcode.add("return ");
-        if (node.returnvalue.Accept(this) != null){
-            Targetcode.add(node.returnvalue.Accept(this).toString());
-        }
-
+        codeGeneratorHelper.GenerateReturnValCode(node);
         return null;
     }
 
     @Override
     public Void Visit(StmtNode node) {
         node.child.Accept(this);
-
         return null;
     }
 
@@ -647,75 +323,30 @@ public class CodeGenerator extends Visitor {
 
     @Override
     public Void Visit(TimesNode node) {
-        if (node.left.Accept(this) != null){
-            Targetcode.add(node.left.Accept(this).toString());
-        }
-        Targetcode.add(" * ");
-
-        if (node.right.Accept(this) != null){
-            Targetcode.add(node.right.Accept(this).toString());
-        }
-
+        codeGeneratorHelper.GenerateTimesCode(node);
         return null;
     }
 
     @Override
     public String Visit(TypesNode node) {
-        if(node.type.contains("number"))
-        {
-            return "float ";
-        }
-        else if (node.type.contains("bool"))
-        {
-            return "bool ";
-        } else {
-            return "void ";
-        }
+        return codeGeneratorHelper.GenerateTypesCode(node);
     }
 
     @Override
     public Void Visit(UnaryMinusNode node) {
-        Targetcode.add("- ");
-        if (node.child.Accept(this) != null){
-            Targetcode.add(node.child.Accept(this).toString());
-        }
-
-
+        codeGeneratorHelper.GenerateUnaryCode(node);
         return null;
     }
 
     @Override
     public Object Visit(ValueNode node) {
-        if (node.paren){
-            Targetcode.add("(");
-        }
-        if (node.child.Accept(this) != null) {
-            Targetcode.add(node.child.Accept(this).toString());
-        }
-        //Object returns = node.child.Accept(this);
-
-        if (node.paren){
-            Targetcode.add(")");
-        }
-
+        codeGeneratorHelper.GenerateValueCode(node);
         return null;
     }
 
     @Override
     public Void Visit(WhileNode node) {
-        codeGeneratorHelper.Indend();
-        Targetcode.add("while (");
-        if (node.bool.Accept(this) != null){
-            Targetcode.add(node.bool.Accept(this).toString());
-        }
-
-        Targetcode.add(")\n");
-        codeGeneratorHelper.Indend();
-        Targetcode.add("{\n");
-        node.block.Accept(this);
-        codeGeneratorHelper.Indend();
-        Targetcode.add("}\n");
-
+        codeGeneratorHelper.GenerateWhileCode(node);
         return null;
     }
 }
