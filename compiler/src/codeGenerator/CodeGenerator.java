@@ -257,8 +257,9 @@ public class CodeGenerator extends Visitor {
         }
 
         if (node.invoke != null){
-            Indend();
+
             if (node.invoke.Accept(this) != null){
+                Indend();
                 ChooseInstance(node);
                 allowSemicolon = true;
             } else {
@@ -266,6 +267,7 @@ public class CodeGenerator extends Visitor {
             }
 
         } else {
+            Indend();
             Targetcode.add(node.id.Accept(this).toString() + "(");
             if (node.parameter != null) {
                 node.parameter.Accept(this);
@@ -324,10 +326,13 @@ public class CodeGenerator extends Visitor {
                 Targetcode.add("sleep(");
                 time.Accept(this);
                 Targetcode.add(" * 1000)");
-
-                Targetcode.add(";\n stopMotor(" + matchMotorsAndSensors.get(node.id.Accept(this).toString()) + ")");
+                Targetcode.add(";\n");
+                Indend();
+                Targetcode.add("stopMotor(" + matchMotorsAndSensors.get(node.id.Accept(this).toString()) + ")");
                 if (isSynced){
-                    Targetcode.add(";\n stopMotor(" + matchMotorsAndSensors.get(FindSyncedMotor((IdentifierNode) node.id).motor2.name) + ")");
+                    Targetcode.add(";\n");
+                    Indend();
+                    Targetcode.add("stopMotor(" + matchMotorsAndSensors.get(FindSyncedMotor((IdentifierNode) node.id).motor2.name) + ")");
                 }
 
                 break;
@@ -372,9 +377,13 @@ public class CodeGenerator extends Visitor {
                 Targetcode.add("sleep(");
                 time.Accept(this);
                 Targetcode.add(" * 1000)");
-                Targetcode.add(";\n stopMotor(" + matchMotorsAndSensors.get(node.id.Accept(this).toString()) + ")");
+                Targetcode.add(";\n");
+                Indend();
+                Targetcode.add("stopMotor(" + matchMotorsAndSensors.get(node.id.Accept(this).toString()) + ")");
                 if (isSynced){
-                    Targetcode.add(";\n stopMotor(" + matchMotorsAndSensors.get(FindSyncedMotor((IdentifierNode) node.id).motor2.name) + ")");
+                    Targetcode.add(";\n");
+                    Indend();
+                    Targetcode.add("stopMotor(" + matchMotorsAndSensors.get(FindSyncedMotor((IdentifierNode) node.id).motor2.name) + ")");
                 }
                 break;
             case "S":
