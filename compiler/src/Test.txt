@@ -1,7 +1,7 @@
 // Again we define two motors 
 Motor[A] motorLeft;
 Motor[B] motorRight;
-
+Motor[C] motorFront;
 // Then we create our sensors.
 TouchSensor[1] tSensorTop;
 TouchSensor[2] tSensorFront;
@@ -83,7 +83,8 @@ void Method TurnLeft(number speed)
 {
     // We now have to desynchronize and then synchronize the motors again so that we can use them to turn.
     motorLeft desynchronize motorRight;
-    motorLeft synchronize motorRight 100;
+    motorLeft synchronize motorRight;
+    motorLeft synchronize motorFront;
 
     // Here we make the robot turn. We use a hardcoded value for turning here since it depends.
     // On the relative speed of the motors when we use the ForwardSeconds method.
@@ -95,7 +96,8 @@ void Method TurnRight(number speed)
 {
     // Just as the other method desynchronize and then synchronize the motors again so that we can use them to turn.
     motorLeft desynchronize motorRight;
-    motorLeft synchronize motorRight 100;
 
-    motorLeft.ForwardSeconds(speed, 3);
+    motorLeft.BackwardSeconds(speed, 3);
+
+    motorLeft.Forward(speed);
 }

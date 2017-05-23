@@ -1,5 +1,6 @@
 #pragma config(Motor, motorA, motorLeft, tmotorEV3_Large)
 #pragma config(Motor, motorB, motorRight, tmotorEV3_Large)
+#pragma config(Motor, motorC, motorFront, tmotorEV3_Large)
 #pragma config(Sensor, S1, tSensorTop, sensorEV3_Touch)
 #pragma config(Sensor, S2, tSensorFront, sensorEV3_Touch)
 #pragma config(Sensor, S3, uSensorLeft, sensorEV3_Ultrasonic)
@@ -30,9 +31,9 @@ task main()
 		{
 			stopMotor(motorA);
 			stopMotor(motorB);
-;
 			motor[motorA] = - (backSpeed);
-			motor[motorB] = - (backSpeed)			sleep(2.0 * 1000);
+			motor[motorB] = - (backSpeed);
+ 			sleep(2.0 * 1000);
 			stopMotor(motorA);
 			stopMotor(motorB);
 			if(getUSDistance(S3) > getUSDistance(S4))
@@ -62,18 +63,21 @@ task main()
 void TurnLeft(float speed)
 {
 	motor[motorA] = - (speed);
-	motor[motorB] = - (1.0 * (speed))	sleep(3.0 * 1000);
+	motor[motorB] = - (speed);
+	motor[motorC] = - (speed);
+ 	sleep(3.0 * 1000);
 	stopMotor(motorA);
 	stopMotor(motorB);
-;
+	stopMotor(motorC);
 }
 
 void TurnRight(float speed)
 {
-	motor[motorA] = speed;
-	motor[motorB] = 1.0 * (speed);
+	motor[motorA] = - (speed);
+	motor[motorC] = - (speed);
  	sleep(3.0 * 1000);
 	stopMotor(motorA);
-	stopMotor(motorB);
-;
+	stopMotor(motorC);
+	motor[motorA] = speed;
+	motor[motorC] = speed;
 }

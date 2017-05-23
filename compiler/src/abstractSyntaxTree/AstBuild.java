@@ -387,7 +387,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
                 child = visitB(ctx.b());
                 paren = true;
             } else if(ctx.expr() != null){
-                child = visitUnary(ctx.expr());
+                child = visitUnary(ctx);
             }
 
             ChildrenList.add(child);
@@ -395,7 +395,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
         }};
     }
 
-    private Node visitUnary(FinalGrammarParser.ExprContext ctx){
+    private Node visitUnary(FinalGrammarParser.ValContext ctx){
         return new UnaryMinusNode(){{
             child = visitExpr(ctx.expr());
             ChildrenList.add(child);

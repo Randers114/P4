@@ -80,7 +80,7 @@ public class ATypeChecker extends Visitor {
         }
 
         if (node.relativeSpeed != null){
-            if (!(node.relativeSpeed < 101 && node.relativeSpeed > -100))
+            if (!node.relativeSpeed.Accept(this).toString().equals("number"))
             System.out.println("Synchronization node failed speed out of bounds at line: " + node.LineNumber);
         }
 

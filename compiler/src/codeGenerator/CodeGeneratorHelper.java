@@ -281,7 +281,6 @@ final class CodeGeneratorHelper {
             node.returnval.Accept(CodeGen);
         }
 
-        Targetcode.add(";\n");
         CodeGenerator.tab--;
         Targetcode.add("}\n");
     }
@@ -437,12 +436,10 @@ final class CodeGeneratorHelper {
     }
 
     String GenerateTypesCode(TypesNode node){
-        if(node.type.contains("number"))
-        {
+        if(node.type.contains("number")){
             return "float ";
         }
-        else if (node.type.contains("bool"))
-        {
+        else if (node.type.contains("bool")) {
             return "bool ";
         } else {
             return "void ";
@@ -504,14 +501,12 @@ final class CodeGeneratorHelper {
                 Forward((IdentifierNode) node.id, false, true);
                 break;
             case "BS":
-                Forward((IdentifierNode) node.id, false, true);
+                Forward((IdentifierNode) node.id, true, true);
                 SleepInInvokes();
                 StopInvoke((IdentifierNode) node.id);
-
                 break;
             case "S":
                 StopInvoke((IdentifierNode) node.id);
-                Targetcode.add(";\n");
                 break;
         }
     }
@@ -526,34 +521,45 @@ final class CodeGeneratorHelper {
             Targetcode.add(")");
         }
         if (CheckForSync(node)){
-            Targetcode.add(";\n");
-            Indend();
-            Targetcode.add("motor[" + matchMotorsAndSensors.get(FindSyncedMotor(node).motor2.name) + "] = ");
-            if (isBackwards){
-                Targetcode.add("- (");
+            for (SyncMotor synced: FindSyncedMotor(node)
+                 ) {
+                Targetcode.add(";\n");
+                Indend();
+                Targetcode.add("motor[" + matchMotorsAndSensors.get(synced.motor2.name) + "] = ");
+
+                if (isBackwards){
+                    Targetcode.add("- (");
+                }
+
+                if (synced.value != null){
+                    Targetcode.add("((");
+                    synced.value.Accept(CodeGen);
+                    Targetcode.add(") / 100)" + " * (");
+                    CodeGenerator.speed.Accept(CodeGen);
+                    Targetcode.add(")");
+                } else {
+                    CodeGenerator.speed.Accept(CodeGen);
+                }
+
+                if (isBackwards){
+                    Targetcode.add(")");
+                }
             }
-            if (FindSyncedMotor(node).value != null){
-                Targetcode.add(Double.toString((FindSyncedMotor(node).value / 100)) + " * (");
-                CodeGenerator.speed.Accept(CodeGen);
-                Targetcode.add(")");
-            } else {
-                CodeGenerator.speed.Accept(CodeGen);
-            }
-            if (isBackwards){
-                Targetcode.add(")");
-            }
-            if (isTimed){
-                Targetcode.add(";\n ");
-            }
+        }
+        if (isTimed){
+            Targetcode.add(";\n ");
         }
     }
 
     private void StopInvoke(IdentifierNode node){
         Targetcode.add("stopMotor(" + matchMotorsAndSensors.get(node.Accept(CodeGen).toString()) + ")");
         if (CheckForSync(node)){
-            Targetcode.add(";\n");
-            Indend();
-            Targetcode.add("stopMotor(" + matchMotorsAndSensors.get(FindSyncedMotor(node).motor2.name) + ")");
+            for (SyncMotor syncMotor: FindSyncedMotor(node)
+                 ) {
+                Targetcode.add(";\n");
+                Indend();
+                Targetcode.add("stopMotor(" + matchMotorsAndSensors.get(syncMotor.motor2.name) + ")");
+            }
         }
     }
 
@@ -567,14 +573,15 @@ final class CodeGeneratorHelper {
         return false;
     }
 
-    private SyncMotor FindSyncedMotor(IdentifierNode node){
+    private List<SyncMotor> FindSyncedMotor(IdentifierNode node){
+        List<SyncMotor> syncMotors = new ArrayList<>();
         for (SyncMotor sync: CodeGenerator.syncMotors
                 ) {
             if (node.name.equals(sync.motor1.name)){
-                return sync;
+                syncMotors.add(sync);
             }
         }
-        return null;
+        return syncMotors;
     }
 
     private void SleepInInvokes(){

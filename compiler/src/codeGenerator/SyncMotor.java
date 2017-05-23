@@ -12,7 +12,7 @@ public class SyncMotor
 
     }
 
-    public SyncMotor(IdentifierNode motor1, IdentifierNode motor2, Double value)
+    public SyncMotor(IdentifierNode motor1, IdentifierNode motor2, Node value)
     {
         this(motor1, motor2);
          this.value = value;
@@ -20,6 +20,6 @@ public class SyncMotor
 
     public IdentifierNode motor1;
     public IdentifierNode motor2;
-    public Double value;
+    public Node value;
 
 }

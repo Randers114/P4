@@ -19,7 +19,7 @@ public class CodeGenerator extends Visitor {
     public void openfile() {
         try {
 
-            File file = new File("C:\\Users\\Nille\\OneDrive\\Dokumenter\\P4\\compiler\\src\\codeGenerator");
+            File file = new File("C:\\Users\\Simon\\Documents\\P4\\compiler\\src\\codeGenerator");
             if (file.createNewFile())
             {
                 System.out.println("File is created!");
@@ -30,7 +30,7 @@ public class CodeGenerator extends Visitor {
         }
 
         try {
-            PrintWriter writer = new PrintWriter("C:\\Users\\Nille\\OneDrive\\Dokumenter\\P4\\compiler\\src\\codeGenerator/newfile.c", "UTF-8");
+            PrintWriter writer = new PrintWriter("C:\\Users\\Simon\\Documents\\P4\\compiler\\src\\codeGenerator/newfile.c", "UTF-8");
             writer.flush();
             codeGeneratorHelper.WriteToFile(writer);
 
