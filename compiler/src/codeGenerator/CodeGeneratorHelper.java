@@ -41,9 +41,7 @@ final class CodeGeneratorHelper {
     }
 
     void GenerateAndCode(AndNode node){
-        node.left.Accept(CodeGen);
-        Targetcode.add(" && ");
-        node.right.Accept(CodeGen);
+        GenerateExpressionCode(node, "&&");
     }
 
     void GenerateAssignCode(AssignNode node){
@@ -117,14 +115,7 @@ final class CodeGeneratorHelper {
     }
 
     void GenerateDivideCode(DivideNode node){
-        if (node.left.Accept(CodeGen) != null){
-            Targetcode.add(node.left.Accept(CodeGen).toString());
-        }
-        Targetcode.add(" / ");
-
-        if (node.right.Accept(CodeGen) != null){
-            Targetcode.add(node.right.Accept(CodeGen).toString());
-        }
+        GenerateExpressionCode(node, "/");
     }
 
     void GenerateElseIfCode(ElseIfNode node){
@@ -189,27 +180,11 @@ final class CodeGeneratorHelper {
     }
 
     void GenerateGreaterThanCode(GreaterThanNode node){
-        if (node.left.Accept(CodeGen) != null){
-            Targetcode.add(node.left.Accept(CodeGen).toString());
-        }
-
-        Targetcode.add(" > ");
-
-        if (node.right.Accept(CodeGen) != null){
-            Targetcode.add(node.right.Accept(CodeGen).toString());
-        }
+        GenerateExpressionCode(node, ">");
     }
 
     void GenerateGreaterThanOrEqualCode(GreaterThanOrEqualNode node){
-        if (node.left.Accept(CodeGen) != null){
-            Targetcode.add(node.left.Accept(CodeGen).toString());
-        }
-
-        Targetcode.add(" >= ");
-
-        if (node.right.Accept(CodeGen) != null){
-            Targetcode.add(node.right.Accept(CodeGen).toString());
-        }
+        GenerateExpressionCode(node, ">=");
     }
 
     void GenerateIfCode(IfNode node){
@@ -239,27 +214,11 @@ final class CodeGeneratorHelper {
     }
 
     void GenerateLessThanCode(LessThanNode node){
-        if (node.left.Accept(CodeGen) != null){
-            Targetcode.add(node.left.Accept(CodeGen).toString());
-        }
-
-        Targetcode.add(" < ");
-
-        if (node.right.Accept(CodeGen) != null){
-            Targetcode.add(node.right.Accept(CodeGen).toString());
-        }
+        GenerateExpressionCode(node, "<");
     }
 
     void GenerateLessThanOrEqualCode(LessThanOrEqualNode node){
-        if (node.left.Accept(CodeGen) != null){
-            Targetcode.add(node.left.Accept(CodeGen).toString());
-        }
-
-        Targetcode.add(" <= ");
-
-        if (node.right.Accept(CodeGen) != null){
-            Targetcode.add(node.right.Accept(CodeGen).toString());
-        }
+        GenerateExpressionCode(node, "<=");
     }
 
     void GenerateMethodCode(MethodNode node){
@@ -286,14 +245,7 @@ final class CodeGeneratorHelper {
     }
 
     void GenerateMinusCode(MinusNode node){
-        if (node.left.Accept(CodeGen) != null){
-            Targetcode.add(node.left.Accept(CodeGen).toString());
-        }
-        Targetcode.add(" - ");
-
-        if (node.right.Accept(CodeGen) != null){
-            Targetcode.add(node.right.Accept(CodeGen).toString());
-        }
+        GenerateExpressionCode(node, "-");
     }
 
     void GenerateMotorDclCode(MotorNode node){
@@ -343,15 +295,7 @@ final class CodeGeneratorHelper {
     }
 
     void GenerateOrCode(OrNode node){
-        if (node.left.Accept(CodeGen) != null){
-            Targetcode.add(node.left.Accept(CodeGen).toString());
-        }
-
-        Targetcode.add(" || ");
-
-        if (node.right.Accept(CodeGen) != null){
-            Targetcode.add(node.right.Accept(CodeGen).toString());
-        }
+        GenerateExpressionCode(node, "||");
     }
 
     void GenerateParameterCode(ParameterNode node){
@@ -366,14 +310,7 @@ final class CodeGeneratorHelper {
     }
 
     void GeneratePlusCode(PlusNode node){
-        if (node.left.Accept(CodeGen) != null){
-            Targetcode.add(node.left.Accept(CodeGen).toString());
-        }
-        Targetcode.add(" + ");
-
-        if (node.right.Accept(CodeGen) != null){
-            Targetcode.add(node.right.Accept(CodeGen).toString());
-        }
+        GenerateExpressionCode(node, "+");
     }
 
     void GenerateProgramMainCode(ProgramNode node){
@@ -419,14 +356,7 @@ final class CodeGeneratorHelper {
     }
 
     void GenerateTimesCode(TimesNode node){
-        if (node.left.Accept(CodeGen) != null){
-            Targetcode.add(node.left.Accept(CodeGen).toString());
-        }
-        Targetcode.add(" * ");
-
-        if (node.right.Accept(CodeGen) != null){
-            Targetcode.add(node.right.Accept(CodeGen).toString());
-        }
+        GenerateExpressionCode(node, "*");
     }
 
     void GenerateTouchSensorCode(TouchSensorNode node){
@@ -591,6 +521,18 @@ final class CodeGeneratorHelper {
         Targetcode.add(" * 1000)");
         Targetcode.add(";\n");
         Indend();
+    }
+
+    private void GenerateExpressionCode(OpNode node, String operator){
+        if (node.left.Accept(CodeGen) != null){
+            Targetcode.add(node.left.Accept(CodeGen).toString());
+        }
+
+        Targetcode.add(" " + operator + " ");
+
+        if (node.right.Accept(CodeGen) != null){
+            Targetcode.add(node.right.Accept(CodeGen).toString());
+        }
     }
 
     private void Indend(){

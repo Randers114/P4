@@ -63,7 +63,8 @@ task main()
 void TurnLeft(float speed)
 {
 	motor[motorA] = - (speed);
-	motor[motorB] = - (speedmotor[motorC] = - (speed);
+	motor[motorB] = - (speed);
+	motor[motorC] = - (speed);
  	sleep(3.0 * 1000);
 	stopMotor(motorA);
 	stopMotor(motorB);
