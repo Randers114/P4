@@ -1,5 +1,6 @@
 package test;
 
+import codeGenerator.CodeGenerator;
 import org.junit.*;
 import abstractSyntaxTree.nodes.*;
 import typeChecker.ATypeChecker;
@@ -7,6 +8,7 @@ import static junit.framework.Assert.assertEquals;
 
 public class Unit {
     private ATypeChecker typeChecker = new ATypeChecker();
+    private CodeGenerator codeGenerator = new CodeGenerator();
     @Test
     public void EvaluateTypeCheckerDividePlus(){
         PlusNode plusNode = new PlusNode(){{left = new NumberNode(){{value = 10;}}; right = new NumberNode(){{value = 66;}};}};
@@ -24,4 +26,21 @@ public class Unit {
 
         assertEquals("bool", typeChecker.Visit(equalNode));
     }
+
+    @Test
+    public void EvaluateCodeGenInvokeNode(){
+        MotorInvokeNode motorInvokeNode = new MotorInvokeNode(){{speed = new NumberNode(){{value = 10;}}; method = "Forward";}};
+        InvokeNode invokeNode = new InvokeNode(){{child = motorInvokeNode;}};
+
+        assertEquals("F", codeGenerator.Visit(invokeNode).toString());
+    }
+
+    @Test
+    public void EvaluateCodeGenInvokeNodeSec(){
+        MotorInvokeNode motorInvokeNode = new MotorInvokeNode(){{speed = new NumberNode(){{value = 10;}}; time = new NumberNode(){{value = 100;}}; method = "ForwardSeconds";}};
+        InvokeNode invokeNode = new InvokeNode(){{child = motorInvokeNode;}};
+
+        assertEquals("FS", codeGenerator.Visit(invokeNode).toString());
+    }
+
 }

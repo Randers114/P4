@@ -3,7 +3,7 @@ package prettyPrint;
 import AVisitor.Visitor;
 import abstractSyntaxTree.nodes.*;
 
-public class APrettyPrint extends Visitor {
+public class APrettyPrint implements Visitor {
 
     private int tab = 0;
 

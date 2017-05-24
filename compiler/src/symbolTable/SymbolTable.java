@@ -2,14 +2,15 @@ package symbolTable;
 
 import abstractSyntaxTree.nodes.*;
 import codeGenerator.SyncMotor;
+import event.ErrorEvent;
+import event.FireableError;
 
 import java.util.*;
 
-public class SymbolTable {
+public class SymbolTable extends FireableError{
     private List<Variable> Variables;
-    private HashMap<String, ArrayList<Node>> Lists = new HashMap<String, ArrayList<Node>>();
     static List<SymbolTable> symbolTables = new ArrayList<>();
-    List<SyncMotor> syncMotors = new ArrayList<>();
+    private List<SyncMotor> syncMotors = new ArrayList<>();
     SymbolTable()
     {
         Variables = new ArrayList<>();
@@ -35,12 +36,9 @@ public class SymbolTable {
         if (!LookUp(((IdentifierNode) id).name)){
             if (type instanceof TypesNode){
                 symbolTables.get((symbolTables.size() - 1)).Variables.add(new Variable(((IdentifierNode) id).name,((TypesNode) type).type));
-            }// else {
-            //    symbolTables.get((symbolTables.size() - 1)).Variables.add(new Variable(((IdentifierNode) id).name,((InstanceNode) type).instance)); //TODO
-            //}
-
+            }
         } else {
-            System.out.println("Variable " + ((IdentifierNode) id).name + " already exists in this context, error at line: " + id.LineNumber);
+            FireError(new ErrorEvent("Variable " + ((IdentifierNode) id).name + " already exists in this context, error at line: " + id.LineNumber));
         }
     }
 
@@ -49,11 +47,11 @@ public class SymbolTable {
             if (type.equals("Motor") && symbol.matches("[A-D]") || (type.equals("TouchSensor") || type.equals("UltrasoundSensor")) && symbol.matches("[0-4]")){
                 symbolTables.get((symbolTables.size() - 1)).Variables.add(new Variable(((IdentifierNode) id).name, type, symbol));
             } else {
-                System.out.println("Variable " + ((IdentifierNode) id).name + " failed, the socket " + symbol + " does not exist error at line: " + id.LineNumber);
+                FireError(new ErrorEvent("Variable " + ((IdentifierNode) id).name + " failed, the socket " + symbol + " does not exist error at line: " + id.LineNumber));
             }
 
         } else {
-            System.out.println("Variable " + ((IdentifierNode) id).name + " failed, the socket " + symbol + " is already initialized error at line: " + id.LineNumber);
+            FireError(new ErrorEvent("Variable " + ((IdentifierNode) id).name + " failed, the socket " + symbol + " is already initialized error at line: " + id.LineNumber));
         }
     }
 
@@ -71,7 +69,7 @@ public class SymbolTable {
         if (!LookUpSyncedMotor(left, right)){
             syncMotors.add(new SyncMotor(left, right));
         } else {
-            System.out.println("Motors already synced, error at line: " + line.LineNumber);
+            FireError(new ErrorEvent("Motors already synced, error at line: " + line.LineNumber));
         }
     }
 
@@ -87,14 +85,14 @@ public class SymbolTable {
         }
 
         if (error){
-            System.out.println("Motors is not synced, error at line:  " + line.LineNumber);
+            FireError(new ErrorEvent("Motors are not synced, error at line: " + line.LineNumber));
         }
     }
 
     private Boolean LookUpSyncedMotor(IdentifierNode left, IdentifierNode right){
         for (SyncMotor sync: syncMotors
              ) {
-            if (left.name.equals(((IdentifierNode)sync.motor1).name) && right.name.equals(((IdentifierNode)sync.motor2).name) || left.name.equals(((IdentifierNode)sync.motor2).name)){
+            if (left.name.equals((sync.motor1).name) && right.name.equals((sync.motor2).name) || left.name.equals((sync.motor2).name)){
                 return true;
             }
         }
@@ -109,11 +107,6 @@ public class SymbolTable {
                 return true;
             }
         }
-        for (String s : Lists.keySet())
-        {
-                if(s.equals(varName))
-                return true;
-        }
 
         return false;
     }
@@ -127,13 +120,5 @@ public class SymbolTable {
             }
         }
         return type;
-    }
-
-    void InsertList(String name, ArrayList<Node> list, int line)
-    {
-        if (!LookUp(name))
-            Lists.put(name, list);
-        else
-            System.out.println("List already exsists at this context @" + line);
     }
 }

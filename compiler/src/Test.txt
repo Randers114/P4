@@ -12,9 +12,9 @@ main
 {
     // We synchronize the motors, so they run simultaneously.
     motorLeft synchronize motorRight;
-
+    number b = u;
     // We define numbers for speeds of the motor.
-    number speed = 75;
+    number speed = 75
     number backSpeed = 20;
     number turningSpeed = 35;
 

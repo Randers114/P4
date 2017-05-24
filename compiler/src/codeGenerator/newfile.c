@@ -11,6 +11,7 @@ void TurnRight(float speed);
 
 task main() 
 {
+	float b = u;
 	float speed = 75.0;
 	float backSpeed = 20.0;
 	float turningSpeed = 35.0;

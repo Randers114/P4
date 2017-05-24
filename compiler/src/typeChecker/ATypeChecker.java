@@ -2,13 +2,15 @@ package typeChecker;
 
 import AVisitor.Visitor;
 import abstractSyntaxTree.nodes.*;
+import event.ErrorEvent;
+import event.FireableError;
 import symbolTable.SymbolTable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-public class ATypeChecker extends Visitor {
+public class ATypeChecker extends FireableError implements Visitor {
     private Stack<SymbolTable> CurrentSymbolTable = new Stack<>();
     private ProgramNode Root;
 
@@ -45,7 +47,7 @@ public class ATypeChecker extends Visitor {
         }
 
         if(!(((node.method.equals("Forward") || node.method.equals("Backward")) && type.equals("number") && node.time == null || (node.time != null && type2.equals("number"))) || node.method.equals("Stop()"))) {
-            System.out.println("Mistakes were made motorinvoke, line: " + node.LineNumber);
+            FireError(new ErrorEvent("Mistakes were made motorinvoke, line: " + node.LineNumber));
         }
         return "void";
     }
@@ -75,13 +77,13 @@ public class ATypeChecker extends Visitor {
     {
         if (!(node.right != null && node.left != null && SymbolTable.GetTypeByID(((IdentifierNode)node.left).name, CurrentSymbolTable.peek()).equals("Motor")
             && SymbolTable.GetTypeByID(((IdentifierNode)node.right).name, CurrentSymbolTable.peek()).equals("Motor"))){
-
-            System.out.println("Synchronization node failed one identifier is not Motor at line: " + node.LineNumber);
+            FireError(new ErrorEvent("Synchronization node failed one identifier is not Motor at line: " + node.LineNumber));
         }
 
         if (node.relativeSpeed != null){
-            if (!node.relativeSpeed.Accept(this).toString().equals("number"))
-            System.out.println("Synchronization node failed speed out of bounds at line: " + node.LineNumber);
+            if (!node.relativeSpeed.Accept(this).toString().equals("number")){
+                FireError(new ErrorEvent("Synchronization node failed speed out of bounds at line: " + node.LineNumber));
+            }
         }
 
         return null;
@@ -100,7 +102,7 @@ public class ATypeChecker extends Visitor {
         if (CheckForBool(node).equals("bool")){
             return "bool";
         } else {
-            System.out.println("And expression fail, line: " + node.LineNumber);
+            FireError(new ErrorEvent("And expression fail, line: " + node.LineNumber));
         }
 
         return "";
@@ -111,7 +113,7 @@ public class ATypeChecker extends Visitor {
         if (CheckForBool(node).equals("bool") || CheckForNumber(node).equals("number")){
             return "bool";
         } else {
-            System.out.println("Equal expression fail, line:  " + node.LineNumber);
+            FireError(new ErrorEvent("Equal expression fail, line:  " + node.LineNumber));
         }
 
         return "";
@@ -122,7 +124,7 @@ public class ATypeChecker extends Visitor {
         if (CheckForNumber(node).equals("number")){
             return "bool";
         } else {
-            System.out.println("greaterThan expression fail, line: " + node.LineNumber);
+            FireError(new ErrorEvent("greaterThan expression fail, line: " + node.LineNumber));
         }
 
         return "";
@@ -133,7 +135,7 @@ public class ATypeChecker extends Visitor {
         if (CheckForNumber(node).equals("number")){
             return "bool";
         } else {
-            System.out.println("greaterThanEqual expression fail, line: " + node.LineNumber);
+            FireError(new ErrorEvent("greaterThanEqual expression fail, line: " + node.LineNumber));
         }
 
         return "";
@@ -144,7 +146,7 @@ public class ATypeChecker extends Visitor {
         if (CheckForNumber(node).equals("number")){
             return "bool";
         } else {
-            System.out.println("lessThan expression fail, line: " + node.LineNumber);
+            FireError(new ErrorEvent("lessThan expression fail, line: " + node.LineNumber));
         }
 
         return "";
@@ -155,7 +157,7 @@ public class ATypeChecker extends Visitor {
         if (CheckForNumber(node).equals("number")){
             return "bool";
         } else {
-            System.out.println("lessThanEqual expression fail, line: " + node.LineNumber);
+            FireError(new ErrorEvent("lessThanEqual expression fail, line: " + node.LineNumber));
         }
 
         return "";
@@ -166,7 +168,7 @@ public class ATypeChecker extends Visitor {
         if (CheckForBool(node).equals("bool") || CheckForNumber(node).equals("number")){
             return "bool";
         } else {
-            System.out.println("notEqual expression fail, line: " + node.LineNumber);
+            FireError(new ErrorEvent("notEqual expression fail, line: " + node.LineNumber));
         }
 
         return "";
@@ -190,7 +192,7 @@ public class ATypeChecker extends Visitor {
         }
 
         if (!type.equals(type2)){
-            System.out.println("Mistakes have been made assignNode, line: " + node.LineNumber);
+            FireError(new ErrorEvent("The types of the assign are not compatible, error at line: " + node.LineNumber));
         }
 
         return null;
@@ -212,7 +214,6 @@ public class ATypeChecker extends Visitor {
     @Override
     public Void Visit(BodyNode node) {
         node.content.Accept(this);
-
         return null;
     }
 
@@ -233,11 +234,11 @@ public class ATypeChecker extends Visitor {
                 if (formal.size() == actual.size()){
                     for (int i = 0; i < formal.size(); i++){
                         if (!formal.get(i).equals(actual.get(i))){
-                            System.out.println("Mistake at parameter: " + (i + 1) );
+                            FireError(new ErrorEvent("Mistake at parameter: " + (i + 1)));
                         }
                     }
                 } else {
-                    System.out.println("Mistakes have been made callnode, line: " + node.LineNumber);
+                    FireError(new ErrorEvent("Mistakes have been made callnode, line: " + node.LineNumber));
                 }
             }
         }
@@ -266,10 +267,10 @@ public class ATypeChecker extends Visitor {
                 type2 = "Motor";
                 if (node.middle instanceof IdentifierNode) {
                     if (!((IdentifierNode) node.middle).name.matches("[A-D]")) {
-                        System.out.println("Wrong motor instanciation symbol, line: " + node.LineNumber);
+                        FireError(new ErrorEvent("Wrong motor instantiation symbol, line: " + node.LineNumber));
                     }
                 } else {
-                    System.out.println("Wrong motor instanciation symbol, line: " + node.LineNumber);
+                    FireError(new ErrorEvent("Wrong motor instantiation symbol, line: " + node.LineNumber));
                 }
             }
             else if(rightNode.equals("UltrasoundSensor")){
@@ -286,7 +287,7 @@ public class ATypeChecker extends Visitor {
             }
 
             if (!type.equals(type2)){
-                System.out.println("Mistakes have been made dclNode, line: " + node.LineNumber);
+                FireError(new ErrorEvent("Declaration failed, error at line: " + node.LineNumber));
             }
         }
         return null;
@@ -296,8 +297,7 @@ public class ATypeChecker extends Visitor {
     public Object Visit(DesynchronizeNode node) {
         if (!(node.right != null && node.left != null && SymbolTable.GetTypeByID(((IdentifierNode)node.left).name, CurrentSymbolTable.peek()).equals("Motor")
                 && SymbolTable.GetTypeByID(((IdentifierNode)node.right).name, CurrentSymbolTable.peek()).equals("Motor"))){
-
-            System.out.println("Desynchronization node failed one identifier is not Motor at line: " + node.LineNumber);
+            FireError(new ErrorEvent("Desynchronization failed one identifier is not Motor at line: " + node.LineNumber));
         }
         return null;
     }
@@ -307,7 +307,7 @@ public class ATypeChecker extends Visitor {
         if (CheckForNumber(node).equals("number")){
             return "number";
         } else {
-            System.out.println("Mistake at line: " + node.LineNumber);
+            FireError(new ErrorEvent("Divide error, error at line: " + node.LineNumber));
         }
         return "";
     }
@@ -346,7 +346,7 @@ public class ATypeChecker extends Visitor {
     @Override
     public Void Visit(IfNode node) {
         if (!node.bool.Accept(this).toString().equals("bool")){
-            System.out.println("if bool error, line: " + node.LineNumber);
+            FireError(new ErrorEvent("Wrong bool in the if statement, error at line: " + node.LineNumber));
         }
         node.block.Accept(this);
         if (node.elseif != null) {
@@ -374,7 +374,7 @@ public class ATypeChecker extends Visitor {
             type2 = node.returnval.Accept(this).toString();
 
             if (!type.equals(type2)){
-                System.out.println("Mistakes have been made methodNode");
+                FireError(new ErrorEvent("Wrong returnvalue in method, error at line: " + node.LineNumber));
             }
         }
 
@@ -392,7 +392,7 @@ public class ATypeChecker extends Visitor {
         if (CheckForNumber(node).equals("number")){
             return "number";
         } else {
-            System.out.println("Mistake at line: " + node.LineNumber);
+            FireError(new ErrorEvent("Minus expression error, error at line: " + node.LineNumber));
         }
         return "";
     }
@@ -402,7 +402,7 @@ public class ATypeChecker extends Visitor {
         if (CheckForBool(node).equals("bool")){
             return "bool";
         } else {
-            System.out.println("Mistake at line: " + node.LineNumber);
+            FireError(new ErrorEvent("Not bool expression error, error at line: " + node.LineNumber));
         }
         return "";
     }
@@ -422,7 +422,7 @@ public class ATypeChecker extends Visitor {
         if (CheckForNumber(node).equals("number")){
             return "number";
         } else {
-            System.out.println("Mistake at line: " + node.LineNumber);
+            FireError(new ErrorEvent("Plus expression error, error at line: " + node.LineNumber));
         }
         return "";
     }
@@ -470,7 +470,7 @@ public class ATypeChecker extends Visitor {
         if (CheckForNumber(node).equals("number")){
             return "number";
         } else {
-            System.out.println("Mistake at line: " + node.LineNumber);
+            FireError(new ErrorEvent("Times expression error at line: " + node.LineNumber));
         }
         return "";
     }
@@ -493,7 +493,7 @@ public class ATypeChecker extends Visitor {
     @Override
     public Void Visit(WhileNode node) {
         if (!node.bool.Accept(this).toString().equals("bool")){
-            System.out.println("while bool error " + node.LineNumber);
+            FireError(new ErrorEvent("bool error in while statement, error at line: " + node.LineNumber));
         }
         node.block.Accept(this);
         return null;

@@ -1,19 +1,22 @@
 package symbolTable;
 
 import abstractSyntaxTree.nodes.*;
+import event.ErrorEvent;
+import event.ErrorListener;
+import event.FireableError;
 
+import javax.swing.event.EventListenerList;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.EventListener;
 import java.util.List;
 import java.util.Scanner;
 
-public class BuildSymbolTable {
+public class BuildSymbolTable extends FireableError{
+    private SymbolTable symbolTable = new SymbolTable();
 
-    private SymbolTable symbolTable;
-
-    public BuildSymbolTable(ProgramNode node) {
-        symbolTable = new SymbolTable();
+    public void InitializeSymbolTable(ProgramNode node){
         Build(node);
     }
 
@@ -65,24 +68,12 @@ public class BuildSymbolTable {
                 if (((DclNode) node).right != null){
                     TraverseChildren(((DclNode) node).right.ChildrenList);
                 }
-            }
-			//else if(((DclNode) node).left instanceof  ListNode) //TODO
-			//{
-			//	symbolTable.Insert(((DclNode)node).right, ((DclNode)node).left, ((DclNode) node).middle);
-			//}
-			else if(((DclNode)node).middle instanceof TypesNode)
-            {
-                if(((TypesNode)(((DclNode)node).middle)).type.equals("bool") ||((TypesNode)(((DclNode)node).middle)).type.equals("number") )
-                    symbolTable.InsertList(((IdentifierNode)(((DclNode)node).right)).name, new ArrayList<>(), node.LineNumber);
-            }
-			else {
+            } else {
                 symbolTable.Insert(((DclNode) node).right, ((DclNode) node).left);
             }
-
-
         } else if (node instanceof IdentifierNode){
             if (!symbolTable.LookUp(((IdentifierNode) node).name)){
-                System.out.println("Variable: " + ((IdentifierNode) node).name + " does not exist in this context. Error at line: " + node.LineNumber);
+                FireError(new ErrorEvent("Variable: " + ((IdentifierNode) node).name + " does not exist in this context. Error at line: " + node.LineNumber));
             }
         } else if (node instanceof SynchronizationNode){
             symbolTable.Synchronize((IdentifierNode) ((SynchronizationNode) node).left, (IdentifierNode) ((SynchronizationNode) node).right, (SynchronizationNode) node);
@@ -95,7 +86,7 @@ public class BuildSymbolTable {
         }
     }
 
-    public void TraverseChildren(List<Node> childrenList){
+    private void TraverseChildren(List<Node> childrenList){
         for (Node a: childrenList) {
             if (a != null) {
                 Build(a);

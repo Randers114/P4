@@ -8,7 +8,7 @@ import java.io.PrintWriter;
 import java.util.*;
 
 
-public class CodeGenerator extends Visitor {
+public class CodeGenerator implements Visitor {
     static List<SyncMotor> syncMotors = new ArrayList<>();
     static int tab = 0;
     static Node speed;

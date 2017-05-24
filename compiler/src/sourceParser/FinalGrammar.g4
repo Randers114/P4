@@ -1,6 +1,5 @@
 grammar FinalGrammar;
 
-
 COMMENT :       '/*' .*? '*/' -> skip;
 LINE_COMMENT:   '//' ~[\r\n]* -> skip;
 Num:            [0-9]+ ('.' [0-9]+)?;
