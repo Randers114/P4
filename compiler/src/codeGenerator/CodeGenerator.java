@@ -32,7 +32,7 @@ public class CodeGenerator implements Visitor {
     }
 
     @Override
-    public Object Visit(DesynchronizeNode node) {
+    public Void Visit(DesynchronizeNode node) {
         for (SyncMotor sync: syncMotors
              ) {
             if (((IdentifierNode) node.left).name.equals(sync.motor1.name) && ((IdentifierNode) node.right).name.equals(sync.motor2.name)){
@@ -44,7 +44,7 @@ public class CodeGenerator implements Visitor {
     }
 
     @Override
-    public Object Visit(DesignSpecificDclNode node) {
+    public Void Visit(DesignSpecificDclNode node) {
         node.child.Accept(this);
         return null;
     }
@@ -55,12 +55,12 @@ public class CodeGenerator implements Visitor {
     }
 
     @Override
-    public Object Visit(ListInvokeNode node) {
+    public Void Visit(ListInvokeNode node) {
         return null;
     }
 
     @Override
-    public Object Visit(MotorNode node) {
+    public Void Visit(MotorNode node) {
         codeGeneratorHelper.GenerateMotorDclCode(node);
         return null;
     }
@@ -87,19 +87,19 @@ public class CodeGenerator implements Visitor {
     }
 
     @Override
-    public Object Visit(SensorInvokeNode node) {
+    public Void Visit(SensorInvokeNode node) {
         codeGeneratorHelper.GenerateSensorInvokeCode(node);
         return null;
     }
 
     @Override
-    public Object Visit(TouchSensorNode node) {
+    public Void Visit(TouchSensorNode node) {
         codeGeneratorHelper.GenerateTouchSensorCode(node);
         return null;
     }
 
     @Override
-    public Object Visit(UltraSoundSensorNode node) {
+    public Void Visit(UltraSoundSensorNode node) {
         codeGeneratorHelper.GenerateUltraSoundCode(node);
         return null;
     }
@@ -115,7 +115,7 @@ public class CodeGenerator implements Visitor {
     }
 
     @Override
-    public Object Visit(SleepNode node) {
+    public Void Visit(SleepNode node) {
         codeGeneratorHelper.GenerateSleepCode(node);
         return null;
     }
@@ -253,7 +253,7 @@ public class CodeGenerator implements Visitor {
     }
 
     @Override
-    public Object Visit(NotBoolNode node) {
+    public Void Visit(NotBoolNode node) {
         codeGeneratorHelper.GenerateNotBoolCode(node);
         return null;
     }
@@ -329,7 +329,7 @@ public class CodeGenerator implements Visitor {
     }
 
     @Override
-    public Object Visit(ValueNode node) {
+    public Void Visit(ValueNode node) {
         codeGeneratorHelper.GenerateValueCode(node);
         return null;
     }

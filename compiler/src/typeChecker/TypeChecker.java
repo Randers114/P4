@@ -15,7 +15,7 @@ public class TypeChecker extends FireableError implements Visitor {
     private ProgramNode Root;
 
     @Override
-    public Object Visit(DesignSpecificDclNode node) {
+    public Void Visit(DesignSpecificDclNode node) {
         return null;
     }
 
@@ -30,7 +30,7 @@ public class TypeChecker extends FireableError implements Visitor {
     }
 
     @Override
-    public Object Visit(MotorNode node) {
+    public Void Visit(MotorNode node) {
         return null;
     }
 
@@ -63,17 +63,17 @@ public class TypeChecker extends FireableError implements Visitor {
     }
 
     @Override
-    public Object Visit(TouchSensorNode node) {
+    public Void Visit(TouchSensorNode node) {
         return null;
     }
 
     @Override
-    public Object Visit(UltraSoundSensorNode node) {
+    public Void Visit(UltraSoundSensorNode node) {
         return null;
     }
 
     @Override
-    public Object Visit(SynchronizationNode node)
+    public Void Visit(SynchronizationNode node)
     {
         if (!(node.right != null && node.left != null && SymbolTable.GetTypeByID(((IdentifierNode)node.left).name, CurrentSymbolTable.peek()).equals("Motor")
                 && SymbolTable.GetTypeByID(((IdentifierNode)node.right).name, CurrentSymbolTable.peek()).equals("Motor"))){
@@ -90,7 +90,7 @@ public class TypeChecker extends FireableError implements Visitor {
     }
 
     @Override
-    public Object Visit(SleepNode node)
+    public Void Visit(SleepNode node)
     {
         node.child.Accept(this);
         return null;
@@ -290,7 +290,7 @@ public class TypeChecker extends FireableError implements Visitor {
     }
 
     @Override
-    public Object Visit(DesynchronizeNode node) {
+    public Void Visit(DesynchronizeNode node) {
         if (!(node.right != null && node.left != null && SymbolTable.GetTypeByID(((IdentifierNode)node.left).name, CurrentSymbolTable.peek()).equals("Motor")
                 && SymbolTable.GetTypeByID(((IdentifierNode)node.right).name, CurrentSymbolTable.peek()).equals("Motor"))){
             FireError(new ErrorEvent("Desynchronization failed one identifier is not Motor at line: " + node.LineNumber));

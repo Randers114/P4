@@ -8,12 +8,12 @@ public class PrettyPrint implements Visitor {
     private int tab = 0;
 
     @Override
-    public Object Visit(DesynchronizeNode node) {
+    public Void Visit(DesynchronizeNode node) {
         return null;
     }
 
     @Override
-    public Object Visit(DesignSpecificDclNode node) {
+    public Void Visit(DesignSpecificDclNode node) {
         node.child.Accept(this);
         return null;
     }
@@ -25,13 +25,13 @@ public class PrettyPrint implements Visitor {
     }
 
     @Override
-    public Object Visit(ListInvokeNode node) {
+    public Void Visit(ListInvokeNode node) {
 
         return null;
     }
 
     @Override
-    public Object Visit(MotorNode node) {
+    public Void Visit(MotorNode node) {
         System.out.print("Motor[" + node.symbol + "]");
         node.id.Accept(this);
         System.out.print("\n");
@@ -74,13 +74,13 @@ public class PrettyPrint implements Visitor {
     }
 
     @Override
-    public Object Visit(SensorInvokeNode node) {
+    public Void Visit(SensorInvokeNode node) {
         System.out.print(node.method);
         return null;
     }
 
     @Override
-    public Object Visit(TouchSensorNode node) {
+    public Void Visit(TouchSensorNode node) {
         System.out.print("TouchSensor[" + node.symbol + "]");
         node.id.Accept(this);
         System.out.print("\n");
@@ -88,7 +88,7 @@ public class PrettyPrint implements Visitor {
     }
 
     @Override
-    public Object Visit(UltraSoundSensorNode node) {
+    public Void Visit(UltraSoundSensorNode node) {
         System.out.print("UltrasoundSensor[" + node.symbol + "]");
         node.id.Accept(this);
         System.out.print("\n");
@@ -96,7 +96,7 @@ public class PrettyPrint implements Visitor {
     }
 
     @Override
-    public Object Visit (SynchronizationNode node)
+    public Void Visit (SynchronizationNode node)
     {
          node.right.Accept(this);
          System.out.print(" Synchronize ");
@@ -106,7 +106,7 @@ public class PrettyPrint implements Visitor {
     }
 
     @Override
-    public Object Visit (SleepNode node)
+    public Void Visit (SleepNode node)
     {
         System.out.print("Sleep (");
         node.child.Accept(this);
@@ -115,7 +115,7 @@ public class PrettyPrint implements Visitor {
     }
 
     @Override
-    public Object Visit(AndNode node) {
+    public Void Visit(AndNode node) {
         node.left.Accept(this);
         System.out.print(" and ");
         node.right.Accept(this);
@@ -123,7 +123,7 @@ public class PrettyPrint implements Visitor {
     }
 
     @Override
-    public Object Visit(EqualNode node) {
+    public Void Visit(EqualNode node) {
         node.left.Accept(this);
         System.out.print(" equal ");
         node.right.Accept(this);
@@ -131,7 +131,7 @@ public class PrettyPrint implements Visitor {
     }
 
     @Override
-    public Object Visit(GreaterThanNode node) {
+    public Void Visit(GreaterThanNode node) {
         node.left.Accept(this);
         System.out.print(" greaterThan ");
         node.right.Accept(this);
@@ -139,7 +139,7 @@ public class PrettyPrint implements Visitor {
     }
 
     @Override
-    public Object Visit(GreaterThanOrEqualNode node) {
+    public Void Visit(GreaterThanOrEqualNode node) {
         node.left.Accept(this);
         System.out.print(" greaterThanOrEqual ");
         node.right.Accept(this);
@@ -147,7 +147,7 @@ public class PrettyPrint implements Visitor {
     }
 
     @Override
-    public Object Visit(LessThanNode node) {
+    public Void Visit(LessThanNode node) {
         node.left.Accept(this);
         System.out.print(" lessThan ");
         node.right.Accept(this);
@@ -155,7 +155,7 @@ public class PrettyPrint implements Visitor {
     }
 
     @Override
-    public Object Visit(LessThanOrEqualNode node) {
+    public Void Visit(LessThanOrEqualNode node) {
         node.left.Accept(this);
         System.out.print(" lessThanOrEqual ");
         node.right.Accept(this);
@@ -163,7 +163,7 @@ public class PrettyPrint implements Visitor {
     }
 
     @Override
-    public Object Visit(NotEqualNode node) {
+    public Void Visit(NotEqualNode node) {
         node.left.Accept(this);
         System.out.print(" notEqual ");
         node.right.Accept(this);
@@ -171,7 +171,7 @@ public class PrettyPrint implements Visitor {
     }
 
     @Override
-    public Object Visit(OrNode node) {
+    public Void Visit(OrNode node) {
         node.left.Accept(this);
         System.out.print(" or ");
         node.right.Accept(this);
@@ -333,13 +333,7 @@ public class PrettyPrint implements Visitor {
         }
         return null;
     }
-    /*
-    @Override
-    public Void Visit(InstanceNode node) {
-        System.out.print(node.instance + " ");
-        return null;
-    }
-    */ //TODO
+
     @Override
     public Void Visit(MethodNode node) {
         node.type.Accept(this);
