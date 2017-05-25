@@ -3,16 +3,18 @@ package compilerInitializer;
 import abstractSyntaxTree.AstBuild;
 import abstractSyntaxTree.nodes.ProgramNode;
 import codeGenerator.CodeGenerator;
-import org.antlr.v4.runtime.ANTLRFileStream;
-import org.antlr.v4.runtime.TokenStream;
+import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.atn.ATNConfigSet;
+import org.antlr.v4.runtime.dfa.DFA;
 import prettyPrint.APrettyPrint;
 import sourceParser.FinalGrammarLexer;
 import sourceParser.FinalGrammarParser;
 import symbolTable.BuildSymbolTable;
 import typeChecker.ATypeChecker;
-
+import event.*;
 import java.awt.*;
 import java.io.File;
+import java.util.BitSet;
 import java.util.Scanner;
 
 public class CompilerInitializer {
@@ -73,7 +75,28 @@ public class CompilerInitializer {
 
     private FinalGrammarParser InitParser(org.antlr.v4.runtime.CharStream charStream){
         FinalGrammarLexer lexer = new FinalGrammarLexer(charStream);
-        lexer.addErrorListener(e -> SetB());
+        ANTLRErrorListener antlrErrorListener = new ANTLRErrorListener() {
+            @Override
+            public void syntaxError(Recognizer<?, ?> recognizer, Object o, int i, int i1, String s, RecognitionException e) {
+                throw new Exception();
+            }
+
+            @Override
+            public void reportAmbiguity(Parser parser, DFA dfa, int i, int i1, boolean b, BitSet bitSet, ATNConfigSet atnConfigSet) {
+
+            }
+
+            @Override
+            public void reportAttemptingFullContext(Parser parser, DFA dfa, int i, int i1, BitSet bitSet, ATNConfigSet atnConfigSet) {
+
+            }
+
+            @Override
+            public void reportContextSensitivity(Parser parser, DFA dfa, int i, int i1, int i2, ATNConfigSet atnConfigSet) {
+
+            }
+        };
+        lexer.addErrorListener(antlrErrorListener);
         TokenStream tokenStream = new org.antlr.v4.runtime.CommonTokenStream(lexer);
         return new FinalGrammarParser(tokenStream);
     }
