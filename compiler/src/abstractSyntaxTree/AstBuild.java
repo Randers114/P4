@@ -95,8 +95,6 @@ public class AstBuild extends MSTGrammarBaseVisitor<Node> {
                 child = visitMotorInvoke(ctx.motorInvoke());
             } else if (ctx.sensorInvoke() != null){
                 child = visitSensorInvoke(ctx.sensorInvoke());
-            } else {
-                child = visitListInvoke(ctx.listInvoke());
             }
         }};
 
@@ -632,13 +630,6 @@ public class AstBuild extends MSTGrammarBaseVisitor<Node> {
         return new SensorInvokeNode(){{
             method = ctx.getText();
             LineNumber = ctx.start.getLine();
-        }};
-    }
-
-    @Override
-    public Node visitListInvoke(MSTGrammarParser.ListInvokeContext ctx) {
-        return new ListInvokeNode(){{
-
         }};
     }
 

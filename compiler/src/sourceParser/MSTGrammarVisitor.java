@@ -167,12 +167,6 @@ public interface MSTGrammarVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitSensorInvoke(MSTGrammarParser.SensorInvokeContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link MSTGrammarParser#listInvoke}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitListInvoke(MSTGrammarParser.ListInvokeContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link MSTGrammarParser#boolop}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

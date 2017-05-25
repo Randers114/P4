@@ -25,11 +25,6 @@ public class TypeChecker extends FireableError implements Visitor {
     }
 
     @Override
-    public String Visit(ListInvokeNode node) {
-        return "";
-    }
-
-    @Override
     public Void Visit(MotorNode node) {
         return null;
     }

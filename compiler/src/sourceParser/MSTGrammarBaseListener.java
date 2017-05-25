@@ -328,18 +328,6 @@ public class MSTGrammarBaseListener implements MSTGrammarListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterListInvoke(MSTGrammarParser.ListInvokeContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitListInvoke(MSTGrammarParser.ListInvokeContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterBoolop(MSTGrammarParser.BoolopContext ctx) { }
 	/**
 	 * {@inheritDoc}

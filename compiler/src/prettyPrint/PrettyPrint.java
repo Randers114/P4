@@ -25,12 +25,6 @@ public class PrettyPrint implements Visitor {
     }
 
     @Override
-    public Void Visit(ListInvokeNode node) {
-
-        return null;
-    }
-
-    @Override
     public Void Visit(MotorNode node) {
         System.out.print("Motor[" + node.symbol + "]");
         node.id.Accept(this);

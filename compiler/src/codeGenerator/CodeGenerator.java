@@ -55,11 +55,6 @@ public class CodeGenerator implements Visitor {
     }
 
     @Override
-    public Void Visit(ListInvokeNode node) {
-        return null;
-    }
-
-    @Override
     public Void Visit(MotorNode node) {
         codeGeneratorHelper.GenerateMotorDclCode(node);
         return null;

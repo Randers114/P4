@@ -268,16 +268,6 @@ public interface MSTGrammarListener extends ParseTreeListener {
 	 */
 	void exitSensorInvoke(MSTGrammarParser.SensorInvokeContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link MSTGrammarParser#listInvoke}.
-	 * @param ctx the parse tree
-	 */
-	void enterListInvoke(MSTGrammarParser.ListInvokeContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link MSTGrammarParser#listInvoke}.
-	 * @param ctx the parse tree
-	 */
-	void exitListInvoke(MSTGrammarParser.ListInvokeContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link MSTGrammarParser#boolop}.
 	 * @param ctx the parse tree
 	 */
