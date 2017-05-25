@@ -103,7 +103,7 @@ public class FinalGrammarLexer extends Lexer {
 	}
 
 	@Override
-	public String getGrammarFileName() { return "FinalGrammar.g4"; }
+	public String getGrammarFileName() { return "MST.g4"; }
 
 	@Override
 	public String[] getRuleNames() { return ruleNames; }

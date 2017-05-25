@@ -1,4 +1,4 @@
-grammar FinalGrammar;
+grammar MST;
 
 COMMENT :       '/*' .*? '*/' -> skip;
 LINE_COMMENT:   '//' ~[\r\n]* -> skip;

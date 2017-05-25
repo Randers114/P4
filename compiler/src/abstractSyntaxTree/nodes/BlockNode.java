@@ -1,6 +1,6 @@
 package abstractSyntaxTree.nodes;
 
-import AVisitor.Visitor;
+import visitor.Visitor;
 import symbolTable.SymbolTable;
 
 public class BlockNode extends Node {

@@ -1,6 +1,6 @@
 package abstractSyntaxTree.nodes;
 
-import AVisitor.Visitor;
+import visitor.Visitor;
 
 public class NumberNode extends Node {
     public double value;

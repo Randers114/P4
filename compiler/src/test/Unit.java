@@ -3,11 +3,11 @@ package test;
 import codeGenerator.CodeGenerator;
 import org.junit.*;
 import abstractSyntaxTree.nodes.*;
-import typeChecker.ATypeChecker;
+import typeChecker.TypeChecker;
 import static junit.framework.Assert.assertEquals;
 
 public class Unit {
-    private ATypeChecker typeChecker = new ATypeChecker();
+    private TypeChecker.typeChecker typeChecker = new TypeChecker.typeChecker();
     private CodeGenerator codeGenerator = new CodeGenerator();
     @Test
     public void EvaluateTypeCheckerDividePlus(){

@@ -1,302 +1,491 @@
 package prettyPrint;
 
+import visitor.Visitor;
 import abstractSyntaxTree.nodes.*;
-import abstractSyntaxTree.nodes.ProgramNode;
 
-/*
-public class PrettyPrint
-{
-	public static void Init(ProgramNode node){
-		VisitNode(node);
-	}
-	private static void VisitNode(ProgramNode node) {
-		System.out.println("main {");
-		VisitNode(node.leftMain);
-		System.out.println("}");
+public class PrettyPrint implements Visitor {
 
-		for (Node item : node.methods)
-		{
-			VisitNode(item);
-		}
-	}
-	private static void VisitNode(MinusNode node) {
-		VisitNode(node.left);
-		System.out.print("-");
-		VisitNode(node.right);
-	}
-	private static void VisitNode(PlusNode node) {
-		VisitNode(node.left);
-		System.out.print("+");
-		VisitNode(node.right);
-	}
-	private static void VisitNode(TimesNode node) {
-		VisitNode(node.left);
-		System.out.print("*");
-		VisitNode(node.right);
-	}
-	private static void VisitNode(DivideNode node) {
-		VisitNode(node.left);
-		System.out.print("/");
-		VisitNode(node.right);
-	}
-	private static void VisitNode(UnaryMinusNode node) {
-		System.out.print("-");
-		VisitNode(node.child);
-	}
-	private static void VisitNode(MethodNode node) {
-		VisitNode(node.type);
-		System.out.print("Method ");
-		VisitNode(node.id);
-		System.out.print("(");
-		VisitNode(node.fprmt);
-		System.out.print(")");
-		System.out.println("{");
-		VisitNode(node.block);
-		VisitNode(node.returnval);
-		System.out.println(";");
-		System.out.println("}");
-	}
-	private static void VisitNode(BodyNode node)
-	{
-		VisitNode(node.content);
-	}
-	private static void VisitNode(DclNode node){
-		VisitNode(node.left);
-		VisitNode(node.middle);
-		if (node.right != null) {
-			System.out.print(" = ");
-			VisitNode(node.right);
-		}
-		System.out.println(";");
+    private int tab = 0;
 
-	}
-	private static void VisitNode(StmtNode node){
-		VisitNode(node.child);
-	}
-	private static void VisitNode(AssignNode node){
-		VisitNode(node.left);
-		System.out.print(" = ");
-		VisitNode(node.right);
-	}
-	private static void VisitNode(WhileNode node){
-		System.out.print("While (");
-		VisitNode(node.bool);
-		System.out.print(") \n{ \n");
-		VisitNode(node.block);
-		System.out.println("}");
+    @Override
+    public Object Visit(DesynchronizeNode node) {
+        return null;
+    }
 
-	}
-	private static void VisitNode(ForNode node){
-		System.out.print("for ( ");
-		VisitNode(node.startNumber);
-		System.out.print(" to ");
-		VisitNode(node.endNumber);
-		System.out.println(" )\n{");
+    @Override
+    public Object Visit(DesignSpecificDclNode node) {
+        node.child.Accept(this);
+        return null;
+    }
 
-		VisitNode(node.block);
-		System.out.println("}");
-	}
-	private static void VisitNode(IfNode node){
-		System.out.print("if(");
-		VisitNode(node.bool);
-		System.out.println(")\n{");
+    @Override
+    public Void Visit(InvokeNode node) {
+        node.child.Accept(this);
+        return null;
+    }
 
-		VisitNode(node.block);
-		System.out.println("}");
+    @Override
+    public Object Visit(ListInvokeNode node) {
 
-		if (node.elseif != null) {
-			for (Node item : node.elseif
-					) {
-				VisitNode(item);
-			}
-		}
+        return null;
+    }
 
-		VisitNode(node.el);
-	}
-	private static void VisitNode(ElseNode node){
-		System.out.println("else\n{");
-		VisitNode(node.block);
-		System.out.println("}");
-	}
-	private static void VisitNode(ElseIfNode node){
-		System.out.print("else if(");
-		VisitNode(node.bool);
-		System.out.print(")\n{");
-		VisitNode(node.block);
-		System.out.println("}");
-	}
-	private static void VisitNode(TypesNode node){
-		System.out.print(node.type + " ");
-	}
-	private static void VisitNode(ParameterNode node){
-		System.out.print(node.Parameter);
+    @Override
+    public Object Visit(MotorNode node) {
+        System.out.print("Motor[" + node.symbol + "]");
+        node.id.Accept(this);
+        System.out.print("\n");
+        return null;
+    }
 
-		if (node.prmt != null){
-			System.out.print(", ");
+    @Override
+    public Void Visit(MotorInvokeNode node) {
+        switch (node.method) {
+            case "Forward":
+                System.out.print(node.method + "(");
+                node.speed.Accept(this);
+                System.out.print(");\n");
+                break;
+            case "ForwardSeconds":
+                System.out.print(node.method + "(");
+                node.speed.Accept(this);
+                System.out.print(",");
+                node.time.Accept(this);
+                System.out.print(");\n");
+                break;
+            case "Backward":
+                System.out.print(node.method + "(-");
+                node.speed.Accept(this);
+                System.out.print (");\n");
+                break;
+            case "BackwardSeconds":
+                System.out.print(node.method);
+                System.out.print("(-");
+                node.speed.Accept(this);
+                System.out.print(",");
+                node.time.Accept(this);
+                System.out.print(");\n");
+                break;
+            default:
+                break;
 
-			VisitNode(node.prmt);
-		}
-	}
-	private static void VisitNode(FormalParameterNode node){
-		VisitNode(node.type);
-		VisitNode(node.id);
-		if (node.fprmt != null){
-			System.out.print(", ");
-			VisitNode(node.fprmt);
-		}
-	}
-	private static void VisitNode(CallNode node){
-		VisitNode(node.id);
-		System.out.print("(");
-		VisitNode(node.parameter);
-		System.out.println(") ;");
-	}
-	private static void VisitNode(NumberNode node){
-		System.out.print(node.value);
-	}
-	private static void VisitNode(TermNode node){
-		VisitNode(node.child);
-	}
-	private static void VisitNode(ValueNode node){
-		VisitNode(node.child);
-	}
-	private static void VisitNode(IdentifierNode node){
-		System.out.print(node.name);
-	}
-	private static void VisitNode(BoolNode node){
-		System.out.print(node.aBoolean);
-	}
-	private static void VisitNode(ReturnValNode node){
-		System.out.printf("return ");
-		VisitNode(node.returnvalue);
-	}
-	private static void VisitNode(InstanceNode node){
-		System.out.print(node.instance + " ");
-	}
-	private static void VisitNode(StatIdNode node){
-		VisitNode(node.instance);
-	}
-	private static void VisitNode(StatSensorNode node){
-		System.out.printf(node.instance);
-	}
-	private static void VisitNode(StatMotorNode node){
-		System.out.printf(node.instance);
-	}
-	private static void VisitNode(StatListNode node){
-		System.out.printf(node.instance);
-	}
-	private static void VisitNode(BoolValOpNode node){
-		System.out.print(" " + node.boolValOperator + " ");
-	}
-	private static void VisitNode(BoolExprNode node){
-		VisitNode(node.left);
-		VisitNode(node.middle);
-		VisitNode(node.right);
-	}
-	private static void VisitNode(NegatedBoolNode node){
-		System.out.printf("not ");
-		VisitNode(node.left);
-	}
-	private static void VisitNode(BoolOpNode node){
-		System.out.print(" " + node.child + " ");
-	}
-	private static void VisitNode(RBooleanNode node){
-		VisitNode(node.left);
+        }
+        return null;
+    }
 
-		if (node.middle != null) {
-			VisitNode(node.middle);
-		}
-		if (node.right != null) {
-			VisitNode(node.right);
-		}
-	}
-	private static void VisitNode(NotBoolNode node){
-		System.out.printf("not ");
-		VisitNode(node.child);
-	}
-	private static void VisitNode(BlockNode node){
-		for (Node item : node.ChildrenList)
-		{
-			VisitNode(item);
-		}
-	}
-	private static void VisitNode(Node node){
-		if (node instanceof BodyNode){
-			VisitNode((BodyNode) node);
-		} else if (node instanceof StmtNode){
-			VisitNode((StmtNode) node);
-		} else if (node instanceof DclNode){
-			VisitNode((DclNode) node);
-		} else if (node instanceof CallNode){
-			VisitNode((CallNode) node);
-		} else if (node instanceof IfNode){
-			VisitNode((IfNode) node);
-		} else if (node instanceof ForNode){
-			VisitNode((ForNode) node);
-		} else if (node instanceof WhileNode){
-			VisitNode((WhileNode) node);
-		} else if (node instanceof TypesNode){
-			VisitNode((TypesNode) node);
-		} else if (node instanceof IdentifierNode){
-			VisitNode((IdentifierNode) node);
-		} else if (node instanceof PlusNode){
-			VisitNode((PlusNode) node);
-		} else if (node instanceof MinusNode){
-			VisitNode((MinusNode) node);
-		} else if (node instanceof TermNode){
-			VisitNode((TermNode) node);
-		} else if (node instanceof MethodNode){
-			VisitNode((MethodNode) node);
-		} else if (node instanceof TimesNode){
-			VisitNode((TimesNode) node);
-		} else if (node instanceof DivideNode){
-			VisitNode((DivideNode) node);
-		} else if (node instanceof RBooleanNode){
-			VisitNode((RBooleanNode) node);
-		} else if (node instanceof ReturnValNode){
-			VisitNode((ReturnValNode) node);
-		} else if (node instanceof StatIdNode){
-			VisitNode((StatIdNode) node);
-		} else if (node instanceof BoolOpNode){
-			VisitNode((BoolOpNode) node);
-		} else if (node instanceof BoolExprNode){
-			VisitNode((BoolExprNode) node);
-		} else if (node instanceof NumberNode){
-			VisitNode((NumberNode) node);
-		} else if (node instanceof ElseNode){
-			VisitNode((ElseNode) node);
-		} else if (node instanceof ElseIfNode){
-			VisitNode((ElseIfNode) node);
-		} else if (node instanceof AssignNode){
-			VisitNode((AssignNode) node);
-		} else if (node instanceof ParameterNode){
-			VisitNode((ParameterNode) node);
-		} else if (node instanceof FormalParameterNode){
-			VisitNode((FormalParameterNode) node);
-		} else if (node instanceof ValueNode){
-			VisitNode((ValueNode) node);
-		} else if (node instanceof InstanceNode){
-			VisitNode((InstanceNode) node);
-		} else if (node instanceof StatSensorNode){
-			VisitNode((StatSensorNode) node);
-		} else if (node instanceof StatMotorNode){
-			VisitNode((StatMotorNode) node);
-		} else if (node instanceof StatListNode){
-			VisitNode((StatListNode) node);
-		} else if (node instanceof NegatedBoolNode){
-			VisitNode((NegatedBoolNode) node);
-		} else if (node instanceof BoolValOpNode){
-			VisitNode((BoolValOpNode) node);
-		} else if (node instanceof  UnaryMinusNode){
-			VisitNode((UnaryMinusNode) node);
-		} else if (node instanceof NotBoolNode){
-			VisitNode((NotBoolNode) node);
-		} else if (node instanceof BoolNode){
-			VisitNode((BoolNode) node);
-		} else if (node instanceof BlockNode){
-			VisitNode((BlockNode) node);
-		}
-	}
+    @Override
+    public Object Visit(SensorInvokeNode node) {
+        System.out.print(node.method);
+        return null;
+    }
+
+    @Override
+    public Object Visit(TouchSensorNode node) {
+        System.out.print("TouchSensor[" + node.symbol + "]");
+        node.id.Accept(this);
+        System.out.print("\n");
+        return null;
+    }
+
+    @Override
+    public Object Visit(UltraSoundSensorNode node) {
+        System.out.print("UltrasoundSensor[" + node.symbol + "]");
+        node.id.Accept(this);
+        System.out.print("\n");
+        return null;
+    }
+
+    @Override
+    public Object Visit (SynchronizationNode node)
+    {
+         node.right.Accept(this);
+         System.out.print(" Synchronize ");
+         node.left.Accept(this);
+         System.out.print(";\n");
+         return null;
+    }
+
+    @Override
+    public Object Visit (SleepNode node)
+    {
+        System.out.print("Sleep (");
+        node.child.Accept(this);
+        System.out.print(");\n");
+        return null;
+    }
+
+    @Override
+    public Object Visit(AndNode node) {
+        node.left.Accept(this);
+        System.out.print(" and ");
+        node.right.Accept(this);
+        return null;
+    }
+
+    @Override
+    public Object Visit(EqualNode node) {
+        node.left.Accept(this);
+        System.out.print(" equal ");
+        node.right.Accept(this);
+        return null;
+    }
+
+    @Override
+    public Object Visit(GreaterThanNode node) {
+        node.left.Accept(this);
+        System.out.print(" greaterThan ");
+        node.right.Accept(this);
+        return null;
+    }
+
+    @Override
+    public Object Visit(GreaterThanOrEqualNode node) {
+        node.left.Accept(this);
+        System.out.print(" greaterThanOrEqual ");
+        node.right.Accept(this);
+        return null;
+    }
+
+    @Override
+    public Object Visit(LessThanNode node) {
+        node.left.Accept(this);
+        System.out.print(" lessThan ");
+        node.right.Accept(this);
+        return null;
+    }
+
+    @Override
+    public Object Visit(LessThanOrEqualNode node) {
+        node.left.Accept(this);
+        System.out.print(" lessThanOrEqual ");
+        node.right.Accept(this);
+        return null;
+    }
+
+    @Override
+    public Object Visit(NotEqualNode node) {
+        node.left.Accept(this);
+        System.out.print(" notEqual ");
+        node.right.Accept(this);
+        return null;
+    }
+
+    @Override
+    public Object Visit(OrNode node) {
+        node.left.Accept(this);
+        System.out.print(" or ");
+        node.right.Accept(this);
+        return null;
+    }
+
+    @Override
+    public Void Visit(AssignNode node) {
+        node.left.Accept(this);
+        System.out.printf(" = ");
+        node.left.Accept(this);
+        System.out.println(";");
+        return null;
+    }
+
+    @Override
+    public Void Visit(BlockNode node) {
+        tab++;
+        for (Node a: node.ChildrenList
+             ) {
+            a.Accept(this);
+        }
+        tab--;
+        return null;
+    }
+
+    @Override
+    public Void Visit(BodyNode node) {
+        Indend();
+        node.content.Accept(this);
+        return null;
+    }
+
+    @Override
+    public Void Visit(BoolNode node) {
+        System.out.print(node.aBoolean);
+        return null;
+    }
+
+    @Override
+    public Void Visit(CallNode node) {
+
+            if(node.invoke != null)
+            {
+                node.id.Accept(this);
+                System.out.print(".");
+                node.invoke.Accept(this);
+            }
+            else {
+                node.id.Accept(this);
+                System.out.print("(");
+                if (node.parameter != null)
+                    node.parameter.Accept(this);
+                System.out.print(")");
+            }
+
+            return null;
+    }
+
+
+    @Override
+    public Void Visit(DclNode node) {
+        node.left.Accept(this);
+        node.middle.Accept(this);
+        if (node.right != null) {
+            System.out.print(" = ");
+            node.right.Accept(this);
+        }
+        System.out.println(";");
+        return null;
+    }
+
+    @Override
+    public Void Visit(DivideNode node) {
+        node.left.Accept(this);
+        System.out.print("/");
+        node.right.Accept(this);
+
+        return null;
+    }
+
+    @Override
+    public Void Visit(ElseIfNode node) {
+        System.out.print(" else if (");
+        node.bool.Accept(this);
+        System.out.println(") then");
+        Indend();
+        System.out.println("{");
+        node.block.Accept(this);
+        Indend();
+        System.out.println("}");
+
+        return null;
+    }
+
+    @Override
+    public Void Visit(ElseNode node) {
+        System.out.println("else");
+        Indend();
+        System.out.println("{");
+        node.block.Accept(this);
+        Indend();
+        System.out.println("}");
+
+        return null;
+    }
+
+    @Override
+    public Void Visit(FormalParameterNode node) {
+        node.type.Accept(this);
+        node.id.Accept(this);
+        if (node.fprmt != null){
+            System.out.print(", ");
+            node.fprmt.Accept(this);
+        }
+        return null;
+    }
+
+    @Override
+    public Void Visit(ForNode node) {
+        System.out.print("for ( ");
+        node.startNumber.Accept(this);
+        System.out.print(" to ");
+        node.endNumber.Accept(this);
+        System.out.println(" )");
+        Indend();
+        System.out.println("{");
+        node.block.Accept(this);
+        Indend();
+        System.out.println("}");
+        return null;
+    }
+
+    @Override
+    public Void Visit(IdentifierNode node) {
+        System.out.print(node.name);
+        return null;
+    }
+
+    @Override
+    public Void Visit(IfNode node) {
+        System.out.print("if(");
+        node.bool.Accept(this);
+        System.out.println(") then ");
+        Indend();
+        System.out.println("{");
+        node.block.Accept(this);
+        Indend();
+        System.out.print("}");
+
+        if (node.elseif != null) {
+            for (Node item : node.elseif
+                    ) {
+                item.Accept(this);
+            }
+        }
+        if(node.el != null){
+            node.el.Accept(this);
+        }
+        return null;
+    }
+    /*
+    @Override
+    public Void Visit(InstanceNode node) {
+        System.out.print(node.instance + " ");
+        return null;
+    }
+    */ //TODO
+    @Override
+    public Void Visit(MethodNode node) {
+        node.type.Accept(this);
+        System.out.print("Method ");
+        node.id.Accept(this);
+        System.out.print("(");
+        if (node.fprmt != null){
+            node.fprmt.Accept(this);
+        }
+        System.out.print(")");
+        System.out.println("{");
+        node.block.Accept(this);
+        tab++;
+        Indend();
+        if (node.returnval != null) {
+            node.returnval.Accept(this);
+        }
+        System.out.println(";");
+        tab--;
+        System.out.println("}");
+
+        return null;
+    }
+
+    @Override
+    public Void Visit(MinusNode node) {
+        node.left.Accept(this);
+        System.out.print(" - ");
+        node.right.Accept(this);
+        return null;
+    }
+
+    @Override
+    public Void Visit(NotBoolNode node) {
+        System.out.printf("not ");
+        node.child.Accept(this);
+        return null;
+    }
+
+    @Override
+    public Void Visit(NumberNode node) {
+        System.out.print(node.value);
+        return null;
+    }
+
+    @Override
+    public Void Visit(ParameterNode node) {
+
+        node.Parameter.Accept(this);
+
+        if (node.prmt != null){
+            System.out.print(", ");
+            node.prmt.Accept(this);
+        }
+        return null;
+    }
+
+    @Override
+    public Void Visit(PlusNode node) {
+        node.left.Accept(this);
+        System.out.print(" + ");
+        node.right.Accept(this);
+        return null;
+    }
+
+    @Override
+    public Void Visit(ProgramNode node) {
+        for (Node motorSensor: node.designSpecificInvokes
+                ) {
+            motorSensor.Accept(this);
+        }
+        System.out.println("main {");
+        node.mainBlock.Accept(this);
+
+        System.out.println("}");
+
+        for (Node item : node.methods)
+        {
+            System.out.println();
+            item.Accept(this);
+        }
+        return null;
+    }
+
+    @Override
+    public Void Visit(ReturnValNode node) {
+        System.out.printf("return ");
+        node.returnvalue.Accept(this);
+        return null;
+    }
+
+    @Override
+    public Void Visit(StmtNode node) {
+        node.child.Accept(this);
+        return null;
+    }
+
+    @Override
+    public Void Visit(TermNode node) {
+        node.child.Accept(this);
+        return null;
+    }
+
+    @Override
+    public Void Visit(TimesNode node) {
+        node.left.Accept(this);
+        System.out.print(" * ");
+        node.right.Accept(this);
+        return null;
+    }
+
+    @Override
+    public Void Visit(TypesNode node) {
+        System.out.print(node.type + " ");
+        return null;
+    }
+
+    @Override
+    public Void Visit(UnaryMinusNode node) {
+        System.out.print("- ");
+        node.child.Accept(this);
+        return null;
+    }
+
+    @Override
+    public Void Visit(ValueNode node) {
+        node.child.Accept(this);
+        return null;
+    }
+
+    @Override
+    public Void Visit(WhileNode node) {
+        System.out.print("While (");
+        node.bool.Accept(this);
+        System.out.println(")");
+        Indend();
+        System.out.println("{");
+        node.block.Accept(this);
+        Indend();
+        System.out.println("}");
+        return null;
+    }
+
+    private void Indend(){
+        for (int i = 0; i <= tab; i++){
+            System.out.print("\t");
+        }
+    }
 }
-
-*/

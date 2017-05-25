@@ -1,5 +1,7 @@
-package event;
+package errorHandling;
 
+import event.ErrorEvent;
+import event.ErrorListener;
 
 import javax.swing.event.EventListenerList;
 

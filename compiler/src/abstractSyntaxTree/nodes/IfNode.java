@@ -1,6 +1,6 @@
 package abstractSyntaxTree.nodes;
 
-import AVisitor.Visitor;
+import visitor.Visitor;
 
 import java.util.ArrayList;
 import java.util.List;

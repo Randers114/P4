@@ -1,7 +1,7 @@
 package abstractSyntaxTree.nodes;
 
 
-import AVisitor.Visitor;
+import visitor.Visitor;
 
 public class UltraSoundSensorNode extends Node{
     public String symbol;

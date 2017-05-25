@@ -314,24 +314,20 @@ final class CodeGeneratorHelper {
     }
 
     void GenerateProgramMainCode(ProgramNode node){
-        for (Node motorSensor: node.designSpecificInvokes
-                ) {
-            motorSensor.Accept(CodeGen);
-        }
+        node.designSpecificInvokes.forEach(n -> n.Accept(CodeGen));
+
         Targetcode.add("task main() \n{\n");
         node.mainBlock.Accept(CodeGen);
         Targetcode.add("} \n");
 
-        for (Node item : node.methods)
-        {
-            item.Accept(CodeGen);
-        }
+        node.methods.forEach(n -> n.Accept(CodeGen));
     }
 
     void GenerateReturnValCode(ReturnValNode node){
         Targetcode.add("\n");
         Indend();
         Targetcode.add("return ");
+
         if (node.returnvalue.Accept(CodeGen) != null){
             Targetcode.add(node.returnvalue.Accept(CodeGen).toString());
         }
@@ -452,7 +448,7 @@ final class CodeGeneratorHelper {
         }
         if (CheckForSync(node)){
             for (SyncMotor synced: FindSyncedMotor(node)
-                 ) {
+                    ) {
                 Targetcode.add(";\n");
                 Indend();
                 Targetcode.add("motor[" + matchMotorsAndSensors.get(synced.motor2.name) + "] = ");
@@ -485,7 +481,7 @@ final class CodeGeneratorHelper {
         Targetcode.add("stopMotor(" + matchMotorsAndSensors.get(node.Accept(CodeGen).toString()) + ")");
         if (CheckForSync(node)){
             for (SyncMotor syncMotor: FindSyncedMotor(node)
-                 ) {
+                    ) {
                 Targetcode.add(";\n");
                 Indend();
                 Targetcode.add("stopMotor(" + matchMotorsAndSensors.get(syncMotor.motor2.name) + ")");
@@ -505,12 +501,8 @@ final class CodeGeneratorHelper {
 
     private List<SyncMotor> FindSyncedMotor(IdentifierNode node){
         List<SyncMotor> syncMotors = new ArrayList<>();
-        for (SyncMotor sync: CodeGenerator.syncMotors
-                ) {
-            if (node.name.equals(sync.motor1.name)){
-                syncMotors.add(sync);
-            }
-        }
+        CodeGenerator.syncMotors.forEach(n -> {if (node.name.equals(n.motor1.name)){syncMotors.add(n);}});
+
         return syncMotors;
     }
 

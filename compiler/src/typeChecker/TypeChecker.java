@@ -1,16 +1,16 @@
 package typeChecker;
 
-import AVisitor.Visitor;
+import visitor.Visitor;
 import abstractSyntaxTree.nodes.*;
 import event.ErrorEvent;
-import event.FireableError;
+import errorHandling.FireableError;
 import symbolTable.SymbolTable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-public class ATypeChecker extends FireableError implements Visitor {
+public class TypeChecker extends FireableError implements Visitor {
     private Stack<SymbolTable> CurrentSymbolTable = new Stack<>();
     private ProgramNode Root;
 
@@ -47,7 +47,7 @@ public class ATypeChecker extends FireableError implements Visitor {
         }
 
         if(!(((node.method.equals("Forward") || node.method.equals("Backward")) && type.equals("number") && node.time == null || (node.time != null && type2.equals("number"))) || node.method.equals("Stop()"))) {
-            FireError(new ErrorEvent("Mistakes were made motorinvoke, line: " + node.LineNumber));
+            FireError(new ErrorEvent("Wrong type used in motorinvoke, line: " + node.LineNumber));
         }
         return "void";
     }
@@ -76,7 +76,7 @@ public class ATypeChecker extends FireableError implements Visitor {
     public Object Visit(SynchronizationNode node)
     {
         if (!(node.right != null && node.left != null && SymbolTable.GetTypeByID(((IdentifierNode)node.left).name, CurrentSymbolTable.peek()).equals("Motor")
-            && SymbolTable.GetTypeByID(((IdentifierNode)node.right).name, CurrentSymbolTable.peek()).equals("Motor"))){
+                && SymbolTable.GetTypeByID(((IdentifierNode)node.right).name, CurrentSymbolTable.peek()).equals("Motor"))){
             FireError(new ErrorEvent("Synchronization node failed one identifier is not Motor at line: " + node.LineNumber));
         }
 
@@ -92,8 +92,8 @@ public class ATypeChecker extends FireableError implements Visitor {
     @Override
     public Object Visit(SleepNode node)
     {
-		node.child.Accept(this);
-    	return null;
+        node.child.Accept(this);
+        return null;
 
     }
 
@@ -201,11 +201,7 @@ public class ATypeChecker extends FireableError implements Visitor {
     @Override
     public Void Visit(BlockNode node) {
         CurrentSymbolTable.push(node.symbolTable);
-
-        for (Node n: node.ChildrenList
-                ) {
-            n.Accept(this);
-        }
+        node.ChildrenList.forEach(n -> n.Accept(this));
 
         CurrentSymbolTable.pop();
         return null;
@@ -234,11 +230,11 @@ public class ATypeChecker extends FireableError implements Visitor {
                 if (formal.size() == actual.size()){
                     for (int i = 0; i < formal.size(); i++){
                         if (!formal.get(i).equals(actual.get(i))){
-                            FireError(new ErrorEvent("Mistake at parameter: " + (i + 1)));
+                            FireError(new ErrorEvent("Wrong type at parameter: " + (i + 1)));
                         }
                     }
                 } else {
-                    FireError(new ErrorEvent("Mistakes have been made callnode, line: " + node.LineNumber));
+                    FireError(new ErrorEvent("Too many actual parameters in callnode, line: " + node.LineNumber));
                 }
             }
         }
@@ -255,7 +251,7 @@ public class ATypeChecker extends FireableError implements Visitor {
     public Void Visit(DclNode node) {
         String type = "", type2 = "", rightNode = "";
         if (node.left != null)
-        type = node.left.Accept(this).toString();
+            type = node.left.Accept(this).toString();
 
         if (node.right != null){
             rightNode = node.right.Accept(this).toString();
@@ -287,7 +283,7 @@ public class ATypeChecker extends FireableError implements Visitor {
             }
 
             if (!type.equals(type2)){
-                FireError(new ErrorEvent("Declaration failed, error at line: " + node.LineNumber));
+                FireError(new ErrorEvent("It is illegal to declare a " + type + " as a " + type2 + ", error at line: " + node.LineNumber));
             }
         }
         return null;
@@ -350,10 +346,7 @@ public class ATypeChecker extends FireableError implements Visitor {
         }
         node.block.Accept(this);
         if (node.elseif != null) {
-            for (Node n: node.elseif
-                    ) {
-                n.Accept(this);
-            }
+            node.elseif.forEach(n -> n.Accept(this));
         }
 
         if (node.el != null) {
@@ -432,10 +425,7 @@ public class ATypeChecker extends FireableError implements Visitor {
         CurrentSymbolTable.push(node.symbolTable);
         Root = node;
 
-        for (Node n: node.ChildrenList
-                ) {
-            n.Accept(this);
-        }
+        node.ChildrenList.forEach(n -> n.Accept(this));
 
         CurrentSymbolTable.pop();
         return null;
@@ -504,7 +494,7 @@ public class ATypeChecker extends FireableError implements Visitor {
         List<String> typeList = new ArrayList<>();
 
         for (Node n: Root.methods
-             ) {
+                ) {
             if (((IdentifierNode)((MethodNode) n).id).name.equals(id)){
                 method = (MethodNode) n;
             }
@@ -584,8 +574,3 @@ public class ATypeChecker extends FireableError implements Visitor {
         return "";
     }
 }
-
-
-
-
-

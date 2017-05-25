@@ -2,16 +2,9 @@ package symbolTable;
 
 import abstractSyntaxTree.nodes.*;
 import event.ErrorEvent;
-import event.ErrorListener;
-import event.FireableError;
+import errorHandling.FireableError;
 
-import javax.swing.event.EventListenerList;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.EventListener;
 import java.util.List;
-import java.util.Scanner;
 
 public class BuildSymbolTable extends FireableError{
     private SymbolTable symbolTable = new SymbolTable();
@@ -73,7 +66,7 @@ public class BuildSymbolTable extends FireableError{
             }
         } else if (node instanceof IdentifierNode){
             if (!symbolTable.LookUp(((IdentifierNode) node).name)){
-                FireError(new ErrorEvent("Variable: " + ((IdentifierNode) node).name + " does not exist in this context. Error at line: " + node.LineNumber));
+                FireError(new ErrorEvent("Variable: " + ((IdentifierNode) node).name + " does not exist in this context, error at line: " + node.LineNumber));
             }
         } else if (node instanceof SynchronizationNode){
             symbolTable.Synchronize((IdentifierNode) ((SynchronizationNode) node).left, (IdentifierNode) ((SynchronizationNode) node).right, (SynchronizationNode) node);

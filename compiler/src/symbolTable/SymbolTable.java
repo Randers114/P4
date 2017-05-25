@@ -3,7 +3,7 @@ package symbolTable;
 import abstractSyntaxTree.nodes.*;
 import codeGenerator.SyncMotor;
 import event.ErrorEvent;
-import event.FireableError;
+import errorHandling.FireableError;
 
 import java.util.*;
 

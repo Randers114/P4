@@ -1,6 +1,6 @@
 package codeGenerator;
 
-import AVisitor.Visitor;
+import visitor.Visitor;
 import abstractSyntaxTree.nodes.*;
 import java.io.File;
 import java.io.IOException;
@@ -17,20 +17,10 @@ public class CodeGenerator implements Visitor {
 
 
     public void openfile() {
-        try {
-
-            File file = new File("C:\\Users\\Simon\\Documents\\P4\\compiler\\src\\codeGenerator");
-            if (file.createNewFile())
-            {
-                System.out.println("File is created!");
-            }
-        }
-        catch (IOException exception) {
-            exception.printStackTrace();
-        }
+        File file = new File("Mindstorms.c");
 
         try {
-            PrintWriter writer = new PrintWriter("C:\\Users\\Simon\\Documents\\P4\\compiler\\src\\codeGenerator/newfile.c", "UTF-8");
+            PrintWriter writer = new PrintWriter(file, "UTF-8");
             writer.flush();
             codeGeneratorHelper.WriteToFile(writer);
 
