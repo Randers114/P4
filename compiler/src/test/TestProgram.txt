@@ -1,65 +1,9 @@
-// Again we define two motors
-Motor[A]  motorLeft;
-Motor[B]  motorRight;
+Motor[A] M1;
+Motor[B] M2;
 
-// Then we create our sensors.
-TouchSensor[1] tSensorFront;
-UltrasoundSensor[2] uSensorRight;
+main{
+    number a = 9;
+    number b;
 
-main
-{
-    // We synchronize the motors, so they run simultaneously.
-    motorLeft synchronize motorRight;
-
-    // The creation of a List, to store all readings from the UltrasoundSensor.
-    List[number] distancesToObjects;
-
-    // We define all numbers used throughout the program.
-    number speedWhileScanning = 50;
-    number millisecondsBetweenScannings = 100;
-    number lowestValue;
-    number lowestValueIndex;
-    number sizeOfList;
-    number counter = 0;
-    number millisecondsToDriveBackwards;
-
-    // The robot starts driving in the defined speed.
-    motorLeft = speedWhileScanning;
-
-    // As long as the TouchSensor is not pressed, repeat the following loop.
-    while(not(tSensorFront.isPressed)) do
-    {
-        // The reading from the sensor is stored in the List.
-        distancesToObjects.Add(uSensorRight.distance);
-
-        // To control how many readings are made and with what interval, the sleep() function is called.
-        Sleep(millisecondsBetweenScannings);
-    }
-
-    motorLeft.Stop();
-
-    // The amount of numbers in the list are determined, and the lowestValue is set to the first number in the list.
-    sizeOfList = distancesToObjects.Length();
-    lowestValue = distancesToObjects[counter];
-    lowestValueIndex = counter;
-
-    // The for-loop goes from 1 to sizeOfList - 1, as the first number has already been read.
-    for(1 to sizeOfList - 1) do
-    {
-        // The current lowest value is compared to the next value of the list. If the next value is lower, this is set as lowestValue.
-        if(distancesToObjects[counter] lessThan lowestValue) then
-        {
-            lowestValue = distancesToObjects[counter];
-
-            // These variables is used to determine how far the robot has to backtrack, to reach the closest object of the robots path.
-            lowestValueIndex = counter;
-        }
-
-        counter = counter + 1;
-    }
-
-    // As we now know at what index the lowest value is located, and how far the robot has drived between each reading, we can determine the amount of time to drive backwards to reach the desired location.
-    millisecondsToDriveBackwards = (sizeOfList - lowestValueIndex) * millisecondsBetweenScannings;
-
-    motorLeft.BackwardSeconds(speedWhileScanning, millisecondsToDriveBackwards * 1000);
+    bool ghj = 1341234 lessThan a lessThan a;
 }
