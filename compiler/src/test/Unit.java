@@ -7,7 +7,7 @@ import typeChecker.TypeChecker;
 import static junit.framework.Assert.assertEquals;
 
 public class Unit {
-    private TypeChecker.typeChecker typeChecker = new TypeChecker.typeChecker();
+    private TypeChecker typeChecker = new TypeChecker();
     private CodeGenerator codeGenerator = new CodeGenerator();
     @Test
     public void EvaluateTypeCheckerDividePlus(){

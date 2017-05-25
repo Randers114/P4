@@ -7,20 +7,20 @@ import org.apache.commons.collections4.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AstBuild extends FinalGrammarBaseVisitor<Node> {
+public class AstBuild extends MSTGrammarBaseVisitor<Node> {
 
     @Override
-    public Node visitProgram(FinalGrammarParser.ProgramContext ctx) {
+    public Node visitProgram(MSTGrammarParser.ProgramContext ctx) {
         return new ProgramNode(){{
             if (ctx.designSpecificDcl() != null){
-                for (FinalGrammarParser.DesignSpecificDclContext d: ctx.designSpecificDcl()
+                for (MSTGrammarParser.DesignSpecificDclContext d: ctx.designSpecificDcl()
                      ) {
                     designSpecificInvokes.add(visitDesignSpecificDcl(d));
                 }
             }
             mainBlock = visitBlock(ctx.body());
 
-            for (FinalGrammarParser.MethodsContext m: ctx.methods()
+            for (MSTGrammarParser.MethodsContext m: ctx.methods()
                     ) {
                 if (m != null) {
                     methods.add(visitMethods(m));
@@ -33,13 +33,13 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
         }};
     }
 
-    private Node visitBlock(List<FinalGrammarParser.BodyContext> bodyContexts){
+    private Node visitBlock(List<MSTGrammarParser.BodyContext> bodyContexts){
         return new BlockNode(){{ChildrenList = new ArrayList<>(visitBodyList(bodyContexts));}};
     }
 
-    private List<Node> visitBodyList(List<FinalGrammarParser.BodyContext> bodyContexts){
+    private List<Node> visitBodyList(List<MSTGrammarParser.BodyContext> bodyContexts){
         List<Node> nodeList = new ArrayList<>();
-        for (FinalGrammarParser.BodyContext bodyContext: bodyContexts
+        for (MSTGrammarParser.BodyContext bodyContext: bodyContexts
              ) {
             if (bodyContext != null){
                 nodeList.add(visitBody(bodyContext));
@@ -50,7 +50,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
     }
 
     @Override
-    public Node visitDesignSpecificDcl(FinalGrammarParser.DesignSpecificDclContext ctx) {
+    public Node visitDesignSpecificDcl(MSTGrammarParser.DesignSpecificDclContext ctx) {
         return new DesignSpecificDclNode(){{
            child = visitInstancedcl(ctx.instancedcl());
 
@@ -89,7 +89,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
     }
 
     @Override
-    public Node visitInvoke(FinalGrammarParser.InvokeContext ctx) {
+    public Node visitInvoke(MSTGrammarParser.InvokeContext ctx) {
         return new InvokeNode(){{
             if (ctx.motorInvoke() != null){
                 child = visitMotorInvoke(ctx.motorInvoke());
@@ -103,7 +103,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
     }
 
     @Override
-    public Node visitBody(FinalGrammarParser.BodyContext ctx) {
+    public Node visitBody(MSTGrammarParser.BodyContext ctx) {
         return new BodyNode(){{
             if (ctx.dcl() != null) {
                 content = visitDcl(ctx.dcl());
@@ -119,7 +119,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
     }
 
     @Override
-    public Node visitMethods(FinalGrammarParser.MethodsContext ctx) {
+    public Node visitMethods(MSTGrammarParser.MethodsContext ctx) {
         return new MethodNode(){{
             if (!ctx.getText().contains("void")){
                 type = visitType(ctx.type());
@@ -148,7 +148,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
     }
 
     @Override
-    public Node visitDcl(FinalGrammarParser.DclContext ctx) {
+    public Node visitDcl(MSTGrammarParser.DclContext ctx) {
         return new DclNode(){{
             if (ctx.type() != null && !ctx.getText().contains("List")){
                 left = visitType(ctx.type());
@@ -171,7 +171,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
     }
 
     @Override
-    public Node visitStmt(FinalGrammarParser.StmtContext ctx) {
+    public Node visitStmt(MSTGrammarParser.StmtContext ctx) {
         return new StmtNode(){{
             if (ctx.start.getText().contains("if")){
                 child = visitIf(ctx);
@@ -193,7 +193,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
         }};
     }
 
-    private Node visitWhile(FinalGrammarParser.StmtContext ctx){
+    private Node visitWhile(MSTGrammarParser.StmtContext ctx){
         return new WhileNode(){{
             bool = visitB(ctx.b());
             block = visitBlock(ctx.body());
@@ -204,7 +204,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
         }};
     }
 
-    private Node visitFor(FinalGrammarParser.StmtContext ctx){
+    private Node visitFor(MSTGrammarParser.StmtContext ctx){
         return new ForNode(){{
             if (ctx.Num().size() > 1){
                 startNumber = visitTerminal(ctx.Num(0));
@@ -230,12 +230,12 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
         }};
     }
 
-    private Node visitIf(FinalGrammarParser.StmtContext ctx){
+    private Node visitIf(MSTGrammarParser.StmtContext ctx){
         return new IfNode(){{
             bool = visitB(ctx.b());
             block = visitBlock(ctx.body());
 
-            for (FinalGrammarParser.ElseifContext elseifContext: ctx.elseif()){
+            for (MSTGrammarParser.ElseifContext elseifContext: ctx.elseif()){
                 if (elseifContext != null) {
                     elseif.add(visitElseif(elseifContext));
                 }
@@ -257,7 +257,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
         }};
     }
 
-    private Node visitAssign(FinalGrammarParser.StmtContext ctx){
+    private Node visitAssign(MSTGrammarParser.StmtContext ctx){
         return new AssignNode(){{
             left = visitTerminal(ctx.Identifier(0));
             left.LineNumber = ctx.Identifier(0).getSymbol().getLine();
@@ -272,7 +272,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
     }
 
     @Override
-    public Node visitCall(FinalGrammarParser.CallContext ctx) {
+    public Node visitCall(MSTGrammarParser.CallContext ctx) {
         return new CallNode(){{
             id = visitTerminal(ctx.Identifier());
             id.LineNumber = ctx.Identifier().getSymbol().getLine();
@@ -291,7 +291,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
     }
 
     @Override
-    public Node visitFprmt(FinalGrammarParser.FprmtContext ctx) {
+    public Node visitFprmt(MSTGrammarParser.FprmtContext ctx) {
         return new FormalParameterNode(){{
             type = visitType(ctx.type());
             id = visitTerminal(ctx.Identifier());
@@ -308,7 +308,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
     }
 
     @Override
-    public Node visitPrmt(FinalGrammarParser.PrmtContext ctx) {
+    public Node visitPrmt(MSTGrammarParser.PrmtContext ctx) {
         return new ParameterNode(){{
             Parameter = visitB(ctx.b());
 
@@ -323,7 +323,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
 
 
     @Override
-    public Node visitReturnval(FinalGrammarParser.ReturnvalContext ctx) {
+    public Node visitReturnval(MSTGrammarParser.ReturnvalContext ctx) {
         return new ReturnValNode(){{
             returnvalue = visitB(ctx.b());
             CollectionUtils.addIgnoreNull(ChildrenList, returnvalue);
@@ -332,7 +332,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
     }
 
     @Override
-    public Node visitInstancedcl(FinalGrammarParser.InstancedclContext ctx) {
+    public Node visitInstancedcl(MSTGrammarParser.InstancedclContext ctx) {
         String type = ctx.getText();
 
         if (type.contains("Motor")){
@@ -346,7 +346,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
     }
 
     @Override
-    public Node visitElseif(FinalGrammarParser.ElseifContext ctx) {
+    public Node visitElseif(MSTGrammarParser.ElseifContext ctx) {
         return new ElseIfNode(){{
             bool = visitB(ctx.b());
             block = visitBlock(ctx.body());
@@ -357,7 +357,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
     }
 
     @Override
-    public Node visitElsel(FinalGrammarParser.ElselContext ctx) {
+    public Node visitElsel(MSTGrammarParser.ElselContext ctx) {
         return new ElseNode(){{
             block = visitBlock(
             ctx.body());
@@ -366,14 +366,14 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
     }
 
     @Override
-    public Node visitType(FinalGrammarParser.TypeContext ctx) {
+    public Node visitType(MSTGrammarParser.TypeContext ctx) {
         return new TypesNode(){{
             type = ctx.getText();
             LineNumber = ctx.start.getLine();}};
     }
 
     @Override
-    public Node visitVal(FinalGrammarParser.ValContext ctx) {
+    public Node visitVal(MSTGrammarParser.ValContext ctx) {
         return new ValueNode(){{
             if (ctx.Num() != null){
                 child = visitTerminal(ctx.Num());
@@ -395,7 +395,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
         }};
     }
 
-    private Node visitUnary(FinalGrammarParser.ValContext ctx){
+    private Node visitUnary(MSTGrammarParser.ValContext ctx){
         return new UnaryMinusNode(){{
             child = visitExpr(ctx.expr());
             ChildrenList.add(child);
@@ -404,7 +404,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
     }
 
     @Override
-    public Node visitExpr(FinalGrammarParser.ExprContext ctx) {
+    public Node visitExpr(MSTGrammarParser.ExprContext ctx) {
         if (ctx.getChildCount() == 1){
             return new TermNode(){{
                 child = visitTerm(ctx.term());
@@ -434,7 +434,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
     }
 
     @Override
-    public Node visitTerm(FinalGrammarParser.TermContext ctx) {
+    public Node visitTerm(MSTGrammarParser.TermContext ctx) {
         if (ctx.getChildCount() == 1){
             return visitVal(ctx.val());
         } else if (ctx.getChild(1).getText().equals("*")){
@@ -458,7 +458,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
     }
 
     @Override
-    public Node visitB(FinalGrammarParser.BContext ctx) {
+    public Node visitB(MSTGrammarParser.BContext ctx) {
         if (ctx.getChildCount() == 1){
             return visitT(ctx.t());
         } else if (ctx.getText().contains("and")) {
@@ -476,7 +476,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
     }
 
     @Override
-    public Node visitT(FinalGrammarParser.TContext ctx) {
+    public Node visitT(MSTGrammarParser.TContext ctx) {
         if (ctx.getChildCount() == 1){
             return visitF(ctx.f());
         } else if (ctx.getText().contains("or")) {
@@ -494,7 +494,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
     }
 
     @Override
-    public Node visitF(FinalGrammarParser.FContext ctx) {
+    public Node visitF(MSTGrammarParser.FContext ctx) {
         if (ctx.getChildCount() == 1){
             return visitH(ctx.h());
         } else if (ctx.getText().contains("equal")) {
@@ -521,7 +521,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
     }
 
     @Override
-    public Node visitH(FinalGrammarParser.HContext ctx) {
+    public Node visitH(MSTGrammarParser.HContext ctx) {
         if (ctx.getChildCount() == 1){
             return visitI(ctx.i());
         } else if (ctx.getText().contains("lessThan")) {
@@ -584,7 +584,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
     }
 
     @Override
-    public Node visitI(FinalGrammarParser.IContext ctx) {
+    public Node visitI(MSTGrammarParser.IContext ctx) {
         if (ctx.Bool() != null) {
             return visitTerminal(ctx.Bool());
         } else if (ctx.expr() != null) {
@@ -602,7 +602,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
     }
 
     @Override
-    public Node visitMotorInvoke(FinalGrammarParser.MotorInvokeContext ctx) {
+    public Node visitMotorInvoke(MSTGrammarParser.MotorInvokeContext ctx) {
         return new MotorInvokeNode(){{
             if (ctx.getText().contains("Stop")) {
                 method = "Stop()";
@@ -628,7 +628,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
     }
 
     @Override
-    public Node visitSensorInvoke(FinalGrammarParser.SensorInvokeContext ctx) {
+    public Node visitSensorInvoke(MSTGrammarParser.SensorInvokeContext ctx) {
         return new SensorInvokeNode(){{
             method = ctx.getText();
             LineNumber = ctx.start.getLine();
@@ -636,7 +636,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
     }
 
     @Override
-    public Node visitListInvoke(FinalGrammarParser.ListInvokeContext ctx) {
+    public Node visitListInvoke(MSTGrammarParser.ListInvokeContext ctx) {
         return new ListInvokeNode(){{
 
         }};
@@ -658,7 +658,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
         }
     }
 
-    private Node visitSleep(FinalGrammarParser.StmtContext ctx)
+    private Node visitSleep(MSTGrammarParser.StmtContext ctx)
 	{
 		return new SleepNode(){{
 			child = visitTerminal(ctx.Num(0));
@@ -666,7 +666,7 @@ public class AstBuild extends FinalGrammarBaseVisitor<Node> {
 		}};
 	}
 
-	private Node visitSynch(FinalGrammarParser.StmtContext ctx)
+	private Node visitSynch(MSTGrammarParser.StmtContext ctx)
 	{
 	    if (ctx.getText().contains("d")){
             return new DesynchronizeNode(){{

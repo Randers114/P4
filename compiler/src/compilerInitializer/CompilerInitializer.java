@@ -7,8 +7,8 @@ import errorHandling.AntlrErrorHandler;
 import errorHandling.PrintError;
 import org.antlr.v4.runtime.*;
 import prettyPrint.PrettyPrint;
-import sourceParser.FinalGrammarLexer;
-import sourceParser.FinalGrammarParser;
+import sourceParser.MSTGrammarLexer;
+import sourceParser.MSTGrammarParser;
 import symbolTable.BuildSymbolTable;
 import typeChecker.TypeChecker;
 import java.nio.file.Path;
@@ -35,7 +35,7 @@ public class CompilerInitializer {
         Path inputPath = Paths.get(inputCommands[0]);
 
         try {
-            FinalGrammarParser.ProgramContext programContext = RunParser(AntlerInit(inputPath));
+            MSTGrammarParser.ProgramContext programContext = RunParser(AntlerInit(inputPath));
             if (syntaxError){
                 System.exit(0);
             }
@@ -67,22 +67,22 @@ public class CompilerInitializer {
         return CharStreams.fromPath(inputPath);
     }
 
-    private ProgramNode InitAST(FinalGrammarParser.ProgramContext programContext){
+    private ProgramNode InitAST(MSTGrammarParser.ProgramContext programContext){
         AstBuild astBuild = new AstBuild();
 
         return (ProgramNode) astBuild.visitProgram(programContext);
     }
 
-    private FinalGrammarParser.ProgramContext RunParser(org.antlr.v4.runtime.CharStream charStream){
+    private MSTGrammarParser.ProgramContext RunParser(org.antlr.v4.runtime.CharStream charStream){
         return AddErrorListenersAndInitParser(charStream).program();
     }
 
-    private FinalGrammarParser AddErrorListenersAndInitParser(org.antlr.v4.runtime.CharStream charStream){
-        FinalGrammarLexer lexer = new FinalGrammarLexer(charStream);
+    private MSTGrammarParser AddErrorListenersAndInitParser(org.antlr.v4.runtime.CharStream charStream){
+        MSTGrammarLexer lexer = new MSTGrammarLexer(charStream);
         AntlrErrorHandler antlrErrorListener = new AntlrErrorHandler();
         lexer.addErrorListener(antlrErrorListener);
         TokenStream tokenStream = new org.antlr.v4.runtime.CommonTokenStream(lexer);
-        FinalGrammarParser parser = new FinalGrammarParser(tokenStream);
+        MSTGrammarParser parser = new MSTGrammarParser(tokenStream);
         parser.addErrorListener(antlrErrorListener);
         return parser;
     }
