@@ -92,7 +92,9 @@ public class TypeChecker extends FireableError implements Visitor {
     @Override
     public Void Visit(SleepNode node)
     {
-        node.child.Accept(this);
+        if (!CheckForNumber(node).equals("number")){
+            FireError(new ErrorEvent("The object inserted in sleep is not a number, error at line: " + node.LineNumber));
+        }
         return null;
 
     }

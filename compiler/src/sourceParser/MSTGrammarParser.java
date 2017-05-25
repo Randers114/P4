@@ -747,7 +747,15 @@ public class MSTGrammarParser extends Parser {
 				setState(197);
 				match(T__5);
 				setState(198);
-				match(Num);
+				_la = _input.LA(1);
+				if ( !(_la==Num || _la==Identifier) ) {
+				_errHandler.recoverInline(this);
+				}
+				else {
+					if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+					_errHandler.reportMatch(this);
+					consume();
+				}
 				setState(199);
 				match(T__6);
 				setState(200);
@@ -2457,8 +2465,8 @@ public class MSTGrammarParser extends Parser {
 		"\2\2\2\u00bc\u00bd\7\t\2\2\u00bd\u00be\7\23\2\2\u00be\u00c2\7\4\2\2\u00bf"+
 		"\u00c1\5\4\3\2\u00c0\u00bf\3\2\2\2\u00c1\u00c4\3\2\2\2\u00c2\u00c0\3\2"+
 		"\2\2\u00c2\u00c3\3\2\2\2\u00c3\u00c5\3\2\2\2\u00c4\u00c2\3\2\2\2\u00c5"+
-		"\u00d7\7\5\2\2\u00c6\u00c7\7\26\2\2\u00c7\u00c8\7\b\2\2\u00c8\u00c9\7"+
-		":\2\2\u00c9\u00ca\7\t\2\2\u00ca\u00d7\7\6\2\2\u00cb\u00cc\7<\2\2\u00cc"+
+		"\u00d7\7\5\2\2\u00c6\u00c7\7\26\2\2\u00c7\u00c8\7\b\2\2\u00c8\u00c9\t"+
+		"\2\2\2\u00c9\u00ca\7\t\2\2\u00ca\u00d7\7\6\2\2\u00cb\u00cc\7<\2\2\u00cc"+
 		"\u00cd\7\27\2\2\u00cd\u00cf\7<\2\2\u00ce\u00d0\5\30\r\2\u00cf\u00ce\3"+
 		"\2\2\2\u00cf\u00d0\3\2\2\2\u00d0\u00d1\3\2\2\2\u00d1\u00d7\7\6\2\2\u00d2"+
 		"\u00d3\7<\2\2\u00d3\u00d4\7\30\2\2\u00d4\u00d5\7<\2\2\u00d5\u00d7\7\6"+

@@ -661,7 +661,11 @@ public class AstBuild extends MSTGrammarBaseVisitor<Node> {
     private Node visitSleep(MSTGrammarParser.StmtContext ctx)
 	{
 		return new SleepNode(){{
-			child = visitTerminal(ctx.Num(0));
+		    if (ctx.Num(0) != null) {
+                child = visitTerminal(ctx.Num(0));
+            } else if(ctx.Identifier(0) != null){
+		        child = visitTerminal(ctx.Identifier(0));
+            }
 			LineNumber = ctx.start.getLine();
 		}};
 	}

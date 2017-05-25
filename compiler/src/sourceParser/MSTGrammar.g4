@@ -23,7 +23,7 @@ stmt	: Identifier '=' b ';'
 		| 'if' '(' b ')' 'then' '{' body* '}' elseif* elsel?
 		| 'while' '(' b ')' 'do' '{' body* '}'
 		| 'for' '(' (Num | Identifier) 'to' (Num | Identifier) ')' 'do' '{' body* '}'
-		| 'Sleep' '('Num')' ';'
+		| 'Sleep' '('(Num | Identifier)')' ';'
 		| Identifier 'synchronize' Identifier expr? ';'
 		| Identifier 'desynchronize' Identifier ';';
 

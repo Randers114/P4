@@ -347,7 +347,9 @@ final class CodeGeneratorHelper {
     void GenerateSleepCode(SleepNode node){
         Indend();
         Targetcode.add("sleep(");
-        node.child.Accept(CodeGen);
+        if (node.child.Accept(CodeGen) != null) {
+            Targetcode.add(node.child.Accept(CodeGen).toString());
+        }
         Targetcode.add(");\n");
     }
 

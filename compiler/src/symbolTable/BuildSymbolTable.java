@@ -1,6 +1,8 @@
 package symbolTable;
 
 import abstractSyntaxTree.nodes.*;
+import compilerInitializer.CompilerInitializer;
+import errorHandling.PrintError;
 import event.ErrorEvent;
 import errorHandling.FireableError;
 
@@ -8,6 +10,11 @@ import java.util.List;
 
 public class BuildSymbolTable extends FireableError{
     private SymbolTable symbolTable = new SymbolTable();
+
+    public BuildSymbolTable() {
+        symbolTable.AddErrorListener(e -> PrintError.PrintErrors(e.getSource().toString()));
+        symbolTable.AddErrorListener(e -> CompilerInitializer.SetScopeAndTypeError());
+    }
 
     public void InitializeSymbolTable(ProgramNode node){
         Build(node);
@@ -72,8 +79,6 @@ public class BuildSymbolTable extends FireableError{
             symbolTable.Synchronize((IdentifierNode) ((SynchronizationNode) node).left, (IdentifierNode) ((SynchronizationNode) node).right, (SynchronizationNode) node);
         } else if (node instanceof DesynchronizeNode){
             symbolTable.Desynchronize((IdentifierNode) ((DesynchronizeNode) node).left, (IdentifierNode) ((DesynchronizeNode) node).right, (DesynchronizeNode) node);
-
-
         } else {
             TraverseChildren(node.ChildrenList);
         }

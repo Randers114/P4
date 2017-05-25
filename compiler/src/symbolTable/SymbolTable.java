@@ -96,7 +96,7 @@ public class SymbolTable extends FireableError{
                 return true;
             }
         }
-        return false;
+        return left.name.equals(right.name);
     }
 
     Boolean LookUp(String varName)

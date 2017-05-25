@@ -18,6 +18,8 @@ main
     number backSpeed = 25;
     number turningSpeed = 35;
 
+    Sleep(b);
+
     // We then define a bool that is used to run the program.
     bool isRunning = false;
 
@@ -88,6 +90,7 @@ void Method TurnLeft(number speed)
 
     // Here we make the robot turn. We use a hardcoded value for turning here since it depends.
     // On the relative speed of the motors when we use the ForwardSeconds method.
+
     motorLeft.BackwardSeconds(speed, 3); // We assume that it takes the robot 3 seconds to turn at this speed.
 }
 
