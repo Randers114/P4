@@ -3,6 +3,7 @@ package compilerInitializer;
 import abstractSyntaxTree.AstBuild;
 import abstractSyntaxTree.nodes.ProgramNode;
 import codeGenerator.CodeGenerator;
+import codeGenerator.JavaBytecodeGenerator;
 import errorHandling.AntlrErrorHandler;
 import errorHandling.PrintError;
 import org.antlr.v4.runtime.*;
@@ -44,6 +45,11 @@ public class CompilerInitializer {
             PrettyPrintGeneration(root, inputCommands);
             SymbolTableAndTypeCheckerInit(root);
             if (!scopeAndTypeError){
+                if (inputCommands.length > 1){
+                    if (inputCommands[1].equals(" -jvb")){
+                        JavaBytecodeGeneration(root);
+                    }
+                }
                 CodeGenerationInit(root);
             }
         } catch (Exception e) {
@@ -112,6 +118,13 @@ public class CompilerInitializer {
     private void CodeGenerationInit(ProgramNode root){
         codeGenerator.Visit(root);
         codeGenerator.openfile();
+    }
+
+    private void JavaBytecodeGeneration(ProgramNode root){
+        JavaBytecodeGenerator javaBytecodeGenerator = new JavaBytecodeGenerator();
+        javaBytecodeGenerator.Visit(root);
+        javaBytecodeGenerator.openfile();
+        System.exit(0);
     }
 
     public static void SetSyntaxError(){

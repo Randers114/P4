@@ -80,6 +80,8 @@ main
     }
 }
 
+
+
 // We define a methods for tuning left.
 void Method TurnLeft(number speed)
 {
@@ -87,14 +89,13 @@ void Method TurnLeft(number speed)
     motorLeft desynchronize motorRight;
     motorLeft synchronize motorRight;
     motorLeft synchronize motorFront;
-
+    TurnRight(speed);
     // Here we make the robot turn. We use a hardcoded value for turning here since it depends.
     // On the relative speed of the motors when we use the ForwardSeconds method.
 
     motorLeft.BackwardSeconds(speed, 3); // We assume that it takes the robot 3 seconds to turn at this speed.
 }
 
-// And one for turning right.
 void Method TurnRight(number speed)
 {
     // Just as the other method desynchronize and then synchronize the motors again so that we can use them to turn.
@@ -104,3 +105,4 @@ void Method TurnRight(number speed)
 
     motorLeft.Forward(speed);
 }
+// And one for turning right.

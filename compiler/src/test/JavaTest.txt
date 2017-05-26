@@ -1,0 +1,9 @@
+main{
+    number i = 10;
+    number i2;
+    number i3;
+    number i4;
+    number i5;
+    number i6 = i;
+
+}
