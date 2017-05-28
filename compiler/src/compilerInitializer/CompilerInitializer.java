@@ -51,6 +51,7 @@ public class CompilerInitializer {
                     }
                 }
                 CodeGenerationInit(root);
+                System.out.println("The compilation completed without errors.");
             }
         } catch (Exception e) {
             System.out.println(e.toString());
