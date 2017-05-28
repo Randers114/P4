@@ -48,6 +48,7 @@ public class JavaBytecodeGenerator implements Visitor {
 
     @Override
     public Void Visit(BlockNode node) {
+        JavaBytecodeGeneratorHelper.symbolTable = node.symbolTable;
         for (Node a : node.ChildrenList)
         {
             a.Accept(this);
@@ -63,8 +64,9 @@ public class JavaBytecodeGenerator implements Visitor {
     }
 
     @Override
-    public Object Visit(BoolNode node) {
-        return null;
+    public String Visit(BoolNode node) {
+        javaBytecodeGenerator.GenerateBoolCode(node);
+        return "bool";
     }
 
     @Override
@@ -129,8 +131,8 @@ public class JavaBytecodeGenerator implements Visitor {
     }
 
     @Override
-    public Object Visit(IdentifierNode node) {
-        return null;
+    public String Visit(IdentifierNode node) {
+        return node.name;
     }
 
     @Override
@@ -185,9 +187,9 @@ public class JavaBytecodeGenerator implements Visitor {
     }
 
     @Override
-    public Void Visit(NumberNode node) {
+    public String Visit(NumberNode node) {
         javaBytecodeGenerator.GenerateNumberCode(node);
-        return null;
+        return "number";
     }
 
     @Override
@@ -207,7 +209,7 @@ public class JavaBytecodeGenerator implements Visitor {
 
     @Override
     public Void Visit(ProgramNode node) {
-        javaBytecodeGenerator.GenerateProgramMainCode(node);
+        node.mainBlock.Accept(this);
         return null;
     }
 
@@ -223,6 +225,7 @@ public class JavaBytecodeGenerator implements Visitor {
 
     @Override
     public Object Visit(StmtNode node) {
+        node.child.Accept(this);
         return null;
     }
 
@@ -242,8 +245,9 @@ public class JavaBytecodeGenerator implements Visitor {
     }
 
     @Override
-    public Object Visit(TypesNode node) {
-        return null;
+    public String Visit(TypesNode node) {
+        javaBytecodeGenerator.GenerateTypesCode(node);
+        return node.type;
     }
 
     @Override
@@ -257,9 +261,8 @@ public class JavaBytecodeGenerator implements Visitor {
     }
 
     @Override
-    public Void Visit(ValueNode node) {
-        javaBytecodeGenerator.GenerateValueCode(node);
-        return null;
+    public Object Visit(ValueNode node) {
+        return node.child.Accept(this);
     }
 
     @Override

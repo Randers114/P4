@@ -1,9 +1,15 @@
 main{
-    number i = 10;
-    number i2;
-    number i3;
-    number i4;
-    number i5;
-    number i6 = i;
+    bool b = true;
+    bool a;
+    a = b;
+    if(a) then {
 
+        if(b) then {
+            number hh = 1000;
+        }
+        number hsah = 10;
+        hsah = 20;
+        number c = hsah;
+    }
+    a = b;
 }

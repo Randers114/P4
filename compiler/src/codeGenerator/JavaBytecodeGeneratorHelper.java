@@ -1,18 +1,20 @@
 package codeGenerator;
 
 import abstractSyntaxTree.nodes.*;
-
+import symbolTable.SymbolTable;
 
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class JavaBytecodeGeneratorHelper  {
     JavaBytecodeGeneratorHelper(JavaBytecodeGenerator javaBytecodeGenerator){ CodeGen = javaBytecodeGenerator; }
     private JavaBytecodeGenerator CodeGen;
     private List<String> Targetcode = new ArrayList<>();
-
+    private Map<String, String> StoreValue = new HashMap<>();
+    static SymbolTable symbolTable;
+    private Stack<Integer> indexQueue = new Stack<>();
     private int StoreNumber = 1;
+    private int LineNumber = 1;
 
     void WriteToFile(PrintWriter writer) {
         for (String content : Targetcode) {
@@ -21,82 +23,134 @@ public class JavaBytecodeGeneratorHelper  {
     }
 
     void GenerateAssignCode(AssignNode node){
+        String type = node.right.Accept(CodeGen).toString();
+        if (type.equals("bool")){
+            Targetcode.add(Targetcode.size() - 2,"iconst_");
+            GenerateNewline();
+            Targetcode.add(IStore(node.left.Accept(CodeGen).toString()));
+        } else if (type.equals("number")){
+            GenerateNewline();
+            Targetcode.add(Targetcode.size() - 2,"ldc2_w ");
+            Targetcode.add(DStore(node.left.Accept(CodeGen).toString()));
+        } else {
+            String id = type;
+            type = SymbolTable.GetTypeByID(type, symbolTable);
 
-        Targetcode.add(Push() + " ");
+            if (type.equals("number")) {
+                Targetcode.add(DLoad(id));
+                GenerateNewline();
+                Targetcode.add(DStore(node.left.Accept(CodeGen).toString()));
+            } else {
+                Targetcode.add(ILoad(id));
+                GenerateNewline();
+                Targetcode.add(IStore(node.left.Accept(CodeGen).toString()));
+            }
 
-        if (node.right.Accept(CodeGen) != null){
-            Targetcode.add(node.right.Accept(CodeGen).toString());
         }
-        Targetcode.add("\n");
-        Targetcode.add(Store());
-        Targetcode.add("\n");
-        StoreNumber = StoreNumber + 2;
+        GenerateNewline();
     }
 
-    void GenerateDclCode(DclNode node){
+    void GenerateDclCode(DclNode node) {
+        if (node.left.Accept(CodeGen).toString().equals("number")) {
+            if (node.right != null) {
+                if (!(node.right.Accept(CodeGen).toString().equals("number") || node.right.Accept(CodeGen).toString().equals("bool"))) {
+                    Targetcode.remove(Targetcode.size() - 1);
+                    Targetcode.add(DLoad(node.right.Accept(CodeGen).toString()));
+                }
+                StoreValue.put(node.middle.Accept(CodeGen).toString(), Integer.toString(StoreNumber));
+                GenerateNewline();
+                Targetcode.add(DStore(node.middle.Accept(CodeGen).toString()));
+                GenerateNewline();
 
-        if (node.right != null) {
-            Targetcode.add(Push());
-            if (node.right.Accept(CodeGen) != null){
-                Targetcode.add(node.right.Accept(CodeGen).toString());
-                Targetcode.add("\n");
-                Targetcode.add(Store());
-                StoreNumber = StoreNumber + 2;
+            } else {
+                Targetcode.remove(Targetcode.size() - 1);
+                StoreValue.put(node.middle.Accept(CodeGen).toString(), Integer.toString(StoreNumber));
             }
-        } else{
-            StoreNumber = StoreNumber + 2;
+
+        } else {
+            if (node.right != null){
+                if (!(node.right.Accept(CodeGen).toString().equals("number") || node.right.Accept(CodeGen).toString().equals("bool"))) {
+                    Targetcode.remove(Targetcode.size() - 1);
+                    Targetcode.add(ILoad(node.right.Accept(CodeGen).toString()));
+                }
+
+                Targetcode.remove(Targetcode.size() - 1);
+                StoreValue.put(node.middle.Accept(CodeGen).toString(), Integer.toString(StoreNumber));
+                GenerateNewline();
+                Targetcode.add(IStore(node.middle.Accept(CodeGen).toString()));
+                GenerateNewline();
+
+            } else {
+                Targetcode.remove(Targetcode.size() - 1);
+                StoreValue.put(node.middle.Accept(CodeGen).toString(), Integer.toString(StoreNumber));
+            }
+            StoreNumber--;
         }
-        Targetcode.add("\n");
+
+        StoreNumber += 2;
     }
 
     void GenerateIfCode(IfNode node){
-        Targetcode.add("if(");
-        if (node.bool.Accept(CodeGen) != null){
-            Targetcode.add(node.bool.Accept(CodeGen).toString());
+        String type = node.bool.Accept(CodeGen).toString();
+        int tempInt;
+        if (type.equals("bool")){
+            Targetcode.add(Targetcode.size() - 2,"iconst_");
+        } else if (!type.equals("number")) {
+            Targetcode.add(ILoad(type));
         }
-
-        Targetcode.add( ")\n");
-        Targetcode.add("{\n");
+        GenerateNewline();
+        Targetcode.add("ifeq");
+        indexQueue.push(Targetcode.size());
+        GenerateNewline();
+        tempInt = StoreNumber;
         node.block.Accept(CodeGen);
-        Targetcode.add("}\n");
 
-        if (node.elseif != null) {
-            for (Node a : node.elseif
-                    ) {
-                a.Accept(CodeGen);
-            }
-        }
-        if(node.el != null){
-            node.el.Accept(CodeGen);
-        }
+        Targetcode.add(indexQueue.pop()," " + Integer.toString(LineNumber));
 
+        StoreNumber = tempInt;
+    }
+
+    void GenerateTypesCode(TypesNode node){
+        switch (node.type){
+            case "number":
+                Targetcode.add("ldc2_w ");
+                break;
+            case "bool":
+                Targetcode.add("iconst_");
+        }
+    }
+
+    void GenerateBoolCode(BoolNode node){
+        if (node.aBoolean){
+            Targetcode.add("1");
+        } else {
+            Targetcode.add("0");
+        }
     }
 
     void GenerateNumberCode(NumberNode node){
         Targetcode.add(Double.toString(node.value));
     }
 
-    void GenerateProgramMainCode(ProgramNode node){
-        node.mainBlock.Accept(CodeGen);
-
+    private void GenerateNewline(){
+        Targetcode.add("\n");
+        LineNumber++;
     }
 
-    void GenerateValueCode(ValueNode node){
-        if (node.child.Accept(CodeGen) != null) {
-            Targetcode.add(node.child.Accept(CodeGen).toString());
-        }
+    private String DStore(String id){
+        return "dstore_" + StoreValue.get(id);
     }
 
-    private String Push(){
-        return "ldc2_w ";
+    private String DLoad(String id){
+        return "dload_" + StoreValue.get(id);
     }
 
-    private String Store(){
-        return "dstore_" + StoreNumber;
+    private String IStore(String id){
+        return "istore_" + StoreValue.get(id);
     }
 
-    private String Load(){
-        return "dstore_" + 1;
+    private String ILoad(String id){
+        return "iload_" + StoreValue.get(id);
     }
 }
 
