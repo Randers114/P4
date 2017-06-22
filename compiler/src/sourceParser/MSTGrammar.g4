@@ -30,7 +30,8 @@ stmt	: Identifier '=' b ';'
 designSpecificDcl : instancedcl '[' (Identifier | Num) ']' Identifier ';';
 
 call	: Identifier '(' prmt? ')'
-		| Identifier '.' invoke;
+		| Identifier '.' invoke
+		| Identifier '[' expr ']';
 
 type	: 'number'
         | 'bool';
@@ -80,7 +81,8 @@ prmt	: b
         | b ',' prmt;
 
 invoke	: motorInvoke
-        | sensorInvoke;
+        | sensorInvoke
+        | listInvoke;
 
 boolvalop	: 'lessThan'
 		| 'greaterThan'
@@ -96,6 +98,8 @@ motorInvoke	: 'Forward' '(' expr ')'
             | 'Stop' '(' ')';
 
 sensorInvoke: 'isPressed' | 'distance';
+
+listInvoke: 'Add' '[' b ']'| 'remove' '[' b ']';
 
 boolop	: 'equal'
 		| 'notEqual';

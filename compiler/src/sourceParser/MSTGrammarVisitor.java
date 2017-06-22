@@ -1,4 +1,4 @@
-// Generated from C:/Users/Simon/Documents/P4/compiler/src/sourceParser\MSTGrammar.g4 by ANTLR 4.7
+// Generated from F:/Source Tree/Programmer/P4/compiler/src/sourceParser\MSTGrammar.g4 by ANTLR 4.7
 package sourceParser;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
@@ -166,6 +166,12 @@ public interface MSTGrammarVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitSensorInvoke(MSTGrammarParser.SensorInvokeContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MSTGrammarParser#listInvoke}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitListInvoke(MSTGrammarParser.ListInvokeContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link MSTGrammarParser#boolop}.
 	 * @param ctx the parse tree

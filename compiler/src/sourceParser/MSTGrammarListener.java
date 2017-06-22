@@ -1,4 +1,4 @@
-// Generated from C:/Users/Simon/Documents/P4/compiler/src/sourceParser\MSTGrammar.g4 by ANTLR 4.7
+// Generated from F:/Source Tree/Programmer/P4/compiler/src/sourceParser\MSTGrammar.g4 by ANTLR 4.7
 package sourceParser;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
@@ -267,6 +267,16 @@ public interface MSTGrammarListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitSensorInvoke(MSTGrammarParser.SensorInvokeContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MSTGrammarParser#listInvoke}.
+	 * @param ctx the parse tree
+	 */
+	void enterListInvoke(MSTGrammarParser.ListInvokeContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MSTGrammarParser#listInvoke}.
+	 * @param ctx the parse tree
+	 */
+	void exitListInvoke(MSTGrammarParser.ListInvokeContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link MSTGrammarParser#boolop}.
 	 * @param ctx the parse tree
