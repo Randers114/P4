@@ -1,6 +1,7 @@
 package abstractSyntaxTree;
 
 import abstractSyntaxTree.nodes.*;
+import com.sun.org.apache.bcel.internal.classfile.LineNumber;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import sourceParser.*;
 import org.apache.commons.collections4.*;
@@ -95,6 +96,8 @@ public class AstBuild extends MSTGrammarBaseVisitor<Node> {
                 child = visitMotorInvoke(ctx.motorInvoke());
             } else if (ctx.sensorInvoke() != null){
                 child = visitSensorInvoke(ctx.sensorInvoke());
+            } else if (ctx.listInvoke() != null) {
+                child = visitListInvoke(ctx.listInvoke());
             }
         }};
 
@@ -155,9 +158,9 @@ public class AstBuild extends MSTGrammarBaseVisitor<Node> {
                     right = visitB(ctx.b());
                 }
             } else {
+                left = new TypesNode(){{type = "List";}};
                 middle = visitType(ctx.type());
                 right = visitTerminal(ctx.Identifier());
-                isList = true;
 			}
 
             CollectionUtils.addIgnoreNull(ChildrenList, left);
@@ -597,6 +600,22 @@ public class AstBuild extends MSTGrammarBaseVisitor<Node> {
         }
 
         return null;
+    }
+
+    @Override
+    public Node visitListInvoke(MSTGrammarParser.ListInvokeContext ctx) {
+        return new ListInvokeNode(){{
+            if (ctx.getText().contains("Add")){
+                method = "Add";
+                input = visitB(ctx.b());
+            } else if (ctx.getText().contains("Remove")) {
+                method = "Remove";
+            } else if (ctx.getText().contains("GetIndex")) {
+                method = "GetIndex";
+                input = visitExpr(ctx.expr());
+            }
+            LineNumber = ctx.start.getLine();
+        }};
     }
 
     @Override

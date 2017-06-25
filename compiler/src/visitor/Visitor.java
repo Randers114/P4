@@ -27,6 +27,8 @@ public interface Visitor{
     Object Visit(InvokeNode node);
     Object Visit(LessThanNode node);
     Object Visit(LessThanOrEqualNode node);
+    Object Visit(ListInvokeNode node);
+    Object Visit(ListNode node);
     Object Visit(MethodNode node);
     Object Visit(MotorNode node);
     Object Visit(MinusNode node);

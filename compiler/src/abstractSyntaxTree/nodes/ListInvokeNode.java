@@ -2,10 +2,10 @@ package abstractSyntaxTree.nodes;
 
 import visitor.Visitor;
 
-public class DclNode extends Node {
-    public Node left;
-    public Node middle;
-    public Node right;
+
+public class ListInvokeNode extends Node{
+    public String method;
+    public Node input;
 
     @Override
     public Object Accept(Visitor visitor) {
