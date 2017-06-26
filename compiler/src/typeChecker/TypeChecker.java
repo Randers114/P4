@@ -237,11 +237,20 @@ public class TypeChecker extends FireableError implements Visitor {
         }
 
         if(node.invoke != null) {
-            return node.invoke.Accept(this).toString();
+            String type = node.invoke.Accept(this).toString();
+            if (type.equals("GetIndex")){
+                type = node.id.Accept(this).toString();
+            }
+            return type;
         }
 
 
         return node.id.Accept(this).toString();
+    }
+
+    @Override
+    public Object Visit(ListNode node) {
+        return null;
     }
 
     @Override
@@ -271,10 +280,6 @@ public class TypeChecker extends FireableError implements Visitor {
             } else if(rightNode.equals("TouchSensor")){
                 type2 = "TouchSensor";
             }
-            else if (node.middle != null && node.isList)
-            {
-                node.middle.Accept(this);
-            }
             else {
                 type2 = "number";
             }
@@ -284,6 +289,21 @@ public class TypeChecker extends FireableError implements Visitor {
             }
         }
         return null;
+    }
+
+    @Override
+    public Object Visit(ListInvokeNode node) {
+        switch (node.method){
+            case "Add":
+                return node.input.Accept(this);
+            case "GetIndex":
+                if (!node.input.Accept(this).equals("number")){
+                    FireError(new ErrorEvent("Index can only be numbers, error at line: " + node.LineNumber));
+                }
+                return "GetIndex";
+            default: return "";
+        }
+
     }
 
     @Override

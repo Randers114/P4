@@ -140,6 +140,18 @@ public class CodeGenerator implements Visitor {
     }
 
     @Override
+    public Object Visit(ListInvokeNode node) {
+        codeGeneratorHelper.GenerateListInvokeCode(node);
+        return null;
+    }
+
+    @Override
+    public Object Visit(ListNode node) {
+        codeGeneratorHelper.GenerateListCode(node);
+        return null;
+    }
+
+    @Override
     public Void Visit(BodyNode node) {
         node.content.Accept(this);
 

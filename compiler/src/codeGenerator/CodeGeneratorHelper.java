@@ -27,6 +27,8 @@ final class CodeGeneratorHelper {
             writer.print(motorOrSensor);
         }
         writer.print("\n");
+        writer.print("const int MAX_ARRAY_LENGTH = 100;");
+        writer.print("\n");
         for (String prototype: CodePrototypes)
         {
             writer.print(prototype);
@@ -102,8 +104,12 @@ final class CodeGeneratorHelper {
 
     void GenerateDclCode(DclNode node){
         Indend();
+        String type = node.left.Accept(CodeGen).toString();
+        if (type != null) {
+            Targetcode.add(type + node.middle.Accept(CodeGen).toString());
+        } else {
 
-        Targetcode.add(node.left.Accept(CodeGen).toString() + node.middle.Accept(CodeGen).toString());
+        }
 
         if (node.right != null) {
             Targetcode.add(" = ");
@@ -322,6 +328,14 @@ final class CodeGeneratorHelper {
         Targetcode.add("} \n");
 
         node.methods.forEach(n -> n.Accept(CodeGen));
+    }
+
+    void GenerateListInvokeCode(ListInvokeNode node){
+
+    }
+
+    void GenerateListCode(ListNode node){
+
     }
 
     void GenerateReturnValCode(ReturnValNode node){
