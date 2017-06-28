@@ -71,6 +71,7 @@ public class JavaBytecodeGenerator implements Visitor {
 
     @Override
     public Object Visit(CallNode node) {
+        javaBytecodeGenerator.GenerateCallCode(node);
         return null;
     }
 
@@ -157,7 +158,9 @@ public class JavaBytecodeGenerator implements Visitor {
     }
 
     @Override
-    public Object Visit(MethodNode node) {
+    public Object Visit(MethodNode node)
+    {
+        javaBytecodeGenerator.GenerateMethodCode(node);
         return null;
     }
 

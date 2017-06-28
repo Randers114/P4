@@ -152,5 +152,56 @@ public class JavaBytecodeGeneratorHelper  {
     private String ILoad(String id){
         return "iload_" + StoreValue.get(id);
     }
+
+    void GenerateMethodCode(MethodNode node)
+    {
+        if(node.id.toString() != null && node.type != null)
+            StoreValue.put(node.id.toString(),Integer.toString(StoreNumber));
+            if (node.fprmt != null)
+            {
+                String TMP ="public " + node.type + " " + node.id + "(";
+                TMP = AddParameters((FormalParameterNode)(node.fprmt), TMP);
+                TMP.concat(");");
+                GenerateNewline();
+                Targetcode.add("Code:");
+                GenerateNewline();
+                Targetcode.add(TMP);
+                node.block.Accept(CodeGen);
+                GenerateNewline();
+                Targetcode.add("return");
+            }
+            else
+            {
+                Targetcode.add("public " + node.type + " " + node.id + "();");
+                GenerateNewline();
+                Targetcode.add("Code:");
+                GenerateNewline();
+                node.block.Accept(CodeGen);
+                GenerateNewline();
+                Targetcode.add("return");
+            }
+            StoreNumber += //TODO;
+
+    }
+
+    void GenerateCallCode(CallNode node)
+    {
+        Targetcode.add("InvokeStatic #"  + StoreValue.get(node.id)); //TODO
+    }
+
+    String AddParameters (FormalParameterNode node, String s)
+    {
+        s.concat(node.fprmt.toString());
+        if (((FormalParameterNode)(node.fprmt)).fprmt != null)
+                AddParameters(node,s);
+
+        return s;
+    }
+
+    void GenerateMethdoCode()
+    {
+        GenerateNewline();
+    }
 }
+
 
