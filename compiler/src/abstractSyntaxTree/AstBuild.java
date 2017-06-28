@@ -158,9 +158,11 @@ public class AstBuild extends MSTGrammarBaseVisitor<Node> {
                     right = visitB(ctx.b());
                 }
             } else {
-                left = new TypesNode(){{type = "List";}};
-                middle = visitType(ctx.type());
-                right = visitTerminal(ctx.Identifier());
+                left = new ListNode(){{
+                    type = visitType(ctx.type());
+                    id = visitTerminal(ctx.Identifier());
+                    LineNumber = ctx.start.getLine();
+                }};
 			}
 
             CollectionUtils.addIgnoreNull(ChildrenList, left);

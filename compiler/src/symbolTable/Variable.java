@@ -1,5 +1,9 @@
 package symbolTable;
 
+import abstractSyntaxTree.nodes.IdentifierNode;
+import abstractSyntaxTree.nodes.ListNode;
+import abstractSyntaxTree.nodes.TypesNode;
+
 public class Variable {
     public String Name;
     public String Type;
@@ -17,9 +21,9 @@ public class Variable {
         Symbol = symbol;
     }
 
-    public Variable(String name, String ListType, boolean isList) {
-        Name = name;
+    public Variable(ListNode listNode) {
+        Name = ((IdentifierNode) listNode.id).name;
         Type = "List";
-        this.ListType = ListType;
+        ListType = ((TypesNode) listNode.type).type;
     }
 }

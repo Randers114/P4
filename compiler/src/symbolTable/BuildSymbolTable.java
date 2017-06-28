@@ -64,15 +64,12 @@ public class BuildSymbolTable extends FireableError{
 
         } else if (node instanceof DclNode){
             if(((DclNode) node).left instanceof TypesNode){
-                if (((TypesNode) ((DclNode) node).left).type.contains("List")){
-                    symbolTable.Insert((IdentifierNode) ((DclNode) node).right, ((TypesNode) ((DclNode) node).left).type, ((TypesNode) ((DclNode) node).middle).type, true);
-                } else {
-                    symbolTable.Insert(((DclNode) node).middle, ((DclNode) node).left);
-                    if (((DclNode) node).right != null) {
+                symbolTable.Insert(((DclNode) node).middle, ((DclNode) node).left);
+                if (((DclNode) node).right != null) {
                         TraverseChildren(((DclNode) node).right.ChildrenList);
-                    }
                 }
             } else {
+
                 symbolTable.Insert(((DclNode) node).right, ((DclNode) node).left);
             }
         } else if (node instanceof IdentifierNode){

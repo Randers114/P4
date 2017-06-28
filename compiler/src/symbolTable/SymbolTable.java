@@ -55,13 +55,11 @@ public class SymbolTable extends FireableError{
         }
     }
 
-    void Insert(IdentifierNode id, String type, String listType, boolean islist){
-        if (!LookUp(id.name)){
-            if (type.equals("List")){
-                symbolTables.get((symbolTables.size() - 1)).Variables.add(new Variable(id.name, listType, islist));
-            }
+    void Insert(ListNode listNode){
+        if (!LookUp(((IdentifierNode) listNode.id).name)) {
+            symbolTables.get((symbolTables.size() - 1)).Variables.add(new Variable(listNode));
         } else {
-            FireError(new ErrorEvent("Variable " + id.name + " failed, the variable is already initialized error at line: " + id.LineNumber));
+            FireError(new ErrorEvent("Variable " + ((IdentifierNode) listNode.id).name + " failed, the variable is already initialized error at line: " + listNode.LineNumber));
         }
     }
 
