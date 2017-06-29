@@ -1,0 +1,18 @@
+iconst_1
+istore_1
+iload_1
+istore_2
+iload_2
+ifeq 17
+iload_1
+ifeq 11
+ldc2_w 1000.0
+dstore_3
+ldc2_w 10.0
+dstore_3
+ldc2_w 20.0
+dstore_3
+dload_3
+dstore_5
+iload_1
+istore_2

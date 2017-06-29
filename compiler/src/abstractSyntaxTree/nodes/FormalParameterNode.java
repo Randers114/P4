@@ -1,6 +1,6 @@
 package abstractSyntaxTree.nodes;
 
-import AVisitor.Visitor;
+import visitor.Visitor;
 
 public class FormalParameterNode extends Node {
     public Node id;

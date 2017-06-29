@@ -1,28 +1,23 @@
 package symbolTable;
 
-import abstractSyntaxTree.nodes.IdentifierNode;
-import abstractSyntaxTree.nodes.InstanceNode;
-import abstractSyntaxTree.nodes.Node;
-import abstractSyntaxTree.nodes.TypesNode;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import abstractSyntaxTree.nodes.*;
+import codeGenerator.SyncMotor;
+import event.ErrorEvent;
+import errorHandling.FireableError;
 
-public class SymbolTable {
+import java.util.*;
+
+public class SymbolTable extends FireableError{
     private List<Variable> Variables;
-    public static List<SymbolTable> symbolTables = new ArrayList<>();
-    private static int CurrentScope = -1;
-    private static String InputPath;
-    public SymbolTable(String inputPath)
+    static List<SymbolTable> symbolTables = new ArrayList<>();
+    private List<SyncMotor> syncMotors = new ArrayList<>();
+    SymbolTable()
     {
         Variables = new ArrayList<>();
-        InputPath = inputPath;
     }
 
-    public void OpenScope(){
-        SymbolTable nextScope = new SymbolTable(InputPath);
-        CurrentScope++;
+    void OpenScope(){
+        SymbolTable nextScope = new SymbolTable();
 
         if (symbolTables.size() == 0){
             symbolTables.add(nextScope);
@@ -32,47 +27,78 @@ public class SymbolTable {
         }
 
     }
-    public void CloseScope(){
+    void CloseScope(){
         symbolTables.remove((symbolTables.size() - 1));
     }
 
-    public void Insert(Node id, Node type)
+    void Insert(Node id, Node type)
     {
         if (!LookUp(((IdentifierNode) id).name)){
             if (type instanceof TypesNode){
                 symbolTables.get((symbolTables.size() - 1)).Variables.add(new Variable(((IdentifierNode) id).name,((TypesNode) type).type));
+            }
+        } else {
+            FireError(new ErrorEvent("Variable " + ((IdentifierNode) id).name + " already exists in this context, error at line: " + id.LineNumber));
+        }
+    }
+
+    void Insert(Node id, String type, String symbol){
+        if (!LookUpSymbol(symbol)){
+            if (type.equals("Motor") && symbol.matches("[A-D]") || (type.equals("TouchSensor") || type.equals("UltrasoundSensor")) && symbol.matches("[0-4]")){
+                symbolTables.get((symbolTables.size() - 1)).Variables.add(new Variable(((IdentifierNode) id).name, type, symbol));
             } else {
-                symbolTables.get((symbolTables.size() - 1)).Variables.add(new Variable(((IdentifierNode) id).name,((InstanceNode) type).instance));
+                FireError(new ErrorEvent("Variable " + ((IdentifierNode) id).name + " failed, the socket " + symbol + " does not exist error at line: " + id.LineNumber));
             }
 
         } else {
-
-            try {
-                File file = new File(InputPath);
-                Scanner scanner = new Scanner(file);
-                int line = 0, k = 1;
-                String currentline;
-                line = ScopeLineStart(scanner, line);
-
-                while (scanner.hasNext()){
-                    currentline = scanner.nextLine();
-                    if (currentline.contains("number " + ((IdentifierNode) id).name) || currentline.contains("bool " + ((IdentifierNode) id).name)){
-                        if (k != 1){
-                            line++;
-                            System.out.println("Variable " + ((IdentifierNode) id).name + " already exists in this context, error at line: " + line);
-                            break;
-                        }
-                        k++;
-                    }
-                    line++;
-                }
-
-            } catch (Exception e){
-
-            }
-
+            FireError(new ErrorEvent("Variable " + ((IdentifierNode) id).name + " failed, the socket " + symbol + " is already initialized error at line: " + id.LineNumber));
         }
     }
+
+    private Boolean LookUpSymbol(String symbol){
+        for (Variable var: symbolTables.get(symbolTables.size() - 1).Variables
+                ) {
+            if (var.Symbol.equals(symbol)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    void Synchronize(IdentifierNode left, IdentifierNode right , SynchronizationNode line){
+        if (!LookUpSyncedMotor(left, right)){
+            syncMotors.add(new SyncMotor(left, right));
+        } else {
+            FireError(new ErrorEvent("Motors already synced, error at line: " + line.LineNumber));
+        }
+    }
+
+    void Desynchronize(IdentifierNode left, IdentifierNode right , DesynchronizeNode line){
+        boolean error = true;
+        for (SyncMotor sync: syncMotors
+             ) {
+            if (left.name.equals((sync.motor1).name) && right.name.equals((sync.motor2).name)){
+                syncMotors.remove(sync);
+                error = false;
+                break;
+            }
+        }
+
+        if (error){
+            FireError(new ErrorEvent("Motors are not synced, error at line: " + line.LineNumber));
+        }
+    }
+
+    private Boolean LookUpSyncedMotor(IdentifierNode left, IdentifierNode right){
+        for (SyncMotor sync: syncMotors
+             ) {
+            if (left.name.equals((sync.motor1).name) && right.name.equals((sync.motor2).name) || left.name.equals((sync.motor2).name)){
+                return true;
+            }
+        }
+        return left.name.equals(right.name);
+    }
+
     Boolean LookUp(String varName)
     {
         for (Variable var: symbolTables.get(symbolTables.size() - 1).Variables
@@ -85,21 +111,8 @@ public class SymbolTable {
         return false;
     }
 
-    int ScopeLineStart(Scanner scanner, int line){
-        int scope = 0;
-
-        while (scanner.hasNext() && scope < CurrentScope){
-            if (scanner.nextLine().contains("{")){
-                scope++;
-            }
-            line++;
-        }
-
-        return line;
-    }
-
     public static String GetTypeByID(String name, SymbolTable symbolTable){
-        String type = null;
+        String type = "";
         for (Variable var: symbolTable.Variables
                 ) {
             if (var.Name.equals(name)){

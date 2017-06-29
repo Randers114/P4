@@ -1,20 +1,22 @@
 package symbolTable;
 
 import abstractSyntaxTree.nodes.*;
+import compilerInitializer.CompilerInitializer;
+import errorHandling.PrintError;
+import event.ErrorEvent;
+import errorHandling.FireableError;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.List;
-import java.util.Scanner;
 
-public class BuildSymbolTable {
+public class BuildSymbolTable extends FireableError{
+    private SymbolTable symbolTable = new SymbolTable();
 
-    private SymbolTable symbolTable;
-    private String InputPath;
+    public BuildSymbolTable() {
+        symbolTable.AddErrorListener(e -> PrintError.PrintErrors(e.getSource().toString()));
+        symbolTable.AddErrorListener(e -> CompilerInitializer.SetScopeAndTypeError());
+    }
 
-    public BuildSymbolTable(ProgramNode node, String inputPath) {
-        symbolTable = new SymbolTable(inputPath);
-        InputPath = inputPath;
+    public void InitializeSymbolTable(ProgramNode node){
         Build(node);
     }
 
@@ -25,6 +27,17 @@ public class BuildSymbolTable {
             for (Node a: ((ProgramNode) node).methods
                  ) {
                 symbolTable.Insert(((MethodNode) a).id, ((MethodNode) a).type);
+            }
+
+            for (Node designDclNode: ((ProgramNode) node).designSpecificInvokes
+                 ) {
+                if (((DesignSpecificDclNode) designDclNode).child instanceof MotorNode){
+                    symbolTable.Insert(((MotorNode) ((DesignSpecificDclNode) designDclNode).child).id, "Motor", ((MotorNode) ((DesignSpecificDclNode) designDclNode).child).symbol);
+                } else if (((DesignSpecificDclNode) designDclNode).child instanceof UltraSoundSensorNode){
+                    symbolTable.Insert(((UltraSoundSensorNode) ((DesignSpecificDclNode) designDclNode).child).id, "UltrasoundSensor", ((UltraSoundSensorNode) ((DesignSpecificDclNode) designDclNode).child).symbol);
+                } else if (((DesignSpecificDclNode) designDclNode).child instanceof TouchSensorNode){
+                    symbolTable.Insert(((TouchSensorNode) ((DesignSpecificDclNode) designDclNode).child).id, "TouchSensor", ((TouchSensorNode) ((DesignSpecificDclNode) designDclNode).child).symbol);
+                }
             }
             TraverseChildren(node.ChildrenList);
             ((ProgramNode) node).symbolTable = SymbolTable.symbolTables.get(SymbolTable.symbolTables.size() - 1);
@@ -58,41 +71,21 @@ public class BuildSymbolTable {
             } else {
                 symbolTable.Insert(((DclNode) node).right, ((DclNode) node).left);
             }
-
-
         } else if (node instanceof IdentifierNode){
             if (!symbolTable.LookUp(((IdentifierNode) node).name)){
-                int errorLine = 0;
-
-                File file = new File(InputPath);
-                try {
-                    Scanner scanner = new Scanner(file);
-                    errorLine = symbolTable.ScopeLineStart(scanner, errorLine);
-                    String currentLine = scanner.nextLine();
-
-                    while (scanner.hasNext()){
-                        errorLine++;
-
-                        if (currentLine.contains(((IdentifierNode) node).name)){
-                            System.out.println("Variable: " + ((IdentifierNode) node).name + " does not exist in this context. Error at line: " + errorLine);
-                        }
-                        currentLine = scanner.nextLine();
-                    }
-
-                } catch (FileNotFoundException e){
-
-                }
-
-
+                FireError(new ErrorEvent("Variable: " + ((IdentifierNode) node).name + " does not exist in this context, error at line: " + node.LineNumber));
             }
+        } else if (node instanceof SynchronizationNode){
+            symbolTable.Synchronize((IdentifierNode) ((SynchronizationNode) node).left, (IdentifierNode) ((SynchronizationNode) node).right, (SynchronizationNode) node);
+        } else if (node instanceof DesynchronizeNode){
+            symbolTable.Desynchronize((IdentifierNode) ((DesynchronizeNode) node).left, (IdentifierNode) ((DesynchronizeNode) node).right, (DesynchronizeNode) node);
         } else {
             TraverseChildren(node.ChildrenList);
         }
     }
 
     private void TraverseChildren(List<Node> childrenList){
-        for (Node a: childrenList
-                ) {
+        for (Node a: childrenList) {
             if (a != null) {
                 Build(a);
             }

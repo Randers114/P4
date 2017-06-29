@@ -1,0 +1,56 @@
+Motor[B] motorLeft;
+Motor[C] motorRight;
+
+// Then we create our ultrasound sensor.
+UltrasoundSensor[4] uSensor;
+
+main
+{
+    // We synchronize the motors, so they run simultaneously.
+    motorLeft synchronize motorRight;
+
+    // We create numbers for speeds and distances for the sensor.
+    number speed = 75;
+    number dangerSpeed = 35;
+    number minimumDisantance = 15;
+    number dangerDistance = 35;
+    number maxTurns = 10;
+    number actualTurns = 0;
+
+    // We use a while-loop comparing maxTurns and actualTurns
+    while(actualTurns lessThan maxTurns) do
+    {
+        // We make a while-loop with the relation between the actual value of the distance and our variable.
+        while(uSensor.distance lessThan dangerDistance) do
+        {
+            // We set the motors to drive forward with the velocity stored in the number speed.
+            motorLeft.Forward(speed);
+        }
+
+        // Since we are now in danger distance we run the motors at dangerSpeed.
+        motorLeft.Forward(dangerSpeed);
+
+        // We make an if-statement to check if we get under minimumDisantance.
+        if(uSensor.distance greaterThan minimumDisantance) then
+        {
+            // We stop the motors right as we enter the statement, then we turn the robot.
+            motorLeft.Stop();
+            TurnInPlace(dangerSpeed);
+
+            // We increment the actualTurns variable, so that we can exit the while-loop when ten turns are complete.
+            actualTurns = actualTurns + 1;
+        }
+    }
+}
+
+// We make a method for turning in place.
+void Method TurnInPlace(number speed)
+{
+    // We now have to desynchronize and then synchronize the motors again so that we can use them to turn.
+    motorLeft desynchronize motorRight;
+    motorLeft synchronize motorRight -100;
+
+    // Here we make the robot turn. We use a hardcoded value for turning here since it depends.
+    // On the relative speed of the motors when we use the ForwardSeconds method.
+    motorLeft.ForwardSeconds(speed, 3); // We assume that it takes the robot 3 seconds to turn at this speed.
+}

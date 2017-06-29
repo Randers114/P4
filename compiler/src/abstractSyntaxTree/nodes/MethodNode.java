@@ -1,6 +1,6 @@
 package abstractSyntaxTree.nodes;
 
-import AVisitor.Visitor;
+import visitor.Visitor;
 
 public class MethodNode extends Node {
     public Node type;

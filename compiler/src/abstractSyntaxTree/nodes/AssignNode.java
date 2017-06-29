@@ -1,7 +1,6 @@
 package abstractSyntaxTree.nodes;
 
-import AVisitor.*;
-import org.antlr.v4.runtime.tree.ParseTreeVisitor;
+import visitor.*;
 
 public class AssignNode extends OpNode {
     @Override

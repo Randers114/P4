@@ -1,10 +1,10 @@
 package abstractSyntaxTree.nodes;
 
-import AVisitor.Visitor;
+import visitor.Visitor;
 
 public class CallNode extends Node {
     public Node id;
-    public Node statId;
+    public Node invoke;
     public Node parameter;
 
 
