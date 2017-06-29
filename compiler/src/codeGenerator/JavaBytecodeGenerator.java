@@ -26,6 +26,16 @@ public class JavaBytecodeGenerator implements Visitor {
     }
 
     @Override
+    public Object Visit(ListInvokeNode node) {
+        return null;
+    }
+
+    @Override
+    public Object Visit(ListNode node) {
+        return null;
+    }
+
+    @Override
     public Object Visit(SynchronizationNode node) {
         return null;
     }
