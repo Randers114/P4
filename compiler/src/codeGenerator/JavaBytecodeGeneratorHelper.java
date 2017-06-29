@@ -1,6 +1,7 @@
 package codeGenerator;
 
 import abstractSyntaxTree.nodes.*;
+import com.sun.org.apache.bcel.internal.classfile.Code;
 import symbolTable.SymbolTable;
 
 import java.io.PrintWriter;
@@ -159,49 +160,54 @@ public class JavaBytecodeGeneratorHelper  {
             StoreValue.put(node.id.toString(),Integer.toString(StoreNumber));
             if (node.fprmt != null)
             {
-                String TMP ="public " + node.type + " " + node.id + "(";
-                TMP = AddParameters((FormalParameterNode)(node.fprmt), TMP);
-                TMP.concat(");");
-                GenerateNewline();
-                Targetcode.add("Code:");
-                GenerateNewline();
-                Targetcode.add(TMP);
+                String TMP = "public " + ((TypesNode)(node.type)).type + " " + ((IdentifierNode)(node.id)).name + "(";
+				TMP = TMP.concat(AddParameters((FormalParameterNode)(node.fprmt)) + ");");
+				Targetcode.add(TMP);
+				GenerateNewline();
+				Targetcode.add("Code:");
+				GenerateNewline();
                 node.block.Accept(CodeGen);
+                Targetcode.add(CorrectMethodReturn(node));
                 GenerateNewline();
-                Targetcode.add("return");
             }
             else
             {
-                Targetcode.add("public " + node.type + " " + node.id + "();");
+                Targetcode.add("public " + ((TypesNode)(node.type)).type + " " + ((IdentifierNode)(node.id)).name + "();");
                 GenerateNewline();
                 Targetcode.add("Code:");
                 GenerateNewline();
                 node.block.Accept(CodeGen);
+				Targetcode.add(CorrectMethodReturn(node));
                 GenerateNewline();
-                Targetcode.add("return");
             }
       //      StoreNumber += //TODO;
 
     }
-/*
+
     void GenerateCallCode(CallNode node)
     {
-        Targetcode.add("InvokeStatic #"  + StoreValue.get(node.id)); //TODO
-    }
-*/
-    String AddParameters (FormalParameterNode node, String s)
-    {
-        s.concat(node.fprmt.toString());
-        if (((FormalParameterNode)(node.fprmt)).fprmt != null)
-                AddParameters(node,s);
-
-        return s;
+        Targetcode.add("InvokeStatic #"  + StoreValue.get(node.id));
     }
 
-    void GenerateMethdoCode()
+    String AddParameters (FormalParameterNode node)
     {
-        GenerateNewline();
+    	Class<?> classString = ((TypesNode)node.type).type.getClass();
+    	String[] realstring = classString.toString().split(" ");
+		if(node.fprmt != null)
+        	return realstring[1] + node.fprmt.Accept(CodeGen);
+		else return
+				realstring[1];
     }
+
+    String CorrectMethodReturn(MethodNode node)
+	{
+		if (node.returnval == null)
+			return "return";
+		else
+		{
+			return "dreturn";
+		}
+	}
 }
 
 

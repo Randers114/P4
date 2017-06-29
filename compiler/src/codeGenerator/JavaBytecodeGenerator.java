@@ -113,6 +113,7 @@ public class JavaBytecodeGenerator implements Visitor {
 
     @Override
     public Object Visit(FormalParameterNode node) {
+        javaBytecodeGenerator.AddParameters(node);
         return null;
     }
 
@@ -213,6 +214,10 @@ public class JavaBytecodeGenerator implements Visitor {
     @Override
     public Void Visit(ProgramNode node) {
         node.mainBlock.Accept(this);
+        for(Node method: node.methods)
+        {
+            method.Accept(this);
+        }
         return null;
     }
 
