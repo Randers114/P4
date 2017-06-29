@@ -1,6 +1,7 @@
 package codeGenerator;
 
 import abstractSyntaxTree.nodes.*;
+import com.sun.org.apache.bcel.internal.classfile.Code;
 import symbolTable.SymbolTable;
 
 import java.io.PrintWriter;
@@ -152,5 +153,61 @@ public class JavaBytecodeGeneratorHelper  {
     private String ILoad(String id){
         return "iload_" + StoreValue.get(id);
     }
+
+    void GenerateMethodCode(MethodNode node)
+    {
+        if(node.id.toString() != null && node.type != null)
+            StoreValue.put(node.id.toString(),Integer.toString(StoreNumber));
+            if (node.fprmt != null)
+            {
+                String TMP = "public " + ((TypesNode)(node.type)).type + " " + ((IdentifierNode)(node.id)).name + "(";
+				TMP = TMP.concat(AddParameters((FormalParameterNode)(node.fprmt)) + ");");
+				Targetcode.add(TMP);
+				GenerateNewline();
+				Targetcode.add("Code:");
+				GenerateNewline();
+                node.block.Accept(CodeGen);
+                Targetcode.add(CorrectMethodReturn(node));
+                GenerateNewline();
+            }
+            else
+            {
+                Targetcode.add("public " + ((TypesNode)(node.type)).type + " " + ((IdentifierNode)(node.id)).name + "();");
+                GenerateNewline();
+                Targetcode.add("Code:");
+                GenerateNewline();
+                node.block.Accept(CodeGen);
+				Targetcode.add(CorrectMethodReturn(node));
+                GenerateNewline();
+            }
+      //      StoreNumber += //TODO;
+
+    }
+
+    void GenerateCallCode(CallNode node)
+    {
+        Targetcode.add("InvokeStatic #"  + StoreValue.get(node.id));
+    }
+
+    String AddParameters (FormalParameterNode node)
+    {
+    	Class<?> classString = ((TypesNode)node.type).type.getClass();
+    	String[] realstring = classString.toString().split(" ");
+		if(node.fprmt != null)
+        	return realstring[1] + node.fprmt.Accept(CodeGen);
+		else return
+				realstring[1];
+    }
+
+    String CorrectMethodReturn(MethodNode node)
+	{
+		if (node.returnval == null)
+			return "return";
+		else
+		{
+			return "dreturn";
+		}
+	}
 }
+
 

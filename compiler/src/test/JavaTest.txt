@@ -2,6 +2,10 @@ main{
     bool b = true;
     bool a;
     a = b;
+
+    number x = 55;
+    number y = 23;
+
     if(a) then {
 
         if(b) then {
@@ -12,4 +16,18 @@ main{
         number c = hsah;
     }
     a = b;
+}
+
+void Method Tester1 ()
+{
+    number hej = 5;
+    bool hejsa = false;
+}
+
+number Method Tester2 (number x)
+{
+    x = 65;
+    bool xx = true;
+    bool xxx = false;
+    return x;
 }

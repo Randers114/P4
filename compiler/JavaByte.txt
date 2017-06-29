@@ -2,17 +2,37 @@ iconst_1
 istore_1
 iload_1
 istore_2
-iload_2
-ifeq 17
-iload_1
-ifeq 11
-ldc2_w 1000.0
+ldc2_w 55.0
 dstore_3
-ldc2_w 10.0
-dstore_3
-ldc2_w 20.0
-dstore_3
-dload_3
+ldc2_w 23.0
 dstore_5
+iload_2
+ifeq 21
+iload_1
+ifeq 15
+ldc2_w 1000.0
+dstore_7
+ldc2_w 10.0
+dstore_7
+ldc2_w 20.0
+dstore_7
+dload_7
+dstore_9
 iload_1
 istore_2
+public void Tester1();
+Code:
+ldc2_w 5.0
+dstore_7
+iconst_0
+istore_9
+return
+public number Tester2(java.lang.String);
+Code:
+ldc2_w 65.0
+dstore_3
+iconst_1
+istore_10
+iconst_0
+istore_11
+correct bytecode return variant
