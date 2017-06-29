@@ -28,6 +28,7 @@ jjjjj[0] = ARRAY_START_INDEX;
 	AddValueToArray(1,15.0);
 	listen[0.0];
 	DeleteValueFromArray(0);
+	AddValueToArray(2,0);
 	while (actualTurns < maxTurns)
 	{
 		while (getUSDistance(S4) < dangerDistance)

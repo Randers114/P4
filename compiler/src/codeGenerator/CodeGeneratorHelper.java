@@ -86,11 +86,11 @@ final class CodeGeneratorHelper {
         boolean b = node.aBoolean;
         if(b)
         {
-            Targetcode.add("0");
+            Targetcode.add("1");
         }
         else
         {
-            Targetcode.add("1");
+            Targetcode.add("0");
         }
     }
 

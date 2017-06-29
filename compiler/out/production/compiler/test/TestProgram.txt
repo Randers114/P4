@@ -24,6 +24,7 @@ main
     listHHH.Add(15);
     listen.GetIndex(0);
     listen.Remove();
+    jjjjj.Add(false);
 
     // We use a while-loop comparing maxTurns and actualTurns
     while(actualTurns lessThan maxTurns) do
