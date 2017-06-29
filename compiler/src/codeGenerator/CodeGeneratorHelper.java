@@ -34,11 +34,8 @@ final class CodeGeneratorHelper {
         writer.print("const int ARRAY_START_INDEX = 1;");
         writer.print("\n");
 
-        for (String s: ListDcl
-             ) {
-            writer.print(s);
-        }
-        GenerateExtraCodeForLists();
+        GenerateListDcl(writer);
+
 
         for (String prototype: CodePrototypes)
         {
@@ -47,8 +44,10 @@ final class CodeGeneratorHelper {
 
         writer.println();
 
+
+        writer.print("task main() \n{\n");
         for (ListNode node:  ListNodes
-             ) {
+                ) {
             writer.print(node.id + "[0] = ARRAY_START_INDEX;\n");
         }
 
@@ -57,7 +56,7 @@ final class CodeGeneratorHelper {
             writer.print(content);
         }
 
-
+        GenerateExtraCodeForLists();
 
     }
 
@@ -341,7 +340,7 @@ final class CodeGeneratorHelper {
     void GenerateProgramMainCode(ProgramNode node){
         node.designSpecificInvokes.forEach(n -> n.Accept(CodeGen));
 
-        Targetcode.add("task main() \n{\n");
+
         node.mainBlock.Accept(CodeGen);
         Targetcode.add("} \n");
 
@@ -582,6 +581,7 @@ final class CodeGeneratorHelper {
 
                 "void DeleteValueFromArray(int arrayNumber){\n" +
                 "\tint *array = GetArrayAdress(arrayNumber);\n" +
+                "\t array[array[0]] = 0;\n" +
                 "\tarray[0]--;\n" +
                 "}" +
 
@@ -594,5 +594,12 @@ final class CodeGeneratorHelper {
         }
 
         Targetcode.add("}}");
+    }
+
+    private void GenerateListDcl(PrintWriter writer){
+        for (String s: ListDcl
+                ) {
+            writer.print(s);
+        }
     }
 }
