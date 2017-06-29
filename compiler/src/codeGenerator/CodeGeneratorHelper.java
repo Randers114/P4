@@ -17,18 +17,29 @@ final class CodeGeneratorHelper {
     private List<String> Targetcode = new ArrayList<>();
     private List<String> CodePrototypes = new ArrayList<>();
     private List<String> MotorOrSensordcl = new ArrayList<>();
+    private List<String> ListDcl = new ArrayList<>();
+    private List<ListNode> ListNodes = new ArrayList<>();
 
     private Map<String, String> matchMotorsAndSensors = new HashMap<>();
 
     void WriteToFile(PrintWriter writer)
     {
+
         for (String motorOrSensor: MotorOrSensordcl)
         {
             writer.print(motorOrSensor);
         }
         writer.print("\n");
         writer.print("const int MAX_ARRAY_LENGTH = 100;");
+        writer.print("const int ARRAY_START_INDEX = 1;");
         writer.print("\n");
+
+        for (String s: ListDcl
+             ) {
+            writer.print(s);
+        }
+        GenerateExtraCodeForLists();
+
         for (String prototype: CodePrototypes)
         {
             writer.print(prototype);
@@ -36,10 +47,17 @@ final class CodeGeneratorHelper {
 
         writer.println();
 
+        for (ListNode node:  ListNodes
+             ) {
+            writer.print(node.id + "[0] = ARRAY_START_INDEX;\n");
+        }
+
         for (String content: Targetcode)
         {
             writer.print(content);
         }
+
+
 
     }
 
@@ -335,7 +353,8 @@ final class CodeGeneratorHelper {
     }
 
     void GenerateListCode(ListNode node){
-
+        ListDcl.add(node.type.Accept(CodeGen) + " " + node.id.Accept(CodeGen) + "[MAX_ARRAY_LENGTH];\n");
+        ListNodes.add(node);
     }
 
     void GenerateReturnValCode(ReturnValNode node){
@@ -548,5 +567,32 @@ final class CodeGeneratorHelper {
         for (int i = 0; i < CodeGenerator.tab; ++i){
             Targetcode.add("\t");
         }
+    }
+
+    private void GenerateExtraCodeForLists(){
+        int i = 0;
+        Targetcode.add("void AddValueToArray(int arrayNumber, int value){\n" +
+                "\tint *array = GetArrayAdress(arrayNumber);\n" +
+                "\tif(array[0] == MAX_ARRAY_LENGTH){\n" +
+                "\t\treturn;\n" +
+                "\t} else {\n" +
+                "\t\tarray[array[0]] = value;\n" +
+                "array[0]++;\n } \n }\n" +
+
+
+                "void DeleteValueFromArray(int arrayNumber){\n" +
+                "\tint *array = GetArrayAdress(arrayNumber);\n" +
+                "\tarray[0]--;\n" +
+                "}" +
+
+                "int * GetArrayAdress(int arrayNumber){\n" +
+                "\tswitch(arrayNumber){\n");
+
+        for (ListNode node: ListNodes
+                ) {
+            Targetcode.add("\t\tcase " + i + ":\n \t\t\t return " + node.id + ";\n");
+        }
+
+        Targetcode.add("}}");
     }
 }
