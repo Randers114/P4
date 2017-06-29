@@ -16,6 +16,14 @@ main
     number dangerDistance = 35;
     number maxTurns = 10;
     number actualTurns = 0;
+    List[number] listen;
+    List[number] listHHH;
+    List[bool] jjjjj;
+
+    listen.Add(10);
+    listHHH.Add(15);
+    listen.GetIndex(0);
+    listen.Remove();
 
     // We use a while-loop comparing maxTurns and actualTurns
     while(actualTurns lessThan maxTurns) do

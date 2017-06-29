@@ -157,6 +157,7 @@ public class AstBuild extends MSTGrammarBaseVisitor<Node> {
                 if (ctx.b() != null){
                     right = visitB(ctx.b());
                 }
+                middle.LineNumber = ctx.start.getLine();
             } else {
                 left = new ListNode(){{
                     type = visitType(ctx.type());
@@ -168,7 +169,6 @@ public class AstBuild extends MSTGrammarBaseVisitor<Node> {
             CollectionUtils.addIgnoreNull(ChildrenList, left);
             CollectionUtils.addIgnoreNull(ChildrenList, middle);
             CollectionUtils.addIgnoreNull(ChildrenList, right);
-            middle.LineNumber = ctx.start.getLine();
             LineNumber = ctx.start.getLine();
         }};
     }

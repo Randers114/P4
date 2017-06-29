@@ -250,7 +250,7 @@ public class TypeChecker extends FireableError implements Visitor {
 
     @Override
     public Object Visit(ListNode node) {
-        return null;
+        return "";
     }
 
     @Override

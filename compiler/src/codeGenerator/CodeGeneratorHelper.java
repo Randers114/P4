@@ -18,7 +18,7 @@ final class CodeGeneratorHelper {
     private List<String> CodePrototypes = new ArrayList<>();
     private List<String> MotorOrSensordcl = new ArrayList<>();
     private List<String> ListDcl = new ArrayList<>();
-    private List<ListNode> ListNodes = new ArrayList<>();
+    private List<String> ListNodesNames = new ArrayList<>();
 
     private Map<String, String> matchMotorsAndSensors = new HashMap<>();
 
@@ -30,8 +30,8 @@ final class CodeGeneratorHelper {
             writer.print(motorOrSensor);
         }
         writer.print("\n");
-        writer.print("const int MAX_ARRAY_LENGTH = 100;");
-        writer.print("const int ARRAY_START_INDEX = 1;");
+        writer.print("const int MAX_ARRAY_LENGTH = 100;\n");
+        writer.print("const int ARRAY_START_INDEX = 1;\n");
         writer.print("\n");
 
         GenerateListDcl(writer);
@@ -42,21 +42,27 @@ final class CodeGeneratorHelper {
             writer.print(prototype);
         }
 
+        writer.print("void AddValueToArray(int arrayNumber, float value);\n");
+        writer.print("void DeleteValueFromArray(int arrayNumber);\n");
+        writer.print("float *GetArrayAdress(int arrayNumber);\n");
+
         writer.println();
 
 
         writer.print("task main() \n{\n");
-        for (ListNode node:  ListNodes
+        for (String name: ListNodesNames
                 ) {
-            writer.print(node.id + "[0] = ARRAY_START_INDEX;\n");
+            writer.print(name + "[0] = ARRAY_START_INDEX;\n");
         }
+
+        GenerateExtraCodeForLists();
 
         for (String content: Targetcode)
         {
             writer.print(content);
         }
 
-        GenerateExtraCodeForLists();
+
 
     }
 
@@ -80,11 +86,11 @@ final class CodeGeneratorHelper {
         boolean b = node.aBoolean;
         if(b)
         {
-            Targetcode.add("true");
+            Targetcode.add("0");
         }
         else
         {
-            Targetcode.add("false");
+            Targetcode.add("1");
         }
     }
 
@@ -121,11 +127,16 @@ final class CodeGeneratorHelper {
 
     void GenerateDclCode(DclNode node){
         Indend();
-        String type = node.left.Accept(CodeGen).toString();
+        Object objectType = node.left.Accept(CodeGen);
+        String type = "";
+        if (objectType != null){
+            type = node.left.Accept(CodeGen).toString();
+        } else {
+            type = null;
+        }
+
         if (type != null) {
             Targetcode.add(type + node.middle.Accept(CodeGen).toString());
-        } else {
-
         }
 
         if (node.right != null) {
@@ -134,8 +145,9 @@ final class CodeGeneratorHelper {
                 Targetcode.add(node.right.Accept(CodeGen).toString());
             }
         }
-
-        Targetcode.add(";\n");
+        if (type != null) {
+            Targetcode.add(";\n");
+        }
     }
 
     void GenerateDivideCode(DivideNode node){
@@ -347,13 +359,13 @@ final class CodeGeneratorHelper {
         node.methods.forEach(n -> n.Accept(CodeGen));
     }
 
-    void GenerateListInvokeCode(ListInvokeNode node){
-
+    String GenerateListInvokeCode(ListInvokeNode node){
+        return node.method;
     }
 
     void GenerateListCode(ListNode node){
-        ListDcl.add(node.type.Accept(CodeGen) + " " + node.id.Accept(CodeGen) + "[MAX_ARRAY_LENGTH];\n");
-        ListNodes.add(node);
+        ListDcl.add("float " + node.id.Accept(CodeGen) + "[MAX_ARRAY_LENGTH];\n");
+        ListNodesNames.add(((IdentifierNode) node.id).name);
     }
 
     void GenerateReturnValCode(ReturnValNode node){
@@ -401,7 +413,7 @@ final class CodeGeneratorHelper {
             return "float ";
         }
         else if (node.type.contains("bool")) {
-            return "bool ";
+            return "float ";
         } else {
             return "void ";
         }
@@ -468,6 +480,19 @@ final class CodeGeneratorHelper {
                 break;
             case "S":
                 StopInvoke((IdentifierNode) node.id);
+                break;
+            case "Add":
+                Targetcode.add("AddValueToArray(" + ListNodesNames.indexOf(((IdentifierNode) node.id).name) + ",");
+                ((ListInvokeNode) ((InvokeNode) node.invoke).child).input.Accept(CodeGen);
+                Targetcode.add(")");
+                break;
+            case "Remove":
+                Targetcode.add("DeleteValueFromArray(" + ListNodesNames.indexOf(((IdentifierNode) node.id).name) + ")");
+                break;
+            case "GetIndex":
+                Targetcode.add(node.id.Accept(CodeGen).toString() + "[");
+                ((ListInvokeNode) ((InvokeNode) node.invoke).child).input.Accept(CodeGen);
+                Targetcode.add("]");
                 break;
         }
     }
@@ -570,30 +595,33 @@ final class CodeGeneratorHelper {
 
     private void GenerateExtraCodeForLists(){
         int i = 0;
-        Targetcode.add("void AddValueToArray(int arrayNumber, int value){\n" +
-                "\tint *array = GetArrayAdress(arrayNumber);\n" +
+        Targetcode.add("void AddValueToArray(int arrayNumber, float value){\n" +
+                "\tfloat *array = GetArrayAdress(arrayNumber);\n" +
                 "\tif(array[0] == MAX_ARRAY_LENGTH){\n" +
                 "\t\treturn;\n" +
                 "\t} else {\n" +
                 "\t\tarray[array[0]] = value;\n" +
-                "array[0]++;\n } \n }\n" +
+                "\t\tarray[0]++;\n \t} \n }\n" +
 
 
                 "void DeleteValueFromArray(int arrayNumber){\n" +
-                "\tint *array = GetArrayAdress(arrayNumber);\n" +
+                "\tfloat *array = GetArrayAdress(arrayNumber);\n" +
                 "\t array[array[0]] = 0;\n" +
-                "\tarray[0]--;\n" +
-                "}" +
+                "\t if(array[0]!= 1)\n" +
+                "\t {array[0]--;}\n" +
+                "}\n" +
 
-                "int * GetArrayAdress(int arrayNumber){\n" +
+                "float *GetArrayAdress(int arrayNumber){\n" +
                 "\tswitch(arrayNumber){\n");
 
-        for (ListNode node: ListNodes
+        for (String name: ListNodesNames
                 ) {
-            Targetcode.add("\t\tcase " + i + ":\n \t\t\t return " + node.id + ";\n");
+            Targetcode.add("\t\tcase " + i + ":\n \t\t\t return &" + name + ";\n");
+            i++;
         }
 
-        Targetcode.add("}}");
+        Targetcode.add("\t\tdefault: return NULL;\n");
+        Targetcode.add("\t}\n}");
     }
 
     private void GenerateListDcl(PrintWriter writer){

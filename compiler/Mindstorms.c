@@ -1,85 +1,83 @@
-#pragma config(Motor, motorA, motorLeft, tmotorEV3_Large)
-#pragma config(Motor, motorB, motorRight, tmotorEV3_Large)
-#pragma config(Motor, motorC, motorFront, tmotorEV3_Large)
-#pragma config(Sensor, S1, tSensorTop, sensorEV3_Touch)
-#pragma config(Sensor, S2, tSensorFront, sensorEV3_Touch)
-#pragma config(Sensor, S3, uSensorLeft, sensorEV3_Ultrasonic)
-#pragma config(Sensor, S4, uSensorRight, sensorEV3_Ultrasonic)
+#pragma config(Motor, motorB, motorLeft, tmotorEV3_Large)
+#pragma config(Motor, motorC, motorRight, tmotorEV3_Large)
+#pragma config(Sensor, S4, uSensor, sensorEV3_Ultrasonic)
 
-void TurnLeft(float speed); 
-void TurnRight(float speed); 
+const int MAX_ARRAY_LENGTH = 100;
+const int ARRAY_START_INDEX = 1;
+
+float listen[MAX_ARRAY_LENGTH];
+float listHHH[MAX_ARRAY_LENGTH];
+float jjjjj[MAX_ARRAY_LENGTH];
+void TurnInPlace(float speed); 
+void AddValueToArray(int arrayNumber, float value);
+void DeleteValueFromArray(int arrayNumber);
+float *GetArrayAdress(int arrayNumber);
 
 task main() 
 {
-	float b = 10.0;
+listen[0] = ARRAY_START_INDEX;
+listHHH[0] = ARRAY_START_INDEX;
+jjjjj[0] = ARRAY_START_INDEX;
 	float speed = 75.0;
-	float backSpeed = 25.0;
-	float turningSpeed = 35.0;
-	sleep(b);
-	bool isRunning = false;
-	while (! (isRunning))
+	float dangerSpeed = 35.0;
+	float minimumDisantance = 15.0;
+	float dangerDistance = 35.0;
+	float maxTurns = 10.0;
+	float actualTurns = 0.0;
+				AddValueToArray(0,10.0);
+	AddValueToArray(1,15.0);
+	listen[0.0];
+	DeleteValueFromArray(0);
+	while (actualTurns < maxTurns)
 	{
-		if(getTouchValue(S1))
+		while (getUSDistance(S4) < dangerDistance)
 		{
-			isRunning = true; 
+			motor[motorB] = speed;
+			motor[motorC] = speed;
 		}
-		sleep(100.0);
-	}
-	while (isRunning)
-	{
-		motor[motorA] = speed;
-		motor[motorB] = speed;
-		if(getTouchValue(S2))
+		motor[motorB] = dangerSpeed;
+		motor[motorC] = dangerSpeed;
+		if(getUSDistance(S4) > minimumDisantance)
 		{
-			stopMotor(motorA);
 			stopMotor(motorB);
-			motor[motorA] = - (backSpeed);
-			motor[motorB] = - (backSpeed);
- 			sleep(2.0 * 1000);
-			stopMotor(motorA);
-			stopMotor(motorB);
-			if(getUSDistance(S3) > getUSDistance(S4))
-			{
-				TurnLeft(turningSpeed);
-			}
-			else if(getUSDistance(S3) < getUSDistance(S4))
-			{
-				TurnRight(turningSpeed);
-			}
-			else
-			{
-				TurnLeft(turningSpeed);
-			} 
-			for ( int i = 1.0 ; i <20.0 ; i++ )
-			{ 
-				if(getTouchValue(S1))
-				{
-					isRunning = false; 
-				}
-				sleep(100.0);
-			}
+			stopMotor(motorC);
+			TurnInPlace(dangerSpeed);
+			actualTurns = actualTurns + 1.0; 
 		}
 	}
 } 
 
-void TurnLeft(float speed)
+void TurnInPlace(float speed)
 {
-	TurnRight(speed)	motor[motorA] = - (speed);
-	motor[motorB] = - (speed);
-	motor[motorC] = - (speed);
+	motor[motorB] = speed;
+	motor[motorC] = ((- 100.0) / 100) * (speed);
  	sleep(3.0 * 1000);
-	stopMotor(motorA);
 	stopMotor(motorB);
 	stopMotor(motorC);
 }
-
-void TurnRight(float speed)
-{
-	motor[motorA] = - (speed);
-	motor[motorC] = - (speed);
- 	sleep(3.0 * 1000);
-	stopMotor(motorA);
-	stopMotor(motorC);
-	motor[motorA] = speed;
-	motor[motorC] = speed;
+void AddValueToArray(int arrayNumber, float value){
+	float *array = GetArrayAdress(arrayNumber);
+	if(array[0] == MAX_ARRAY_LENGTH){
+		return;
+	} else {
+		array[array[0]] = value;
+		array[0]++;
+ 	} 
+ }
+void DeleteValueFromArray(int arrayNumber){
+	float *array = GetArrayAdress(arrayNumber);
+	 array[array[0]] = 0;
+	 if(array[0]!= 1)
+	 {array[0]--;}
+}
+float *GetArrayAdress(int arrayNumber){
+	switch(arrayNumber){
+		case 0:
+ 			 return &listen;
+		case 1:
+ 			 return &listHHH;
+		case 2:
+ 			 return &jjjjj;
+		default: return NULL;
+	}
 }

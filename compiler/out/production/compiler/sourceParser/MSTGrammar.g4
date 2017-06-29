@@ -80,7 +80,8 @@ prmt	: b
         | b ',' prmt;
 
 invoke	: motorInvoke
-        | sensorInvoke;
+        | sensorInvoke
+        | listInvoke;
 
 boolvalop	: 'lessThan'
 		| 'greaterThan'
@@ -96,6 +97,8 @@ motorInvoke	: 'Forward' '(' expr ')'
             | 'Stop' '(' ')';
 
 sensorInvoke: 'isPressed' | 'distance';
+
+listInvoke: 'Add' '(' b ')'| 'Remove' '(' ')' | 'GetIndex' '(' expr ')';
 
 boolop	: 'equal'
 		| 'notEqual';

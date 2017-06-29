@@ -33,6 +33,16 @@ public class PrettyPrint implements Visitor {
     }
 
     @Override
+    public Object Visit(ListInvokeNode node) {
+        return null;
+    }
+
+    @Override
+    public Object Visit(ListNode node) {
+        return null;
+    }
+
+    @Override
     public Void Visit(MotorInvokeNode node) {
         switch (node.method) {
             case "Forward":

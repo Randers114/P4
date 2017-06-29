@@ -69,8 +69,7 @@ public class BuildSymbolTable extends FireableError{
                         TraverseChildren(((DclNode) node).right.ChildrenList);
                 }
             } else {
-
-                symbolTable.Insert(((DclNode) node).right, ((DclNode) node).left);
+                symbolTable.Insert((ListNode) ((DclNode) node).left);
             }
         } else if (node instanceof IdentifierNode){
             if (!symbolTable.LookUp(((IdentifierNode) node).name)){
