@@ -180,15 +180,15 @@ public class JavaBytecodeGeneratorHelper  {
                 GenerateNewline();
                 Targetcode.add("return");
             }
-            StoreNumber += //TODO;
+      //      StoreNumber += //TODO;
 
     }
-
+/*
     void GenerateCallCode(CallNode node)
     {
         Targetcode.add("InvokeStatic #"  + StoreValue.get(node.id)); //TODO
     }
-
+*/
     String AddParameters (FormalParameterNode node, String s)
     {
         s.concat(node.fprmt.toString());
